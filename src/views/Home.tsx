@@ -358,19 +358,38 @@ export const Home: React.FC = () => {
               "{settings?.tagline || "અબોલ પશુ-પક્ષીઓ માટે આપના ઉદાર સહયોગ બદલ ખૂબ ખૂબ આભાર."}"
             </p>
             
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
-              <a
-                href="#donations"
-                className="bg-royal-800 hover:bg-royal-900 text-cream-50 font-bold px-6 py-3.5 rounded-xl shadow-md transition-all text-sm"
-              >
-                સહયોગ આપો (Donate)
-              </a>
-              <a
-                href="#seva"
-                className="border border-cream-200 text-royal-855 hover:bg-cream-100/50 font-bold px-6 py-3.5 rounded-xl transition-all text-sm"
-              >
-                સેવા કાર્યો જુઓ
-              </a>
+            <div className="space-y-3">
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
+                <a
+                  href="#donations"
+                  className="bg-royal-800 hover:bg-royal-900 text-cream-50 font-bold px-6 py-3.5 rounded-xl shadow-md transition-all text-sm shrink-0"
+                >
+                  સહયોગ આપો (Donate)
+                </a>
+                <button
+                  onClick={handleExportAppealPng}
+                  disabled={exportingAppeal}
+                  className="flex items-center gap-1.5 bg-saffron-500 hover:bg-saffron-600 text-royal-800 font-bold px-5 py-3.5 rounded-xl text-xs md:text-sm shadow-sm transition-all active:scale-[0.98] disabled:opacity-50 shrink-0"
+                >
+                  <Download className="h-4.5 w-4.5" />
+                  <span>અપીલ પત્રિકા ડાઉનલોડ</span>
+                </button>
+                <button
+                  onClick={handleShareAppealCard}
+                  disabled={exportingAppeal}
+                  className="flex items-center gap-1.5 bg-green-600 hover:bg-green-700 text-white font-bold px-5 py-3.5 rounded-xl text-xs md:text-sm shadow-sm transition-all active:scale-[0.98] disabled:opacity-50 shrink-0"
+                >
+                  <Share2 className="h-4.5 w-4.5" />
+                  <span>અપીલ પત્રિકા શેર</span>
+                </button>
+              </div>
+
+              <div className="text-center lg:text-left text-xs font-black text-gray-400">
+                📅 આજની બુકિંગ વિગતો માટે{" "}
+                <a href="#calendar" className="text-royal-800 hover:text-saffron-600 underline decoration-wavy underline-offset-4 decoration-saffron-400">
+                  લાઇવ સેવા કેલેન્ડર જુઓ (Seva Calendar)
+                </a>
+              </div>
             </div>
           </div>
 
@@ -458,7 +477,7 @@ export const Home: React.FC = () => {
         </div>
 
         {/* 🐾 Seva Booking Calendar Section */}
-        <div className="bg-white rounded-3xl border border-cream-200 shadow-xl p-6 md:p-8 space-y-6 relative overflow-hidden">
+        <div id="calendar" className="bg-white rounded-3xl border border-cream-200 shadow-xl p-6 md:p-8 space-y-6 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-2 bg-royal-800" />
           
           <div className="text-center space-y-2">
