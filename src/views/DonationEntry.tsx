@@ -197,6 +197,7 @@ export const DonationEntry: React.FC = () => {
 
   // Strips all oklch, oklab, shadows, and outline properties from cloned DOM before html2canvas converts it.
   const cleanCanvasOklch = (clonedDoc: Document) => {
+    // 1. Clean the HTML root element
     if (clonedDoc.documentElement) {
       clonedDoc.documentElement.style.borderColor = "transparent";
       clonedDoc.documentElement.style.color = "#111827";
@@ -205,6 +206,7 @@ export const DonationEntry: React.FC = () => {
       clonedDoc.documentElement.style.outlineColor = "transparent";
     }
 
+    // 2. Clean the Body root element
     if (clonedDoc.body) {
       clonedDoc.body.style.borderColor = "transparent";
       clonedDoc.body.style.color = "#111827";
@@ -213,8 +215,10 @@ export const DonationEntry: React.FC = () => {
       clonedDoc.body.style.outlineColor = "transparent";
     }
 
+    // 3. Clean every element inside the document
     const elements = clonedDoc.querySelectorAll("*");
     elements.forEach((el: any) => {
+      // Clear borders unless marked gold/blue/gray explicitly
       if (el.classList.contains("gold-border")) {
         el.style.borderColor = "#C5A059";
       } else if (el.classList.contains("blue-border")) {
@@ -228,6 +232,7 @@ export const DonationEntry: React.FC = () => {
       el.style.boxShadow = "none";
       el.style.textShadow = "none";
 
+      // Override computed text and background colors if they contain oklch
       const computed = window.getComputedStyle(el);
       if (computed.color && computed.color.includes("oklch")) {
         el.style.color = "#111827";
@@ -244,7 +249,7 @@ export const DonationEntry: React.FC = () => {
       return;
     }
     if (!phone || phone.length < 10) {
-      setErrorMsg("૧ો આંકડાનો ફોન નંબર જરૂરી છે.");
+      setErrorMsg("૧૦ આંકડાનો ફોન નંબર જરૂરી છે.");
       return;
     }
     if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
@@ -1113,6 +1118,341 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
 
         </div>
       )}
+
+      {/* 
+        Hidden rendering card for 100% safe html2canvas downloads (un-scaled, offscreen).
+        Completely styled with inline style colors and fixed container size to ensure pixel-perfect rendering.
+        Absolutely zero Tailwind classes for colors, borders, or shadows are used here to prevent oklch crashes!
+      */}
+      <div 
+        className="absolute" 
+        style={{ 
+          left: "-9999px", 
+          top: "0",
+          width: "600px",
+          height: "780px",
+          overflow: "hidden"
+        }}
+      >
+        <div 
+          ref={cardRef}
+          className="w-[600px] h-[780px] select-none flex flex-col justify-between relative overflow-hidden safe-card-export"
+          style={{ 
+            fontFamily: "'Noto Sans Gujarati', sans-serif",
+            border: "6px solid #C5A059", // Solid Gold border
+            background: "linear-gradient(180deg, #FAF9F6 0%, #FFFDF9 100%)",
+            boxSizing: 'border-box',
+            padding: "20px"
+          }}
+        >
+          {/* Cloned override stylesheet for sandbox styling inside html2canvas */}
+          <style dangerouslySetInnerHTML={{__html: `
+            .safe-card-export, .safe-card-export * {
+              --border-color: #FAF9F6 !important;
+              border-color: #FAF9F6 !important;
+              outline-color: transparent !important;
+              box-shadow: none !important;
+              text-shadow: none !important;
+            }
+            .safe-card-export .gold-border {
+              border-color: #C5A059 !important;
+            }
+            .safe-card-export .blue-border {
+              border-color: #0B2F64 !important;
+            }
+            .safe-card-export .gray-border {
+              border-color: #E5E7EB !important;
+            }
+          `}} />
+
+          {/* Watermark Background collage at 5% opacity behind details */}
+          {bgBase64 && (
+            <div 
+              style={{
+                position: "absolute",
+                top: 0, left: 0, right: 0, bottom: 0,
+                backgroundImage: `url(${bgBase64})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                opacity: 0.05,
+                zIndex: 0
+              }}
+            />
+          )}
+
+          {/* Inner gold border */}
+          <div 
+            className="absolute pointer-events-none z-20 gold-border" 
+            style={{ inset: "8px", border: "2px solid #C5A059", borderRadius: "12px" }} 
+          />
+
+          {/* Corner leafs */}
+          <div className="absolute w-2.5 h-2.5 z-30" style={{ top: "12px", left: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
+          <div className="absolute w-2.5 h-2.5 z-30" style={{ top: "12px", right: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
+          <div className="absolute w-2.5 h-2.5 z-30" style={{ bottom: "12px", left: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
+          <div className="absolute w-2.5 h-2.5 z-30" style={{ bottom: "12px", right: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
+
+          {/* 1. Header (Compact reference design layout) */}
+          <div className="relative z-10" style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+            {/* Top Slogan Bar */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", padding: "0 10px" }}>
+              <span style={{ color: "#b91c1c", fontSize: "13px", fontWeight: "900" }}>🚩 જીવદયા</span>
+              <span style={{ color: "#0B2F64", fontSize: "18px", fontWeight: "900", letterSpacing: "1px" }}>અહિંસા પરમો ધર્મઃ</span>
+              <span style={{ color: "#b91c1c", fontSize: "13px", fontWeight: "900" }}>કરુણા 🚩</span>
+            </div>
+
+            {/* Logo & Org left, Contacts right */}
+            <div className="blue-border" style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid #0B2F64", borderBottom: "1px solid #0B2F64", padding: "6px 10px", marginTop: "2px" }}>
+              <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px" }}>
+                {logoBase64 && logoBase64.startsWith("data:") ? (
+                  <img 
+                    src={logoBase64} 
+                    alt="Logo" 
+                    className="h-14 w-14 rounded-full object-contain bg-white gold-border" 
+                    style={{ border: '2.5px solid #C5A059' }}
+                  />
+                ) : (
+                  <div className="h-14 w-14 rounded-full flex items-center justify-center text-white font-bold text-[10px] p-2 text-center leading-none gold-border" style={{ border: '2.5px solid #C5A059', backgroundColor: '#0B2F64' }}>કરુણા મૈત્રી</div>
+                )}
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+                  <h2 style={{ color: '#0B2F64', fontSize: "17px", fontWeight: "900", margin: 0, lineHeight: "1.1" }}>{settings?.orgNameGujarati || "કરુણા-મૈત્રી ગ્રુપ"}</h2>
+                  <span style={{ color: '#C5A059', fontSize: "10.5px", fontWeight: "900", margin: 0 }}>📍 {settings?.location || "સુરેન્દ્રનગર"}</span>
+                </div>
+              </div>
+
+              {/* Members list */}
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", fontSize: "9.5px", fontWeight: "900", color: "#374151", lineHeight: "1.3" }}>
+                {displayMembers.slice(0, 3).map((m, idx) => (
+                  <p key={idx} style={{ margin: 0 }}>
+                    {m.name}: <span style={{ color: '#0B2F64', fontFamily: "monospace" }}>{m.phone}</span>
+                  </p>
+                ))}
+                {displayMembers.length === 0 && (
+                  <>
+                    <p style={{ margin: 0 }}>કેતલ વોરા: <span style={{ color: '#0B2F64', fontFamily: "monospace" }}>98242 55909</span></p>
+                    <p style={{ margin: 0 }}>મયુર શાહ: <span style={{ color: '#0B2F64', fontFamily: "monospace" }}>94290 99906</span></p>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* 2. Donor Details Box */}
+          <div 
+            className="text-center relative z-10" 
+            style={{ 
+              backgroundColor: 'rgba(255, 255, 255, 0.98)', 
+              color: '#111827',
+              padding: "8px 12px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "3px",
+              boxSizing: 'border-box'
+            }}
+          >
+            <p style={{ margin: 0, color: '#0B2F64', fontSize: "18px", fontWeight: "900" }}>
+              આજના <span style={{ textDecoration: "underline", textUnderlineOffset: "4px" }}>{activeSeva?.nameGujarati || "જીવદયા સેવા"}</span> ના દાતા શ્રી,
+            </p>
+            <h3 style={{ color: '#b91c1c', fontSize: "24px", fontWeight: "950", margin: "2px 0" }}>
+              {donorName || "દાતાશ્રી..."}
+            </h3>
+            
+            {occasionType !== "કોઈ પ્રસંગ નથી" && (
+              <p style={{ margin: 0, color: '#C5A059', fontSize: "16px", fontWeight: "900" }}>
+                🎉 {occasionType} નિમિત્તે
+              </p>
+            )}
+
+            {customMessage ? (
+              <p style={{ margin: 0, color: '#0B2F64', fontSize: "14px", fontWeight: "900", fontStyle: "italic" }}>
+                {customMessage}
+              </p>
+            ) : (
+              <p style={{ margin: 0, color: '#0B2F64', fontSize: "14px", fontWeight: "900", fontStyle: "italic" }}>
+                હસ્તે, {donorName || "દાતાશ્રી"} સહ પરિવાર
+              </p>
+            )}
+          </div>
+
+          {/* 3. Photos Side-by-Side (large Portrait donor image, covered Dogs Collage) */}
+          <div 
+            className="relative z-10" 
+            style={{ 
+              display: "flex", 
+              flexDirection: "row", 
+              gap: "12px", 
+              justifyContent: "space-between", 
+              width: "100%",
+              boxSizing: 'border-box'
+            }}
+          >
+            {/* Left: Donor Portrait Image */}
+            {showDonorPhoto && donorPhotoUrl && donorPhotoUrl.startsWith("data:") ? (
+              <div 
+                className="gold-border"
+                style={{ 
+                  width: "160px", 
+                  height: "190px", 
+                  borderRadius: "14px", 
+                  overflow: "hidden", 
+                  flexShrink: 0,
+                  padding: "2px",
+                  border: '2.5px solid #C5A059', 
+                  backgroundColor: '#ffffff',
+                  backgroundImage: `url(${donorPhotoUrl})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat"
+                }}
+              />
+            ) : (
+              <div 
+                className="gold-border"
+                style={{ 
+                  width: "160px", 
+                  height: "190px", 
+                  borderRadius: "14px", 
+                  overflow: "hidden", 
+                  flexShrink: 0, 
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center", 
+                  justifyContent: "center",
+                  border: '2.5px solid #C5A059', 
+                  backgroundColor: '#ffffff',
+                  color: '#D1D5DB'
+                }} 
+              >
+                <User className="h-10 w-10 mx-auto mb-1" style={{ color: '#D1D5DB' }} />
+                <p style={{ fontSize: "9px", fontWeight: "900", margin: 0, color: "#9CA3AF" }}>દાતાશ્રીનો ફોટો</p>
+              </div>
+            )}
+
+            {/* Right: Covered Dogs Collage */}
+            <div 
+              className="gold-border"
+              style={{ 
+                flex: 1,
+                height: "190px", 
+                borderRadius: "14px", 
+                overflow: "hidden", 
+                border: '2.5px solid #C5A059', 
+                backgroundColor: '#FAF9F6',
+                backgroundImage: bgBase64 ? `url(${bgBase64})` : "none",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat"
+              }}
+            >
+              {!bgBase64 && (
+                <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", color: "#9CA3AF" }}>
+                  જીવદયા પ્રવૃત્તિઓ
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* 4. Services list & Donation Details/QR Grid */}
+          <div 
+            className="relative z-10" 
+            style={{ 
+              display: "grid", 
+              gridTemplateColumns: "1.2fr 0.8fr", 
+              gap: "12px", 
+              alignItems: "stretch",
+              width: "100%",
+              boxSizing: 'border-box'
+            }}
+          >
+            
+            {/* Left: main services list */}
+            <div 
+              className="gold-border" 
+              style={{ 
+                backgroundColor: 'rgba(197, 160, 89, 0.04)', 
+                border: '1.5px solid rgba(197, 160, 89, 0.2)',
+                borderRadius: "14px",
+                padding: "10px 12px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "4px"
+              }}
+            >
+              <p style={{ color: '#0B2F64', fontSize: "11px", fontWeight: "900", borderBottom: "1.5px solid rgba(11, 47, 100, 0.15)", paddingBottom: "2px", margin: 0 }}>
+                🐾 કરુણા-મૈત્રી મુખ્ય જીવદયા કાર્યો :
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: "2px", fontSize: "10.5px", fontWeight: "900", color: "#374151" }}>
+                {sevaTypes.slice(0, 5).map((s, idx) => (
+                  <p key={idx} style={{ margin: 0 }}>
+                    <span style={{ color: '#b91c1c' }}>{idx + 1})</span> {s.nameGujarati}
+                  </p>
+                ))}
+              </div>
+            </div>
+
+            {/* Right: Donation Details and QR scanner */}
+            <div 
+              className="gold-border" 
+              style={{ 
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                border: '1.5px solid #C5A059',
+                borderRadius: "14px",
+                padding: "8px 12px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                alignItems: "center"
+              }}
+            >
+              <div style={{ textAlign: "center", width: "100%" }}>
+                <p style={{ margin: 0, fontSize: "10px", fontWeight: "900", color: "#6B7280" }}>દાન રકમ (Amount)</p>
+                <p style={{ margin: 0, fontSize: "18px", fontWeight: "950", color: "#0B2F64", fontFamily: "monospace" }}>
+                  ₹{amount ? Number(amount).toLocaleString("en-IN") : "0"}/-
+                </p>
+                <p style={{ margin: "2px 0 0 0", fontSize: "10px", fontWeight: "900", color: "#374151", fontFamily: "monospace" }}>
+                  તારીખ: {donationDate}
+                </p>
+              </div>
+
+              {/* QR code */}
+              {showQrOnCard && settings?.qrImageUrl && settings.qrImageUrl.startsWith("data:") ? (
+                <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "4px", borderTop: "1.5px solid #FAF9F6", paddingTop: "4.5px", marginTop: "4.5px", width: "100%", justifyContent: "center" }}>
+                  <img src={settings.qrImageUrl} alt="Custom QR" className="h-10 w-10 p-0.5 bg-white object-contain" />
+                  <span style={{ fontSize: "7px", fontWeight: "900", color: "#374151", lineHeight: "1.1", width: "45px" }}>UPI દાન સ્કેન કોડ</span>
+                </div>
+              ) : null}
+            </div>
+
+          </div>
+
+          {/* 5. Footer quotes and slogans */}
+          <div className="font-sans relative z-10 gray-border" style={{ display: "flex", flexDirection: "column", gap: "6px", borderTop: "1px solid #FAF9F6", paddingTop: "6px" }}>
+            <p style={{ color: "#0B2F64", fontSize: "11px", fontWeight: "900", fontStyle: "italic", textAlign: "center", margin: 0 }}>
+              “ભવિષ્યમાં આપના તરફથી આજ રીતે જીવદયાના પુનિત કાર્યમાં સાથ સહકાર મળતો રહે તેવી અપેક્ષા સહ...આભાર..”
+            </p>
+            
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "11px", fontWeight: "900", color: "#C5A059", padding: "0 12px" }}>
+              <span style={{ color: "#b91c1c" }}>અનુકંપા 🚩</span>
+              <span style={{ color: "#0B2F64" }}>"અમે તો માત્ર નિમિત્ત છીએ"</span>
+              <span style={{ color: "#b91c1c" }}>🚩 જય જિનેન્દ્ર • આભાર</span>
+            </div>
+
+            <div 
+              className="w-full text-center text-[9.5px] font-black tracking-wider gold-border" 
+              style={{ 
+                background: 'linear-gradient(to right, #051A3B, #0B2F64, #051A3B)', 
+                color: '#C5A059', 
+                border: '1px solid rgba(197, 160, 89, 0.2)',
+                padding: "5px",
+                borderRadius: "10px"
+              }}
+            >
+              ← કરુણા થી કૃત્ય સુધી, મૈત્રી થી માનવતા સુધી →
+            </div>
+          </div>
+
+        </div>
+      </div>
 
       {/* Generated image Modal Overlay for 100% reliable mobile long-press downloads */}
       {exportedImage && (
