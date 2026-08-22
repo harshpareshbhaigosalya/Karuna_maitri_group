@@ -119,7 +119,6 @@ export const DonationDetail: React.FC = () => {
 
   // Strips all oklch, oklab, shadows, and outline properties from cloned DOM before html2canvas converts it.
   const cleanCanvasOklch = (clonedDoc: Document) => {
-    // 1. Clean the HTML root element
     if (clonedDoc.documentElement) {
       clonedDoc.documentElement.style.borderColor = "transparent";
       clonedDoc.documentElement.style.color = "#111827";
@@ -128,7 +127,6 @@ export const DonationDetail: React.FC = () => {
       clonedDoc.documentElement.style.outlineColor = "transparent";
     }
 
-    // 2. Clean the Body root element
     if (clonedDoc.body) {
       clonedDoc.body.style.borderColor = "transparent";
       clonedDoc.body.style.color = "#111827";
@@ -137,10 +135,8 @@ export const DonationDetail: React.FC = () => {
       clonedDoc.body.style.outlineColor = "transparent";
     }
 
-    // 3. Clean every element inside the document
     const elements = clonedDoc.querySelectorAll("*");
     elements.forEach((el: any) => {
-      // Clear borders unless marked gold/blue/gray explicitly
       if (el.classList.contains("gold-border")) {
         el.style.borderColor = "#C5A059";
       } else if (el.classList.contains("blue-border")) {
@@ -154,7 +150,6 @@ export const DonationDetail: React.FC = () => {
       el.style.boxShadow = "none";
       el.style.textShadow = "none";
 
-      // Override computed text and background colors if they contain oklch
       const computed = window.getComputedStyle(el);
       if (computed.color && computed.color.includes("oklch")) {
         el.style.color = "#111827";
@@ -329,7 +324,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                 </div>
                 <div>
                   <p className="text-[10px] text-gray-455 font-bold uppercase">રકમ</p>
-                  <p className="font-extrabold text-royal-850 font-mono text-base">₹{donation.amount.toLocaleString("en-IN")}/-</p>
+                  <p className="font-extrabold text-royal-855 font-mono text-base font-sans">₹{donation.amount.toLocaleString("en-IN")}/-</p>
                 </div>
               </div>
 
@@ -396,7 +391,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                   border: "6px solid #C5A059",
                   backgroundImage: "linear-gradient(180deg, #FAF9F6 0%, #FFFDF9 100%)",
                   boxSizing: 'border-box',
-                  padding: "24px"
+                  padding: "20px"
                 }}
               >
                 {/* Cloned override stylesheet for sandbox styling inside html2canvas */}
@@ -436,218 +431,266 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
 
                 <div 
                   className="absolute pointer-events-none z-20 gold-border" 
-                  style={{ inset: "10px", border: "2px solid #C5A059", borderRadius: "12px" }} 
+                  style={{ inset: "8px", border: "2px solid #C5A059", borderRadius: "12px" }} 
                 />
 
-                {/* Corner Leafs */}
-                <div className="absolute w-2.5 h-2.5 z-30" style={{ top: "14px", left: "14px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
-                <div className="absolute w-2.5 h-2.5 z-30" style={{ top: "14px", right: "14px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
-                <div className="absolute w-2.5 h-2.5 z-30" style={{ bottom: "14px", left: "14px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
-                <div className="absolute w-2.5 h-2.5 z-30" style={{ bottom: "14px", right: "14px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
+                {/* Corner leafs */}
+                <div className="absolute w-2 h-2 z-30" style={{ top: "12px", left: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
+                <div className="absolute w-2 h-2 z-30" style={{ top: "12px", right: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
+                <div className="absolute w-2 h-2 z-30" style={{ bottom: "12px", left: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
+                <div className="absolute w-2 h-2 z-30" style={{ bottom: "12px", right: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
 
-                {/* Header containing Logo & Org Details */}
-                <div className="text-center relative z-10 flex flex-col items-center gap-2" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "6px" }}>
-                  
-                  {/* Big Logo */}
-                  <div className="relative shrink-0" style={{ display: "flex", justifyContent: "center" }}>
-                    {logoBase64 && logoBase64.startsWith("data:") ? (
-                      <img 
-                        src={logoBase64} 
-                        alt="Logo" 
-                        className="h-20 w-20 rounded-full object-contain bg-white relative z-10 gold-border" 
-                        style={{ border: '2.5px solid #C5A059', boxShadow: "0 2.5px 5px rgba(0,0,0,0.08)" }}
-                      />
-                    ) : (
-                      <div className="h-20 w-20 rounded-full flex items-center justify-center text-white font-bold text-[10px] p-2 text-center leading-none relative z-10 gold-border" style={{ border: '2.5px solid #C5A059', backgroundColor: '#0B2F64', boxShadow: "0 2.5px 5px rgba(0,0,0,0.08)" }}>કરુણા મૈત્રી</div>
-                    )}
+                {/* 1. Header (Compact reference design layout) */}
+                <div className="relative z-10" style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                  {/* Top Slogan Bar */}
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", padding: "0 10px" }}>
+                    <span style={{ color: "#b91c1c", fontSize: "13px", fontWeight: "900" }}>🚩 જીવદયા</span>
+                    <span style={{ color: "#0B2F64", fontSize: "18px", fontWeight: "900", letterSpacing: "1px" }}>અહિંસા પરમો ધર્મઃ</span>
+                    <span style={{ color: "#b91c1c", fontSize: "13px", fontWeight: "900" }}>કરુણા 🚩</span>
                   </div>
 
-                  <div 
-                    className="font-extrabold text-[15px] tracking-widest gold-border" 
-                    style={{ 
-                      color: '#0B2F64',
-                      padding: "2px 20px",
-                      display: "inline-block"
-                    }}
-                  >
-                    {settings?.defaultHeader || "જય જિનેન્દ્ર"}
-                  </div>
-
-                  <div className="text-center">
-                    <h2 className="font-black text-2xl tracking-wider leading-none" style={{ color: '#0B2F64', margin: 0 }}>{settings?.orgNameGujarati || "કરુણા-મૈત્રી ગ્રુપ"}</h2>
-                    <span className="text-[12px] font-black tracking-wider block mt-1 font-mono" style={{ color: '#C5A059' }}>📍 {settings?.location || "સુરેન્દ્રનગર"}</span>
-                  </div>
-                </div>
-
-                <div className="text-center z-10" style={{ margin: "-1px 0 3px 0" }}>
-                  <p style={{ color: "#C5A059", fontSize: "12px", fontWeight: "900", letterSpacing: "1.2px", margin: 0 }}>
-                    "અહિંસા પરમો ધર્મઃ" • "જીવદયા એ જ સાચી પ્રભુ સેવા"
-                  </p>
-                </div>
-
-                {/* 2. Donor Details Box (Redesigned with solid background, large texts and no amount box) */}
-                <div 
-                  className="text-sm relative z-10 gold-border" 
-                  style={{ 
-                    border: "2.5px solid #C5A059", 
-                    backgroundColor: 'rgba(255, 255, 255, 0.95)', 
-                    color: '#111827',
-                    borderRadius: "16px",
-                    padding: "16px",
-                    boxShadow: "0 5px 10px rgba(0,0,0,0.08)",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "12px",
-                    boxSizing: 'border-box'
-                  }}
-                >
-                  <div className="flex gap-4 items-start" style={{ display: "flex", flexDirection: "row" }}>
-                    <div className="flex-1 space-y-2 text-[14px] leading-tight font-bold min-w-0" style={{ color: '#374151', display: "flex", flexDirection: "column", gap: "6px" }}>
-                      <p style={{ whiteSpace: 'normal', wordBreak: 'break-word', margin: 0, fontSize: "15px" }}>👤 <strong>દાતાશ્રી:</strong> <span className="font-black" style={{ color: '#0B2F64', fontSize: "20px" }}>{donation.donorNameSnapshot}</span></p>
-                      {donation.phoneSnapshot && <p style={{ margin: 0 }}>📞 <strong>મોબાઈલ:</strong> <span className="font-mono text-royal-800" style={{ fontSize: "15px" }}>{donation.phoneSnapshot}</span></p>}
-                      <p style={{ whiteSpace: 'normal', wordBreak: 'break-word', margin: 0 }}>💙 <strong>સેવા પ્રકાર:</strong> <span className="font-extrabold text-royal-800" style={{ fontSize: "16px" }}>{donation.sevaNameSnapshot}</span></p>
-                      
-                      {/* Highlights details amount as raw text with no border boxes */}
-                      <p style={{ margin: 0, fontSize: "18px" }}>
-                        💰 <strong>દાન રકમ:</strong> <span className="font-black font-mono text-royal-800" style={{ color: '#0B2F64', fontSize: "20px" }}>₹{donation.amount.toLocaleString("en-IN")}/-</span>
-                      </p>
-                      
-                      <p style={{ margin: 0 }}>📅 <strong>તારીખ:</strong> <span className="font-mono text-royal-800" style={{ fontSize: "15px" }}>{donation.donationDate}</span></p>
-                      {donation.occasionType && donation.occasionType !== "કોઈ પ્રસંગ નથી" && <p style={{ whiteSpace: 'normal', wordBreak: 'break-word', color: '#C5A059', margin: 0, fontSize: "15px" }}>🌟 <strong>શુભ પ્રસંગ:</strong> <span>{donation.occasionType} {donation.occasionDate ? `(${donation.occasionDate})` : ""}</span></p>}
-                    </div>
-
-                    {/* Donor photo fitted contain without stretching */}
-                    {donorPhotoBase64 && donorPhotoBase64.startsWith("data:") ? (
-                      <div 
-                        className="gold-border"
-                        style={{ 
-                          width: "90px", 
-                          height: "110px", 
-                          borderRadius: "10px", 
-                          overflow: "hidden", 
-                          flexShrink: 0,
-                          padding: "2px",
-                          border: '1.5px solid #C5A059', 
-                          backgroundColor: '#ffffff',
-                          backgroundImage: `url(${donorPhotoBase64})`,
-                          backgroundSize: "contain",
-                          backgroundPosition: "center",
-                          backgroundRepeat: "no-repeat"
-                        }}
-                      />
-                    ) : (
-                      <div 
-                        className="gold-border"
-                        style={{ 
-                          width: "90px", 
-                          height: "110px", 
-                          borderRadius: "10px", 
-                          overflow: "hidden", 
-                          flexShrink: 0, 
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center", 
-                          justifyContent: "center",
-                          border: '1.5px solid #C5A059', 
-                          backgroundColor: '#ffffff',
-                          color: '#D1D5DB'
-                        }} 
-                      >
-                        <User className="h-8 w-8 mx-auto mb-0.5" style={{ color: '#D1D5DB' }} />
-                        <p style={{ fontSize: "8px", fontWeight: "900", margin: 0 }}>દાતા ફોટો</p>
+                  {/* Logo & Org left, Contacts right */}
+                  <div className="blue-border" style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid #0B2F64", borderBottom: "1px solid #0B2F64", padding: "6px 10px", marginTop: "2px" }}>
+                    <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px" }}>
+                      {logoBase64 && logoBase64.startsWith("data:") ? (
+                        <img 
+                          src={logoBase64} 
+                          alt="Logo" 
+                          className="h-14 w-14 rounded-full object-contain bg-white gold-border" 
+                          style={{ border: '2px solid #C5A059' }}
+                        />
+                      ) : (
+                        <div className="h-14 w-14 rounded-full flex items-center justify-center text-white font-bold text-[10px] p-2 text-center leading-none gold-border" style={{ border: '2px solid #C5A059', backgroundColor: '#0B2F64' }}>કરુણા મૈત્રી</div>
+                      )}
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+                        <h2 style={{ color: '#0B2F64', fontSize: "17px", fontWeight: "900", margin: 0, lineHeight: "1.1" }}>{settings?.orgNameGujarati || "કરુણા-મૈત્રી ગ્રુપ"}</h2>
+                        <span style={{ color: '#C5A059', fontSize: "10.5px", fontWeight: "900", margin: 0 }}>📍 {settings?.location || "સુરેન્દ્રનગર"}</span>
                       </div>
-                    )}
-                  </div>
-                  <div className="text-center border-t pt-1.5 gray-border" style={{ borderColor: '#FAF9F6' }}>
-                    <p className="text-[12px] leading-relaxed font-black italic" style={{ color: '#0B2F64', margin: 0 }}>"{donation.customMessage || activeSeva?.defaultMessage || "અબોલ પશુ-પક્ષીઓ માટે આપના ઉદાર સહયોગ બદલ ખૂબ ખૂબ આભાર."}"</p>
-                  </div>
-                </div>
-
-                <div 
-                  className="text-center gold-border" 
-                  style={{ 
-                    backgroundColor: 'rgba(197, 160, 89, 0.05)', 
-                    border: '1px solid rgba(197, 160, 89, 0.15)',
-                    borderRadius: "12px",
-                    padding: "12px",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "6px",
-                    zIndex: 10
-                  }}
-                >
-                  <p className="text-[11px] font-black tracking-wider uppercase pb-0.5 inline-block gold-border" style={{ color: '#0B2F64', borderBottom: '1px solid rgba(197, 160, 89, 0.1)', alignSelf: "center", margin: 0 }}>અમારી મુખ્ય સેવાઓ</p>
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[10.5px] font-bold text-left pl-2" style={{ color: '#4B5563', display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-                    {otherActiveSevas.map((s, idx) => (
-                      <p key={idx} style={{ margin: 0, whiteSpace: "normal" }}><span className="font-black mr-1" style={{ color: '#C5A059' }}>{idx + 1}.</span> {s.nameGujarati}</p>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Collage image cover without stretching */}
-                <div 
-                  className="gold-border"
-                  style={{ 
-                    borderRadius: "12px",
-                    overflow: "hidden",
-                    height: "112px",
-                    width: "100%",
-                    position: "relative",
-                    zIndex: 10,
-                    border: '1px solid rgba(197, 160, 89, 0.2)', 
-                    backgroundColor: '#FAF9F6',
-                    backgroundImage: bgBase64 ? `url(${bgBase64})` : "none",
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat"
-                  }}
-                >
-                  {!bgBase64 && (
-                    <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", color: "#9CA3AF" }}>
-                      જીવદયા પ્રવૃત્તિઓ
                     </div>
-                  )}
-                </div>
 
-                {/* Motivational Quote at bottom */}
-                <div className="text-center z-10" style={{ margin: "-2px 0 -4px 0" }}>
-                  <p style={{ color: "#0B2F64", fontSize: "11px", fontWeight: "900", fontStyle: "italic", margin: 0 }}>
-                    “જીવદયા એ જ પરમ ધર્મ છે. આપના ઉદાર સહયોગ બદલ આપનો ખૂબ ખૂબ આભાર.”
-                  </p>
-                </div>
-
-                <div className="font-sans relative z-10 gray-border" style={{ display: "flex", flexDirection: "column", gap: "8px", borderTop: "1px solid #FAF9F6", paddingTop: "8px" }}>
-                  <div className="grid grid-cols-12 gap-2 items-center" style={{ display: "grid", gridTemplateColumns: "repeat(12, 1fr)" }}>
-                    <div className="col-span-8 text-left space-y-1 text-[10px] font-bold leading-tight" style={{ color: '#374151', gridColumn: "span 8" }}>
-                      <p className="font-black pb-0.5 mb-0.5 gray-border" style={{ color: '#0B2F64', borderBottom: '1px solid #FAF9F6', margin: 0, fontSize: "11.5px" }}>📞 દાન અથવા પૂછપરછ માટે સંપર્ક કરો :</p>
+                    {/* Members list */}
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", fontSize: "9.5px", fontWeight: "900", color: "#374151", lineHeight: "1.3" }}>
                       {displayMembers.slice(0, 3).map((m, idx) => (
-                        <p key={idx} style={{ margin: 0 }}>{m.name}: <span className="font-mono font-extrabold text-royal-800" style={{ fontSize: "12px" }}>{m.phone}</span></p>
+                        <p key={idx} style={{ margin: 0 }}>{m.name}: <span style={{ color: '#0B2F64', fontFamily: "monospace" }}>{m.phone}</span></p>
                       ))}
                       {displayMembers.length === 0 && (
                         <>
-                          <p style={{ margin: 0 }}>કેતલ વોરા: <span className="font-mono font-extrabold text-royal-800" style={{ fontSize: "12px" }}>98242 55909</span></p>
-                          <p style={{ margin: 0 }}>મયુર શાહ: <span className="font-mono font-extrabold text-royal-800" style={{ fontSize: "12px" }}>94290 99906</span></p>
+                          <p style={{ margin: 0 }}>કેતલ વોરા: <span style={{ color: '#0B2F64', fontFamily: "monospace" }}>98242 55909</span></p>
+                          <p style={{ margin: 0 }}>મયુર શાહ: <span style={{ color: '#0B2F64', fontFamily: "monospace" }}>94290 99906</span></p>
                         </>
                       )}
                     </div>
-                    <div className="col-span-4 flex flex-col items-center justify-end text-center space-y-0.5" style={{ gridColumn: "span 4", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end" }}>
-                      <p className="text-[8px] font-black leading-none" style={{ color: '#0B2F64', margin: "0 0 2px 0" }}>દાન માટે સ્કેન કરો</p>
-                      {settings?.showQR && settings?.qrImageUrl && settings.qrImageUrl.startsWith("data:") ? (
-                        <img src={settings.qrImageUrl} alt="Custom QR" className="h-14 w-14 p-0.5 bg-white object-contain gold-border" style={{ border: '1px solid #C5A059', borderRadius: "4px" }} />
-                      ) : (
-                        <div className="h-14 w-14 bg-white flex items-center justify-center text-[8px] font-bold font-sans gray-border" style={{ border: '1px dashed #FAF9F6', color: '#9CA3AF', borderRadius: "4px" }}>QR કોડ</div>
-                      )}
+                  </div>
+                </div>
+
+                {/* 2. Donor Details Box */}
+                <div 
+                  className="text-center relative z-10" 
+                  style={{ 
+                    backgroundColor: 'rgba(255, 255, 255, 0.98)', 
+                    color: '#111827',
+                    padding: "8px 12px",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "3px",
+                    boxSizing: 'border-box'
+                  }}
+                >
+                  <p style={{ margin: 0, color: '#0B2F64', fontSize: "18px", fontWeight: "900" }}>
+                    આજના <span style={{ textDecoration: "underline", textUnderlineOffset: "4px" }}>{activeSeva?.nameGujarati || donation.sevaNameSnapshot}</span> ના દાતા શ્રી,
+                  </p>
+                  <h3 style={{ color: '#b91c1c', fontSize: "24px", fontWeight: "950", margin: "2px 0" }}>
+                    {donation.donorNameSnapshot}
+                  </h3>
+                  
+                  {donation.occasionType && donation.occasionType !== "કોઈ પ્રસંગ નથી" && (
+                    <p style={{ margin: 0, color: '#C5A059', fontSize: "16px", fontWeight: "900" }}>
+                      🎉 {donation.occasionType} {donation.occasionDate ? `(${donation.occasionDate})` : ""} નિમિત્તે
+                    </p>
+                  )}
+
+                  {donation.customMessage ? (
+                    <p style={{ margin: 0, color: '#0B2F64', fontSize: "14px", fontWeight: "900", fontStyle: "italic" }}>
+                      {donation.customMessage}
+                    </p>
+                  ) : (
+                    <p style={{ margin: 0, color: '#0B2F64', fontSize: "14px", fontWeight: "900", fontStyle: "italic" }}>
+                      હસ્તે, {donation.donorNameSnapshot} સહ પરિવાર
+                    </p>
+                  )}
+                </div>
+
+                {/* 3. Photos Side-by-Side (large Portrait donor image, covered Dogs Collage) */}
+                <div 
+                  className="relative z-10" 
+                  style={{ 
+                    display: "flex", 
+                    flexDirection: "row", 
+                    gap: "12px", 
+                    justifyContent: "space-between", 
+                    width: "100%",
+                    boxSizing: 'border-box'
+                  }}
+                >
+                  {/* Left: Donor Portrait Image */}
+                  {donorPhotoBase64 && donorPhotoBase64.startsWith("data:") ? (
+                    <div 
+                      className="gold-border"
+                      style={{ 
+                        width: "160px", 
+                        height: "190px", 
+                        borderRadius: "14px", 
+                        overflow: "hidden", 
+                        flexShrink: 0,
+                        padding: "2px",
+                        border: '2.5px solid #C5A059', 
+                        backgroundColor: '#ffffff',
+                        backgroundImage: `url(${donorPhotoBase64})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        backgroundRepeat: "no-repeat"
+                      }}
+                    />
+                  ) : (
+                    <div 
+                      className="gold-border"
+                      style={{ 
+                        width: "160px", 
+                        height: "190px", 
+                        borderRadius: "14px", 
+                        overflow: "hidden", 
+                        flexShrink: 0, 
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center", 
+                        justifyContent: "center",
+                        border: '2.5px solid #C5A059', 
+                        backgroundColor: '#ffffff',
+                        color: '#D1D5DB'
+                      }} 
+                    >
+                      <User className="h-10 w-10 mx-auto mb-1" style={{ color: '#D1D5DB' }} />
+                      <p style={{ fontSize: "9px", fontWeight: "900", margin: 0, color: "#9CA3AF" }}>દાતાશ્રીનો ફોટો</p>
+                    </div>
+                  )}
+
+                  {/* Right: Covered Dogs Collage */}
+                  <div 
+                    className="gold-border"
+                    style={{ 
+                      flex: 1,
+                      height: "190px", 
+                      borderRadius: "14px", 
+                      overflow: "hidden", 
+                      border: '2.5px solid #C5A059', 
+                      backgroundColor: '#FAF9F6',
+                      backgroundImage: bgBase64 ? `url(${bgBase64})` : "none",
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      backgroundRepeat: "no-repeat"
+                    }}
+                  >
+                    {!bgBase64 && (
+                      <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", color: "#9CA3AF" }}>
+                        જીવદયા પ્રવૃત્તિઓ
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* 4. Services list & Donation Details/QR Grid */}
+                <div 
+                  className="relative z-10" 
+                  style={{ 
+                    display: "grid", 
+                    gridTemplateColumns: "1.2fr 0.8fr", 
+                    gap: "12px", 
+                    alignItems: "stretch",
+                    width: "100%",
+                    boxSizing: 'border-box'
+                  }}
+                >
+                  
+                  {/* Left: main services list */}
+                  <div 
+                    className="gold-border" 
+                    style={{ 
+                      backgroundColor: 'rgba(197, 160, 89, 0.04)', 
+                      border: '1.5px solid rgba(197, 160, 89, 0.2)',
+                      borderRadius: "14px",
+                      padding: "10px 12px",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "4px"
+                    }}
+                  >
+                    <p style={{ color: '#0B2F64', fontSize: "11px", fontWeight: "900", borderBottom: "1.5px solid rgba(11, 47, 100, 0.15)", paddingBottom: "2px", margin: 0 }}>
+                      🐾 કરુણા-મૈત્રી મુખ્ય જીવદયા કાર્યો :
+                    </p>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "2px", fontSize: "10.5px", fontWeight: "900", color: "#374151" }}>
+                      {sevaList.slice(0, 5).map((s, idx) => (
+                        <p key={idx} style={{ margin: 0 }}>
+                          <span style={{ color: '#b91c1c' }}>{idx + 1})</span> {s.nameGujarati}
+                        </p>
+                      ))}
                     </div>
                   </div>
+
+                  {/* Right: Donation Details and QR scanner */}
+                  <div 
+                    className="gold-border" 
+                    style={{ 
+                      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                      border: '1.5px solid #C5A059',
+                      borderRadius: "14px",
+                      padding: "8px 12px",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                      alignItems: "center"
+                    }}
+                  >
+                    <div style={{ textAlign: "center", width: "100%" }}>
+                      <p style={{ margin: 0, fontSize: "10px", fontWeight: "900", color: "#6B7280" }}>દાન રકમ (Amount)</p>
+                      <p style={{ margin: 0, fontSize: "18px", fontWeight: "950", color: "#0B2F64", fontFamily: "monospace" }}>
+                        ₹{donation.amount.toLocaleString("en-IN")}/-
+                      </p>
+                      <p style={{ margin: "2px 0 0 0", fontSize: "10px", fontWeight: "900", color: "#374151", fontFamily: "monospace" }}>
+                        તારીખ: {donation.donationDate}
+                      </p>
+                    </div>
+
+                    {/* QR code */}
+                    {settings?.showQR && settings?.qrImageUrl && settings.qrImageUrl.startsWith("data:") ? (
+                      <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "4px", borderTop: "1.5px solid #FAF9F6", paddingTop: "4.5px", marginTop: "4.5px", width: "100%", justifyContent: "center" }}>
+                        <img src={settings.qrImageUrl} alt="Custom QR" className="h-10 w-10 p-0.5 bg-white object-contain" />
+                        <span style={{ fontSize: "7px", fontWeight: "900", color: "#374151", lineHeight: "1.1", width: "45px" }}>UPI દાન સ્કેન કોડ</span>
+                      </div>
+                    ) : null}
+                  </div>
+
+                </div>
+
+                {/* 5. Footer quotes and slogans */}
+                <div className="font-sans relative z-10 gray-border" style={{ display: "flex", flexDirection: "column", gap: "6px", borderTop: "1px solid #FAF9F6", paddingTop: "6px" }}>
+                  <p style={{ color: "#0B2F64", fontSize: "11px", fontWeight: "900", fontStyle: "italic", textAlign: "center", margin: 0 }}>
+                    “ભવિષ્યમાં આપના તરફથી આજ રીતે જીવદયાના પુનિત કાર્યમાં સાથ સહકાર મળતો રહે તેવી અપેક્ષા સહ...આભાર..”
+                  </p>
+                  
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "11px", fontWeight: "900", color: "#C5A059", padding: "0 12px" }}>
+                    <span style={{ color: "#b91c1c" }}>અનુકંપા 🚩</span>
+                    <span style={{ color: "#0B2F64" }}>"અમે તો માત્ર નિમિત્ત છીએ"</span>
+                    <span style={{ color: "#b91c1c" }}>🚩 જય જિનેન્દ્ર • આભાર</span>
+                  </div>
+
                   <div 
                     className="w-full text-center text-[9.5px] font-black tracking-wider gold-border" 
                     style={{ 
                       background: 'linear-gradient(to right, #051A3B, #0B2F64, #051A3B)', 
                       color: '#C5A059', 
                       border: '1px solid rgba(197, 160, 89, 0.2)',
-                      padding: "6px",
-                      borderRadius: "12px",
-                      boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
+                      padding: "5px",
+                      borderRadius: "10px"
                     }}
                   >
                     ← કરુણા થી કૃત્ય સુધી, મૈત્રી થી માનવતા સુધી →
@@ -685,7 +728,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
             border: "6px solid #C5A059", // Solid Gold border
             background: "linear-gradient(180deg, #FAF9F6 0%, #FFFDF9 100%)",
             boxSizing: 'border-box',
-            padding: "24px"
+            padding: "20px"
           }}
         >
           {/* Cloned override stylesheet for sandbox styling inside html2canvas */}
@@ -726,225 +769,256 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
           {/* Inner gold border */}
           <div 
             className="absolute pointer-events-none z-20 gold-border" 
-            style={{ inset: "10px", border: "2px solid #C5A059", borderRadius: "12px" }} 
+            style={{ inset: "8px", border: "2px solid #C5A059", borderRadius: "12px" }} 
           />
 
-          {/* Corner Leafs */}
-          <div className="absolute w-2.5 h-2.5 z-30" style={{ top: "14px", left: "14px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
-          <div className="absolute w-2.5 h-2.5 z-30" style={{ top: "14px", right: "14px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
-          <div className="absolute w-2.5 h-2.5 z-30" style={{ bottom: "14px", left: "14px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
-          <div className="absolute w-2.5 h-2.5 z-30" style={{ bottom: "14px", right: "14px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
+          {/* Corner leafs */}
+          <div className="absolute w-2.5 h-2.5 z-30" style={{ top: "12px", left: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
+          <div className="absolute w-2.5 h-2.5 z-30" style={{ top: "12px", right: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
+          <div className="absolute w-2.5 h-2.5 z-30" style={{ bottom: "12px", left: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
+          <div className="absolute w-2.5 h-2.5 z-30" style={{ bottom: "12px", right: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
 
-          {/* 1. Header Column */}
-          <div className="text-center relative z-10" style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            <div className="relative shrink-0" style={{ display: "flex", justifyContent: "center" }}>
-              {logoBase64 && logoBase64.startsWith("data:") ? (
-                <img 
-                  src={logoBase64} 
-                  alt="Logo" 
-                  className="h-20 w-20 rounded-full object-contain bg-white relative z-10 gold-border" 
-                  style={{ border: '2.5px solid #C5A059', boxShadow: "0 3px 6px rgba(0,0,0,0.1)" }}
-                />
-              ) : (
-                <div className="h-20 w-20 rounded-full flex items-center justify-center text-white font-bold text-[10px] p-2 text-center leading-none relative z-10 gold-border" style={{ border: '2.5px solid #C5A059', backgroundColor: '#0B2F64', boxShadow: "0 3px 6px rgba(0,0,0,0.1)" }}>કરુણા મૈત્રી</div>
-              )}
+          {/* 1. Header (Compact reference design layout) */}
+          <div className="relative z-10" style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+            {/* Top Slogan Bar */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", padding: "0 10px" }}>
+              <span style={{ color: "#b91c1c", fontSize: "13px", fontWeight: "900" }}>🚩 જીવદયા</span>
+              <span style={{ color: "#0B2F64", fontSize: "18px", fontWeight: "900", letterSpacing: "1px" }}>અહિંસા પરમો ધર્મઃ</span>
+              <span style={{ color: "#b91c1c", fontSize: "13px", fontWeight: "900" }}>કરુણા 🚩</span>
             </div>
 
-            <div 
-              className="font-extrabold text-[15px] tracking-widest gold-border" 
-              style={{ 
-                color: '#0B2F64',
-                padding: "2px 20px",
-                display: "inline-block"
-              }}
-            >
-              {settings?.defaultHeader || "જય જિનેન્દ્ર"}
-            </div>
-            
-            <div className="text-center">
-              <h2 className="font-black text-2xl tracking-wider leading-none" style={{ color: '#0B2F64', margin: 0 }}>
-                {settings?.orgNameGujarati || "કરુણા-મૈત્રી ગ્રુપ"}
-              </h2>
-              <span className="text-[12px] font-black tracking-wider block mt-1 font-mono" style={{ color: '#C5A059' }}>
-                📍 {settings?.location || "સુરેન્દ્રનગર"}
-              </span>
-            </div>
-          </div>
+            {/* Logo & Org left, Contacts right */}
+            <div className="blue-border" style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid #0B2F64", borderBottom: "1px solid #0B2F64", padding: "6px 10px", marginTop: "2px" }}>
+              <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px" }}>
+                {logoBase64 && logoBase64.startsWith("data:") ? (
+                  <img 
+                    src={logoBase64} 
+                    alt="Logo" 
+                    className="h-14 w-14 rounded-full object-contain bg-white gold-border" 
+                    style={{ border: '2.5px solid #C5A059' }}
+                  />
+                ) : (
+                  <div className="h-14 w-14 rounded-full flex items-center justify-center text-white font-bold text-[10px] p-2 text-center leading-none gold-border" style={{ border: '2.5px solid #C5A059', backgroundColor: '#0B2F64' }}>કરુણા મૈત્રી</div>
+                )}
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+                  <h2 style={{ color: '#0B2F64', fontSize: "17px", fontWeight: "900", margin: 0, lineHeight: "1.1" }}>{settings?.orgNameGujarati || "કરુણા-મૈત્રી ગ્રુપ"}</h2>
+                  <span style={{ color: '#C5A059', fontSize: "10.5px", fontWeight: "900", margin: 0 }}>📍 {settings?.location || "સુરેન્દ્રનગર"}</span>
+                </div>
+              </div>
 
-          <div className="text-center z-10" style={{ margin: "2px 0 2px 0" }}>
-            <p style={{ color: "#C5A059", fontSize: "12px", fontWeight: "900", letterSpacing: "1.2px", margin: 0 }}>
-              "અહિંસા પરમો ધર્મઃ" • "જીવદયા એ જ સાચી પ્રભુ સેવા"
-            </p>
+              {/* Members list */}
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", fontSize: "9.5px", fontWeight: "900", color: "#374151", lineHeight: "1.3" }}>
+                {displayMembers.slice(0, 3).map((m, idx) => (
+                  <p key={idx} style={{ margin: 0 }}>{m.name}: <span style={{ color: '#0B2F64', fontFamily: "monospace" }}>{m.phone}</span></p>
+                ))}
+                {displayMembers.length === 0 && (
+                  <>
+                    <p style={{ margin: 0 }}>કેતલ વોરા: <span style={{ color: '#0B2F64', fontFamily: "monospace" }}>98242 55909</span></p>
+                    <p style={{ margin: 0 }}>મયુર શાહ: <span style={{ color: '#0B2F64', fontFamily: "monospace" }}>94290 99906</span></p>
+                  </>
+                )}
+              </div>
+            </div>
           </div>
 
           {/* 2. Donor Details Box */}
           <div 
-            className="text-sm relative z-10 gold-border"
+            className="text-center relative z-10" 
             style={{ 
-              border: "2.5px solid #C5A059", 
               backgroundColor: 'rgba(255, 255, 255, 0.98)', 
               color: '#111827',
-              borderRadius: "16px",
-              padding: "16px",
+              padding: "8px 12px",
               display: "flex",
               flexDirection: "column",
-              gap: "12px",
+              gap: "3px",
               boxSizing: 'border-box'
             }}
           >
-            <div className="flex gap-4 items-start" style={{ display: "flex", flexDirection: "row" }}>
-              {/* Left: Fields list (no wrap so names wrap naturally) */}
-              <div className="flex-1 space-y-2 text-[14px] leading-tight font-bold min-w-0" style={{ color: '#374151', display: "flex", flexDirection: "column", gap: "6px" }}>
-                <p style={{ whiteSpace: 'normal', wordBreak: 'break-word', margin: 0, fontSize: "15px" }}>👤 <strong>દાતાશ્રી:</strong> <span className="font-black" style={{ color: '#0B2F64', fontSize: "20px" }}>{donation.donorNameSnapshot}</span></p>
-                {donation.phoneSnapshot && (
-                  <p style={{ margin: 0 }}>📞 <strong>મોબાઈલ:</strong> <span className="font-mono text-royal-800" style={{ fontSize: "15px" }}>{donation.phoneSnapshot}</span></p>
-                )}
-                <p style={{ whiteSpace: 'normal', wordBreak: 'break-word', margin: 0 }}>💙 <strong>સેવા પ્રકાર:</strong> <span className="font-extrabold text-royal-800" style={{ color: '#0B2F64', fontSize: "16px" }}>{donation.sevaNameSnapshot}</span></p>
-                
-                {/* Highlights details amount as raw text with no border boxes */}
-                <p style={{ margin: 0, fontSize: "18px" }}>
-                  💰 <strong>દાન રકમ:</strong> <span className="font-black font-mono text-royal-800" style={{ color: '#0B2F64', fontSize: "20px" }}>₹{donation.amount.toLocaleString("en-IN")}/-</span>
-                </p>
-
-                <p style={{ margin: 0 }}>📅 <strong>તારીખ:</strong> <span className="font-mono text-royal-800" style={{ color: '#0B2F64', fontSize: "15px" }}>{donation.donationDate}</span></p>
-                {donation.occasionType && donation.occasionType !== "કોઈ પ્રસંગ નથી" && (
-                  <p style={{ whiteSpace: 'normal', wordBreak: 'break-word', color: '#C5A059', margin: 0, fontSize: "15px" }}>🌟 <strong>શુભ પ્રસંગ:</strong> <span>{donation.occasionType} {donation.occasionDate ? `(${donation.occasionDate})` : ""}</span></p>
-                )}
-              </div>
-
-              {/* Right: Donor face photo */}
-              {donorPhotoBase64 && donorPhotoBase64.startsWith("data:") ? (
-                <div 
-                  className="gold-border"
-                  style={{ 
-                    width: "90px", 
-                    height: "110px", 
-                    borderRadius: "10px", 
-                    overflow: "hidden", 
-                    flexShrink: 0,
-                    padding: "2px",
-                    border: '1.5px solid #C5A059', 
-                    backgroundColor: '#ffffff',
-                    backgroundImage: `url(${donorPhotoBase64})`,
-                    backgroundSize: "contain",
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat"
-                  }}
-                />
-              ) : (
-                <div 
-                  className="gold-border"
-                  style={{ 
-                    width: "90px", 
-                    height: "110px", 
-                    borderRadius: "10px", 
-                    overflow: "hidden", 
-                    flexShrink: 0, 
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center", 
-                    justifyContent: "center",
-                    border: '1.5px solid #C5A059', 
-                    backgroundColor: '#ffffff',
-                    color: '#D1D5DB'
-                  }} 
-                >
-                  <User className="h-8 w-8 mx-auto mb-0.5" style={{ color: '#D1D5DB' }} />
-                  <p style={{ fontSize: "8px", fontWeight: "900", margin: 0 }}>દાતા ફોટો</p>
-                </div>
-              )}
-            </div>
-
-            <div className="text-center border-t pt-1.5 gray-border" style={{ borderColor: '#FAF9F6' }}>
-              <p className="text-[12px] leading-relaxed font-black italic" style={{ color: '#0B2F64', margin: 0 }}>
-                "{donation.customMessage || activeSeva?.defaultMessage || "અબોલ પશુ-પક્ષીઓ માટે આપના ઉદાર સહયોગ બદલ ખૂબ ખૂબ આભાર."}"
-              </p>
-            </div>
-          </div>
-
-          {/* 3. Seva types list */}
-          <div 
-            className="text-center relative z-10 gold-border" 
-            style={{ 
-              backgroundColor: 'rgba(197, 160, 89, 0.05)', 
-              border: '1px solid rgba(197, 160, 89, 0.15)',
-              borderRadius: "12px",
-              padding: "12px",
-              display: "flex",
-              flexDirection: "column",
-              gap: "6px"
-            }}
-          >
-            <p className="text-[11px] font-black tracking-wider uppercase pb-0.5 inline-block gold-border" style={{ color: '#0B2F64', borderBottom: '1px solid rgba(197, 160, 89, 0.1)', alignSelf: "center", margin: 0 }}>
-              અમારી મુખ્ય સેવાઓ
+            <p style={{ margin: 0, color: '#0B2F64', fontSize: "18px", fontWeight: "900" }}>
+              આજના <span style={{ textDecoration: "underline", textUnderlineOffset: "4px" }}>{activeSeva?.nameGujarati || donation.sevaNameSnapshot}</span> ના દાતા શ્રી,
             </p>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[10.5px] font-bold text-left pl-2" style={{ color: '#4B5563', display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-              {otherActiveSevas.map((s, idx) => (
-                <p key={idx} style={{ margin: 0, whiteSpace: "normal" }}>
-                  <span className="font-black mr-1" style={{ color: '#C5A059' }}>{idx + 1}.</span> {s.nameGujarati}
-                </p>
-              ))}
-            </div>
-          </div>
+            <h3 style={{ color: '#b91c1c', fontSize: "24px", fontWeight: "950", margin: "2px 0" }}>
+              {donation.donorNameSnapshot}
+            </h3>
+            
+            {donation.occasionType && donation.occasionType !== "કોઈ પ્રસંગ નથી" && (
+              <p style={{ margin: 0, color: '#C5A059', fontSize: "16px", fontWeight: "900" }}>
+                🎉 {donation.occasionType} {donation.occasionDate ? `(${donation.occasionDate})` : ""} નિમિત્તે
+              </p>
+            )}
 
-          {/* 4. Collage image (Rendered as Background Image CSS to avoid stretching in html2canvas) */}
-          <div 
-            className="gold-border"
-            style={{ 
-              borderRadius: "12px",
-              overflow: "hidden",
-              height: "112px",
-              width: "100%",
-              position: "relative",
-              zIndex: 10,
-              border: '1px solid rgba(197, 160, 89, 0.2)', 
-              backgroundColor: '#FAF9F6',
-              backgroundImage: bgBase64 ? `url(${bgBase64})` : "none",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat"
-            }}
-          >
-            {!bgBase64 && (
-              <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", color: "#9CA3AF" }}>
-                જીવદયા પ્રવૃત્તિઓ
-              </div>
+            {donation.customMessage ? (
+              <p style={{ margin: 0, color: '#0B2F64', fontSize: "14px", fontWeight: "900", fontStyle: "italic" }}>
+                {donation.customMessage}
+              </p>
+            ) : (
+              <p style={{ margin: 0, color: '#0B2F64', fontSize: "14px", fontWeight: "900", fontStyle: "italic" }}>
+                હસ્તે, {donation.donorNameSnapshot} સહ પરિવાર
+              </p>
             )}
           </div>
 
-          {/* Motivational Quote at bottom */}
-          <div className="text-center z-10" style={{ margin: "-2px 0 -4px 0" }}>
-            <p style={{ color: "#0B2F64", fontSize: "11px", fontWeight: "900", fontStyle: "italic", margin: 0 }}>
-              “જીવદયા એ જ પરમ ધર્મ છે. આપના ઉદાર સહયોગ બદલ આપનો ખૂબ ખૂબ આભાર.”
-            </p>
+          {/* 3. Photos Side-by-Side (large Portrait donor image, covered Dogs Collage) */}
+          <div 
+            className="relative z-10" 
+            style={{ 
+              display: "flex", 
+              flexDirection: "row", 
+              gap: "12px", 
+              justifyContent: "space-between", 
+              width: "100%",
+              boxSizing: 'border-box'
+            }}
+          >
+            {/* Left: Donor Portrait Image */}
+            {donorPhotoBase64 && donorPhotoBase64.startsWith("data:") ? (
+              <div 
+                className="gold-border"
+                style={{ 
+                  width: "160px", 
+                  height: "190px", 
+                  borderRadius: "14px", 
+                  overflow: "hidden", 
+                  flexShrink: 0,
+                  padding: "2px",
+                  border: '2.5px solid #C5A059', 
+                  backgroundColor: '#ffffff',
+                  backgroundImage: `url(${donorPhotoBase64})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat"
+                }}
+              />
+            ) : (
+              <div 
+                className="gold-border"
+                style={{ 
+                  width: "160px", 
+                  height: "190px", 
+                  borderRadius: "14px", 
+                  overflow: "hidden", 
+                  flexShrink: 0, 
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center", 
+                  justifyContent: "center",
+                  border: '2.5px solid #C5A059', 
+                  backgroundColor: '#ffffff',
+                  color: '#D1D5DB'
+                }} 
+              >
+                <User className="h-10 w-10 mx-auto mb-1" style={{ color: '#D1D5DB' }} />
+                <p style={{ fontSize: "9px", fontWeight: "900", margin: 0, color: "#9CA3AF" }}>દાતાશ્રીનો ફોટો</p>
+              </div>
+            )}
+
+            {/* Right: Covered Dogs Collage */}
+            <div 
+              className="gold-border"
+              style={{ 
+                flex: 1,
+                height: "190px", 
+                borderRadius: "14px", 
+                overflow: "hidden", 
+                border: '2.5px solid #C5A059', 
+                backgroundColor: '#FAF9F6',
+                backgroundImage: bgBase64 ? `url(${bgBase64})` : "none",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat"
+              }}
+            >
+              {!bgBase64 && (
+                <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", color: "#9CA3AF" }}>
+                  જીવદયા પ્રવૃત્તિઓ
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* 5. Footer */}
-          <div className="font-sans relative z-10 gray-border" style={{ display: "flex", flexDirection: "column", gap: "8px", borderTop: "1px solid #FAF9F6", paddingTop: "8px" }}>
-            <div className="grid grid-cols-12 gap-2 items-center" style={{ display: "grid", gridTemplateColumns: "repeat(12, 1fr)" }}>
-              <div className="col-span-8 text-left space-y-1 text-[10px] font-bold leading-tight" style={{ color: '#374151', gridColumn: "span 8" }}>
-                <p className="font-black pb-0.5 mb-0.5 gray-border" style={{ color: '#0B2F64', borderBottom: '1px solid #FAF9F6', margin: 0, fontSize: "11.5px" }}>📞 દાન અથવા પૂછપરછ માટે સંપર્ક કરો :</p>
-                {displayMembers.slice(0, 3).map((m, idx) => (
+          {/* 4. Services list & Donation Details/QR Grid */}
+          <div 
+            className="relative z-10" 
+            style={{ 
+              display: "grid", 
+              gridTemplateColumns: "1.2fr 0.8fr", 
+              gap: "12px", 
+              alignItems: "stretch",
+              width: "100%",
+              boxSizing: 'border-box'
+            }}
+          >
+            
+            {/* Left: main services list */}
+            <div 
+              className="gold-border" 
+              style={{ 
+                backgroundColor: 'rgba(197, 160, 89, 0.04)', 
+                border: '1.5px solid rgba(197, 160, 89, 0.2)',
+                borderRadius: "14px",
+                padding: "10px 12px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "4px"
+              }}
+            >
+              <p style={{ color: '#0B2F64', fontSize: "11px", fontWeight: "900", borderBottom: "1.5px solid rgba(11, 47, 100, 0.15)", paddingBottom: "2px", margin: 0 }}>
+                🐾 કરુણા-મૈત્રી મુખ્ય જીવદયા કાર્યો :
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: "2px", fontSize: "10.5px", fontWeight: "900", color: "#374151" }}>
+                {sevaList.slice(0, 5).map((s, idx) => (
                   <p key={idx} style={{ margin: 0 }}>
-                    {m.name}: <span className="font-mono font-extrabold text-royal-800" style={{ fontSize: "12px" }}>{m.phone}</span>
+                    <span style={{ color: '#b91c1c' }}>{idx + 1})</span> {s.nameGujarati}
                   </p>
                 ))}
-                {displayMembers.length === 0 && (
-                  <>
-                    <p style={{ margin: 0 }}>કેતલ વોરા: <span className="font-mono font-extrabold text-royal-800" style={{ fontSize: "12px" }}>98242 55909</span></p>
-                    <p style={{ margin: 0 }}>મયુર શાહ: <span className="font-mono font-extrabold text-royal-800" style={{ fontSize: "12px" }}>94290 99906</span></p>
-                  </>
-                )}
+              </div>
+            </div>
+
+            {/* Right: Donation Details and QR scanner */}
+            <div 
+              className="gold-border" 
+              style={{ 
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                border: '1.5px solid #C5A059',
+                borderRadius: "14px",
+                padding: "8px 12px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                alignItems: "center"
+              }}
+            >
+              <div style={{ textAlign: "center", width: "100%" }}>
+                <p style={{ margin: 0, fontSize: "10px", fontWeight: "900", color: "#6B7280" }}>દાન રકમ (Amount)</p>
+                <p style={{ margin: 0, fontSize: "18px", fontWeight: "950", color: "#0B2F64", fontFamily: "monospace" }}>
+                  ₹{donation.amount.toLocaleString("en-IN")}/-
+                </p>
+                <p style={{ margin: "2px 0 0 0", fontSize: "10px", fontWeight: "900", color: "#374151", fontFamily: "monospace" }}>
+                  તારીખ: {donation.donationDate}
+                </p>
               </div>
 
-              <div className="col-span-4 flex flex-col items-center justify-end text-center space-y-0.5" style={{ gridColumn: "span 4", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end" }}>
-                <p className="text-[8px] font-black leading-none" style={{ color: '#0B2F64', margin: "0 0 2px 0" }}>દાન માટે સ્કેન કરો</p>
-                {settings?.showQR && settings?.qrImageUrl && settings.qrImageUrl.startsWith("data:") ? (
-                  <img src={settings.qrImageUrl} alt="Custom QR" className="h-14 w-14 p-0.5 bg-white object-contain gold-border" style={{ border: '1px solid #C5A059', borderRadius: "4px" }} />
-                ) : (
-                  <div className="h-14 w-14 bg-white flex items-center justify-center text-[8px] font-bold font-sans gray-border" style={{ border: '1px dashed #FAF9F6', color: '#9CA3AF', borderRadius: "4px" }}>QR કોડ</div>
-                )}
-              </div>
+              {/* QR code */}
+              {settings?.showQR && settings?.qrImageUrl && settings.qrImageUrl.startsWith("data:") ? (
+                <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "4px", borderTop: "1.5px solid #FAF9F6", paddingTop: "4.5px", marginTop: "4.5px", width: "100%", justifyContent: "center" }}>
+                  <img src={settings.qrImageUrl} alt="Custom QR" className="h-10 w-10 p-0.5 bg-white object-contain" />
+                  <span style={{ fontSize: "7px", fontWeight: "900", color: "#374151", lineHeight: "1.1", width: "45px" }}>UPI દાન સ્કેન કોડ</span>
+                </div>
+              ) : null}
+            </div>
+
+          </div>
+
+          {/* 5. Footer quotes and slogans */}
+          <div className="font-sans relative z-10 gray-border" style={{ display: "flex", flexDirection: "column", gap: "6px", borderTop: "1px solid #FAF9F6", paddingTop: "6px" }}>
+            <p style={{ color: "#0B2F64", fontSize: "11px", fontWeight: "900", fontStyle: "italic", textAlign: "center", margin: 0 }}>
+              “ભવિષ્યમાં આપના તરફથી આજ રીતે જીવદયાના પુનિત કાર્યમાં સાથ સહકાર મળતો રહે તેવી અપેક્ષા સહ...આભાર..”
+            </p>
+            
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "11px", fontWeight: "900", color: "#C5A059", padding: "0 12px" }}>
+              <span style={{ color: "#b91c1c" }}>અનુકંપા 🚩</span>
+              <span style={{ color: "#0B2F64" }}>"અમે તો માત્ર નિમિત્ત છીએ"</span>
+              <span style={{ color: "#b91c1c" }}>🚩 જય જિનેન્દ્ર • આભાર</span>
             </div>
 
             <div 
@@ -953,8 +1027,8 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                 background: 'linear-gradient(to right, #051A3B, #0B2F64, #051A3B)', 
                 color: '#C5A059', 
                 border: '1px solid rgba(197, 160, 89, 0.2)',
-                padding: "6px",
-                borderRadius: "12px"
+                padding: "5px",
+                borderRadius: "10px"
               }}
             >
               ← કરુણા થી કૃત્ય સુધી, મૈત્રી થી માનવતા સુધી →

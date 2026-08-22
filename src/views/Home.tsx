@@ -89,7 +89,6 @@ export const Home: React.FC = () => {
 
   // Strips all oklch, oklab, shadows, and outline properties from cloned DOM before html2canvas converts it.
   const cleanCanvasOklch = (clonedDoc: Document) => {
-    // 1. Clean the HTML root element
     if (clonedDoc.documentElement) {
       clonedDoc.documentElement.style.borderColor = "transparent";
       clonedDoc.documentElement.style.color = "#111827";
@@ -98,7 +97,6 @@ export const Home: React.FC = () => {
       clonedDoc.documentElement.style.outlineColor = "transparent";
     }
 
-    // 2. Clean the Body root element
     if (clonedDoc.body) {
       clonedDoc.body.style.borderColor = "transparent";
       clonedDoc.body.style.color = "#111827";
@@ -107,10 +105,8 @@ export const Home: React.FC = () => {
       clonedDoc.body.style.outlineColor = "transparent";
     }
 
-    // 3. Clean every element inside the document
     const elements = clonedDoc.querySelectorAll("*");
     elements.forEach((el: any) => {
-      // Clear borders unless marked gold/blue/gray explicitly
       if (el.classList.contains("gold-border")) {
         el.style.borderColor = "#C5A059";
       } else if (el.classList.contains("blue-border")) {
@@ -124,7 +120,6 @@ export const Home: React.FC = () => {
       el.style.boxShadow = "none";
       el.style.textShadow = "none";
 
-      // Override computed text and background colors if they contain oklch
       const computed = window.getComputedStyle(el);
       if (computed.color && computed.color.includes("oklch")) {
         el.style.color = "#111827";
@@ -194,9 +189,10 @@ export const Home: React.FC = () => {
 
 અમારી મુખ્ય સેવાઓ:
 ૧. કૂતરાઓ માટે દૂધપૌવા
-૨. પંખીના કુંડા વિતરણ
-૩. પાંજરાપોળ લીલો ઘાસચારો
-૪. બીમાર પશુ સારવાર
+૨. પંખીના માળા-કુંડાનું વિતરણ
+૩. પાંજરાપોળમાં મુલાકાત અને સેવા
+૪. બીમાર પશુ-પક્ષીઓની સારવાર
+૫. બર્ડ કેમ્પમાં સેવા (JCT અમદાવાદ)
 
 આપનો આભાર સહયોગ મોકલવા માટે નીચેની વિગતો તપાસો અથવા અપીલ પત્રિકા ડાઉનલોડ કરો.
 
@@ -235,6 +231,7 @@ export const Home: React.FC = () => {
   const hasDonationMethods = !!settings?.donationMethods;
   const hasQrCode = !!settings?.showQR && (!!settings?.qrImageUrl || !!settings?.qrUrl);
   const hasMembers = !!settings?.members && settings.members.length > 0;
+  const displayMembers = settings?.members?.filter(m => m.showOnCard) || [];
 
   return (
     <div className="min-h-screen bg-cream-50 font-sans text-gray-800 flex flex-col justify-between selection:bg-saffron-500/30 selection:text-royal-800">
@@ -508,7 +505,7 @@ export const Home: React.FC = () => {
             border: "6px solid #C5A059", // Solid Gold border
             background: "linear-gradient(180deg, #FAF9F6 0%, #FFFDF9 100%)",
             boxSizing: 'border-box',
-            padding: "24px"
+            padding: "20px"
           }}
         >
           {/* 
@@ -538,91 +535,89 @@ export const Home: React.FC = () => {
           <div 
             className="absolute pointer-events-none z-20 gold-border" 
             style={{ 
-              inset: "10px", 
+              inset: "8px", 
               border: "2px solid #C5A059", 
               borderRadius: "12px" 
             }} 
           />
 
-          {/* Elegant Corner Decorative Ornaments (No SVG, purely CSS safe) */}
-          <div className="absolute w-2 h-2 z-30" style={{ top: "14px", left: "14px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
-          <div className="absolute w-2 h-2 z-30" style={{ top: "14px", right: "14px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
-          <div className="absolute w-2 h-2 z-30" style={{ bottom: "14px", left: "14px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
-          <div className="absolute w-2 h-2 z-30" style={{ bottom: "14px", right: "14px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
+          {/* Ornament Leaf details */}
+          <div className="absolute w-2 h-2 z-30" style={{ top: "12px", left: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
+          <div className="absolute w-2 h-2 z-30" style={{ top: "12px", right: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
+          <div className="absolute w-2 h-2 z-30" style={{ bottom: "12px", left: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
+          <div className="absolute w-2 h-2 z-30" style={{ bottom: "12px", right: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
 
-          {/* 1. Header Column */}
-          <div className="text-center relative z-10" style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            <div 
-              className="font-extrabold text-[12px] tracking-wider gold-border" 
-              style={{ 
-                backgroundColor: '#0B2F64', 
-                border: '2px solid #C5A059', 
-                color: '#ffffff',
-                padding: "2px 32px",
-                borderRadius: "9999px",
-                display: "inline-block",
-                margin: "0 auto"
-              }}
-            >
-              {settings?.defaultHeader || "જય જિનેન્દ્ર"}
-            </div>
+          {/* 1. Header (Reference Inspired): Slogan Top Row, Logo left, Contacts right */}
+          <div className="relative z-10" style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
             
-            <div className="flex items-center justify-center gap-4 pt-1.5" style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-              <div className="relative flex items-center justify-center shrink-0" style={{ display: "flex" }}>
+            {/* Top Slogan Bar */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", padding: "0 10px" }}>
+              <span style={{ color: "#b91c1c", fontSize: "14px", fontWeight: "900", transform: "rotate(-4deg)" }}>🚩 જીવદયા</span>
+              <span style={{ color: "#0B2F64", fontSize: "20px", fontWeight: "900", letterSpacing: "1.5px" }}>અહિંસા પરમો ધર્મઃ</span>
+              <span style={{ color: "#b91c1c", fontSize: "14px", fontWeight: "900", transform: "rotate(4deg)" }}>કરુણા 🚩</span>
+            </div>
+
+            {/* Logo and Contact Info Side-By-Side */}
+            <div className="blue-border" style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid #0B2F64", borderBottom: "1px solid #0B2F64", padding: "6px 10px", marginTop: "2px" }}>
+              <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px" }}>
                 {logoBase64 && logoBase64.startsWith("data:") ? (
                   <img 
                     src={logoBase64} 
                     alt="Logo" 
-                    className="h-14 w-14 rounded-full object-contain bg-white relative z-10 gold-border" 
+                    className="h-14 w-14 rounded-full object-contain bg-white gold-border" 
                     style={{ border: "2px solid #C5A059" }}
                   />
                 ) : (
-                  <div className="h-14 w-14 rounded-full flex items-center justify-center text-white font-bold text-[8px] p-1 text-center leading-none relative z-10 gold-border" style={{ border: '2px solid #C5A059', backgroundColor: '#0B2F64' }}>કરુણા મૈત્રી</div>
+                  <div className="h-14 w-14 rounded-full flex items-center justify-center text-white font-bold text-[8px] p-1 text-center leading-none gold-border" style={{ border: '2px solid #C5A059', backgroundColor: '#0B2F64' }}>કરુણા મૈત્રી</div>
+                )}
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+                  <h2 style={{ color: '#0B2F64', fontSize: "17px", fontWeight: "900", margin: 0, lineHeight: "1.1" }}>{settings?.orgNameGujarati || "કરુણા-મૈત્રી ગ્રુપ"}</h2>
+                  <span style={{ color: '#C5A059', fontSize: "10.5px", fontWeight: "900", margin: 0 }}>📍 {settings?.location || "સુરેન્દ્રનગર"}</span>
+                </div>
+              </div>
+
+              {/* Right side contact details list formatted compactly */}
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", fontSize: "9.5px", fontWeight: "900", color: "#374151", lineHeight: "1.3" }}>
+                {displayMembers.slice(0, 3).map((m, idx) => (
+                  <p key={idx} style={{ margin: 0 }}>{m.name}: <span style={{ color: '#0B2F64', fontFamily: "monospace" }}>{m.phone}</span></p>
+                ))}
+                {displayMembers.length === 0 && (
+                  <>
+                    <p style={{ margin: 0 }}>કેતલ વોરા: <span style={{ color: '#0B2F64', fontFamily: "monospace" }}>98242 55909</span></p>
+                    <p style={{ margin: 0 }}>મયુર શાહ: <span style={{ color: '#0B2F64', fontFamily: "monospace" }}>94290 99906</span></p>
+                  </>
                 )}
               </div>
-              <div className="text-left">
-                <h2 className="font-black text-lg md:text-xl tracking-wider leading-none" style={{ color: '#0B2F64', margin: 0 }}>
-                  {settings?.orgNameGujarati || "કરુણા-મૈત્રી ગ્રુપ"}
-                </h2>
-                <span className="text-[10.5px] font-black tracking-wider block mt-1 font-mono" style={{ color: '#C5A059' }}>
-                  📍 {settings?.location || "સુરેન્દ્રનગર"}
-                </span>
-              </div>
             </div>
+
           </div>
 
-          {/* Spiritual Quote Header */}
-          <div className="text-center z-10" style={{ margin: "-2px 0 2px 0" }}>
-            <p style={{ color: "#C5A059", fontSize: "11px", fontWeight: "900", letterSpacing: "1px", margin: 0 }}>
-              "પરસ્પરોપગ્રહો જીવાનામ્" • "અહિંસા પરમો ધર્મઃ"
-            </p>
-          </div>
-
-          {/* 2. Donation Credentials Box */}
+          {/* 2. Main Appeal Text Details Box (Redesigned with large fonts) */}
           <div 
             className="text-xs relative z-10 gold-border"
             style={{ 
               border: "2px solid #C5A059", 
-              backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+              backgroundColor: 'rgba(255, 255, 255, 0.98)', 
               color: '#111827',
               borderRadius: "16px",
-              padding: "14px",
-              boxSizing: 'border-box'
+              padding: "16px",
+              boxSizing: 'border-box',
+              marginTop: "4px"
             }}
           >
-            <h3 className="text-center font-black pb-1.5 mb-2 blue-border" style={{ color: '#0B2F64', borderBottom: '1px solid #FAF9F6', fontSize: '12px' }}>
+            <h3 className="text-center font-black pb-1.5 mb-2.5 blue-border" style={{ color: '#0B2F64', borderBottom: '1px solid #FAF9F6', fontSize: '15px' }}>
               🐾 જીવદયા સેવા સહયોગ અપીલ (Bank Details) 🐾
             </h3>
-            <div className="whitespace-pre-line text-[11px] leading-tight font-extrabold text-center" style={{ color: '#374151' }}>
+            <div className="whitespace-pre-line text-[12px] leading-relaxed font-black text-center" style={{ color: '#1F2937' }}>
               {settings?.donationMethods || "બેંક વિગતો મેળવવા સંપર્ક કરો."}
             </div>
           </div>
 
-          {/* 3. Seva types list */}
+          {/* 3. Seva types list (Expanded font sizes, bold list) */}
           <div 
             className="text-center relative z-10 gold-border" 
             style={{ 
-              backgroundColor: 'rgba(197, 160, 89, 0.05)', 
+              backgroundColor: 'rgba(197, 160, 89, 0.04)', 
               border: '1px solid rgba(197, 160, 89, 0.15)',
               borderRadius: "12px",
               padding: "12px",
@@ -631,29 +626,29 @@ export const Home: React.FC = () => {
               gap: "6px"
             }}
           >
-            <p className="text-[10px] font-black tracking-wider uppercase pb-0.5 inline-block gold-border" style={{ color: '#0B2F64', borderBottom: '1px solid rgba(197, 160, 89, 0.1)', alignSelf: "center", margin: 0 }}>
+            <p className="text-[11px] font-black tracking-wider uppercase pb-0.5 inline-block gold-border" style={{ color: '#0B2F64', borderBottom: '1px solid rgba(197, 160, 89, 0.1)', alignSelf: "center", margin: 0 }}>
               અમારા મુખ્ય સેવા કાર્યો
             </p>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[9.5px] font-bold text-left pl-2" style={{ color: '#4B5563', display: "grid", gridTemplateColumns: "1fr 1fr" }}>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-[11px] font-black text-left pl-4" style={{ color: '#374151', display: "grid", gridTemplateColumns: "1fr 1fr" }}>
               {sevaTypes.slice(0, 6).map((s, idx) => (
                 <p key={idx} style={{ margin: 0, whiteSpace: "normal" }}>
-                  <span className="font-black mr-1" style={{ color: '#C5A059' }}>{idx + 1}.</span> {s.nameGujarati}
+                  <span style={{ color: '#b91c1c' }}>{idx + 1})</span> {s.nameGujarati}
                 </p>
               ))}
             </div>
           </div>
 
-          {/* 4. Collage image (Rendered as Background Image CSS to avoid stretching in html2canvas) */}
+          {/* 4. Large collage image cover (Takes up full width, height 180px, covers fully without clipping) */}
           <div 
             className="gold-border"
             style={{ 
-              borderRadius: "12px",
+              borderRadius: "14px",
               overflow: "hidden",
-              height: "112px",
+              height: "180px",
               width: "100%",
               position: "relative",
               zIndex: 10,
-              border: '1px solid rgba(197, 160, 89, 0.2)', 
+              border: '2.5px solid #C5A059', 
               backgroundColor: '#FAF9F6',
               backgroundImage: bgBase64 ? `url(${bgBase64})` : "none",
               backgroundSize: "cover",
@@ -662,43 +657,56 @@ export const Home: React.FC = () => {
             }}
           >
             {!bgBase64 && (
-              <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", color: "#9CA3AF" }}>
+              <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", color: "#9CA3AF" }}>
                 જીવદયા પ્રવૃત્તિઓ
               </div>
             )}
           </div>
 
-          {/* 5. Footer */}
-          <div className="font-sans relative z-10 gray-border" style={{ display: "flex", flexDirection: "column", gap: "8px", borderTop: "1px solid #FAF9F6", paddingTop: "8px" }}>
-            <div className="grid grid-cols-12 gap-2 items-center" style={{ display: "grid", gridTemplateColumns: "repeat(12, 1fr)" }}>
-              <div className="col-span-8 text-left space-y-0.5 text-[9px] font-bold leading-tight" style={{ color: '#374151', gridColumn: "span 8" }}>
-                <p className="font-black pb-0.5 mb-0.5 gray-border" style={{ color: '#0B2F64', borderBottom: '1px solid #FAF9F6', margin: 0 }}>📞 સંપર્ક કરો :</p>
-                {settings?.members?.slice(0, 3).map((m, idx) => (
-                  <p key={idx} style={{ margin: 0 }}>
-                    {m.name}: <span className="font-mono font-extrabold" style={{ color: '#0B2F64' }}>{m.phone}</span>
-                  </p>
-                ))}
-                {(!settings?.members || settings.members.length === 0) && (
-                  <>
-                    <p style={{ margin: 0 }}>કેતલ વોરા: <span className="font-mono font-extrabold" style={{ color: '#0B2F64' }}>98242 55909</span></p>
-                    <p style={{ margin: 0 }}>મયુર શાહ: <span className="font-mono font-extrabold" style={{ color: '#0B2F64' }}>94290 99906</span></p>
-                  </>
-                )}
-              </div>
+          {/* 5. UPI QR Code Box */}
+          <div 
+            className="relative z-10 gold-border" 
+            style={{ 
+              backgroundColor: 'rgba(255, 255, 255, 0.95)',
+              border: '1.5px solid #C5A059',
+              borderRadius: "14px",
+              padding: "8px 16px",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              boxSizing: 'border-box'
+            }}
+          >
+            <div style={{ display: "flex", flexDirection: "column", gap: "2px", maxWidth: "70%" }}>
+              <p style={{ color: '#0B2F64', fontSize: "12px", fontWeight: "900", margin: 0 }}>📲 સ્કેન કરી મદદ કરો (Scan & Pay)</p>
+              <p style={{ color: '#4B5563', fontSize: "9.5px", fontWeight: "900", margin: 0 }}>
+                {settings?.qrLabel || "તમારા ફોનની કોઈ પણ યુપીઆઈ એપ વડે સ્કેન કરી સીધો સેવા સહયોગ મોકલી શકો છો."}
+              </p>
+            </div>
+            
+            {settings?.showQR && settings?.qrImageUrl && settings.qrImageUrl.startsWith("data:") ? (
+              <img 
+                src={settings.qrImageUrl} 
+                alt="Custom QR" 
+                className="h-16 w-16 p-0.5 bg-white object-contain gold-border" 
+                style={{ border: '1px solid #C5A059', borderRadius: "6px" }} 
+              />
+            ) : (
+              <div className="h-16 w-16 bg-white flex items-center justify-center text-[8px] font-bold font-sans gray-border" style={{ border: '1px dashed #FAF9F6', color: '#9CA3AF', borderRadius: "6px" }}>QR કોડ</div>
+            )}
+          </div>
 
-              <div className="col-span-4 flex flex-col items-center justify-end text-center space-y-0.5" style={{ gridColumn: "span 4", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end" }}>
-                <p className="text-[7.5px] font-black leading-none" style={{ color: '#0B2F64', margin: "0 0 2px 0" }}>દાન માટે સ્કેન કરો</p>
-                {settings?.showQR && settings?.qrImageUrl && settings.qrImageUrl.startsWith("data:") ? (
-                  <img 
-                    src={settings.qrImageUrl} 
-                    alt="Custom QR" 
-                    className="h-14 w-14 p-0.5 bg-white object-contain gold-border" 
-                    style={{ border: '1px solid #C5A059', borderRadius: "4px" }} 
-                  />
-                ) : (
-                  <div className="h-14 w-14 bg-white flex items-center justify-center text-[8px] font-bold font-sans gray-border" style={{ border: '1px dashed #FAF9F6', color: '#9CA3AF', borderRadius: "4px" }}>QR કોડ</div>
-                )}
-              </div>
+          {/* 6. Footer (Quotes & Slogans) */}
+          <div className="font-sans relative z-10 gray-border" style={{ display: "flex", flexDirection: "column", gap: "6px", borderTop: "1px solid #FAF9F6", paddingTop: "6px" }}>
+            <p style={{ color: "#0B2F64", fontSize: "11px", fontWeight: "900", fontStyle: "italic", textAlign: "center", margin: 0 }}>
+              “ભવિષ્યમાં આપના તરફથી આજ રીતે જીવદયાના પુનિત કાર્યમાં સાથ સહકાર મળતો રહે તેવી અપેક્ષા સહ...આભાર..”
+            </p>
+            
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "11px", fontWeight: "900", color: "#C5A059", padding: "0 12px" }}>
+              <span style={{ color: "#b91c1c" }}>અનુકંપા 🚩</span>
+              <span style={{ color: "#0B2F64" }}>"અમે તો માત્ર નિમિત્ત છીએ"</span>
+              <span style={{ color: "#b91c1c" }}>🚩 જય જિનેન્દ્ર • આભાર</span>
             </div>
 
             <div 
@@ -707,8 +715,8 @@ export const Home: React.FC = () => {
                 background: 'linear-gradient(to right, #051A3B, #0B2F64, #051A3B)', 
                 color: '#C5A059', 
                 border: '1px solid rgba(197, 160, 89, 0.2)',
-                padding: "6px",
-                borderRadius: "12px"
+                padding: "5px",
+                borderRadius: "10px"
               }}
             >
               ← કરુણા થી કૃત્ય સુધી, મૈત્રી થી માનવતા સુધી →
