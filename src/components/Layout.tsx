@@ -4,6 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { db } from "../lib/firebase";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { 
+  Home,
   LayoutDashboard, 
   PlusCircle, 
   History, 
@@ -70,6 +71,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     },
     { name: "આંકડા", path: "/analytics", icon: BarChart3 },
     { name: "સેટિંગ્સ", path: "/settings", icon: Settings },
+    { name: "મુખ્ય વેબસાઈટ", path: "/", icon: Home },
   ];
 
   return (
@@ -91,13 +93,22 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             <p className="text-xs text-saffron-500">સુરેન્દ્રનગર</p>
           </div>
         </div>
-        <button 
-          onClick={handleLogout}
-          className="p-2 text-cream-50 hover:text-red-400 transition-colors focus:outline-none"
-          title="લૉગઆઉટ"
-        >
-          <LogOut className="h-5 w-5" />
-        </button>
+        <div className="flex items-center gap-1">
+          <button 
+            onClick={() => navigate("/")}
+            className="p-2 text-cream-200 hover:text-saffron-400 transition-colors focus:outline-none"
+            title="મુખ્ય વેબસાઈટ"
+          >
+            <Home className="h-5.5 w-5.5" />
+          </button>
+          <button 
+            onClick={handleLogout}
+            className="p-2 text-cream-50 hover:text-red-400 transition-colors focus:outline-none"
+            title="લૉગઆઉટ"
+          >
+            <LogOut className="h-5 w-5" />
+          </button>
+        </div>
       </header>
 
       {/* Desktop Sidebar Navigation */}
@@ -119,7 +130,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         {/* Navigation Items */}
         <nav className="flex-1 px-4 py-6 space-y-1">
           {navItems.map((item) => {
-            const isActive = location.pathname === item.path || (item.path !== "/dashboard" && location.pathname.startsWith(item.path));
+            const isActive = item.path === "/" 
+              ? location.pathname === "/" 
+              : location.pathname === item.path || (item.path !== "/dashboard" && location.pathname.startsWith(item.path));
             const Icon = item.icon;
 
             return (

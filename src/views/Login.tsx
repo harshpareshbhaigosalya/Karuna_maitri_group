@@ -99,6 +99,16 @@ export const Login: React.FC = () => {
               {loading ? "પ્રવેશ થઈ રહ્યો છે..." : "પોર્ટલ માં પ્રવેશ કરો"}
             </button>
           </form>
+
+          <div className="mt-5 text-center">
+            <button
+              type="button"
+              onClick={() => navigate("/")}
+              className="text-royal-800 hover:text-saffron-600 text-xs font-black transition-colors inline-flex items-center gap-1"
+            >
+              ← મુખ્ય વેબસાઈટ પર જાઓ (Go to Website)
+            </button>
+          </div>
         </div>
 
         <div className="bg-cream-100/50 p-6 border-t border-cream-200 text-xs text-center text-gray-500 font-semibold leading-relaxed">
