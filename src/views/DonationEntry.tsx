@@ -307,7 +307,7 @@ export const DonationEntry: React.FC = () => {
         occasionType: occasionType,
         occasionDate: occasionType !== "કોઈ પ્રસંગ નથી" ? finalOccasionDate : null,
         customMessage: customMessage.trim() || null,
-        donorPhotoUrl: showDonorPhoto ? donorPhotoUrl : "",
+        donorPhotoUrl: "",
         createdBy: "admin",
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
@@ -941,8 +941,8 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                       boxSizing: 'border-box'
                     }}
                   >
-                    {/* Left: Large Portrait Donor Image */}
-                    {showDonorPhoto && donorPhotoUrl && donorPhotoUrl.startsWith("data:") ? (
+                    {/* Left: Large Portrait Donor Image (Only rendered if photo exists and toggled on) */}
+                    {showDonorPhoto && donorPhotoUrl && donorPhotoUrl.startsWith("data:") && (
                       <div 
                         className="gold-border"
                         style={{ 
@@ -960,27 +960,6 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                           backgroundRepeat: "no-repeat"
                         }}
                       />
-                    ) : (
-                      <div 
-                        className="gold-border"
-                        style={{ 
-                          width: "160px", 
-                          height: "190px", 
-                          borderRadius: "14px", 
-                          overflow: "hidden", 
-                          flexShrink: 0, 
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center", 
-                          justifyContent: "center",
-                          border: '2.5px solid #C5A059', 
-                          backgroundColor: '#ffffff',
-                          color: '#D1D5DB'
-                        }} 
-                      >
-                        <User className="h-10 w-10 mx-auto mb-1" style={{ color: '#D1D5DB' }} />
-                        <p style={{ fontSize: "9px", fontWeight: "900", margin: 0, color: "#9CA3AF" }}>દાતાશ્રીનો ફોટો</p>
-                      </div>
                     )}
 
                     {/* Right: Large cover Dogs Collage */}
@@ -1012,7 +991,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                     className="relative z-10" 
                     style={{ 
                       display: "grid", 
-                      gridTemplateColumns: "1.2fr 0.8fr", 
+                      gridTemplateColumns: showQrOnCard ? "1.2fr 0.8fr" : "1.4fr 0.6fr", 
                       gap: "12px", 
                       alignItems: "stretch",
                       width: "100%",
@@ -1050,12 +1029,12 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                       className="gold-border" 
                       style={{ 
                         backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                        border: '1.5px solid #C5A059',
+                        border: showQrOnCard ? '1.5px solid #C5A059' : '3px double #C5A059',
                         borderRadius: "14px",
                         padding: "8px 12px",
                         display: "flex",
                         flexDirection: "column",
-                        justifyContent: "space-between",
+                        justifyContent: showQrOnCard ? "space-between" : "center",
                         alignItems: "center"
                       }}
                     >
@@ -1286,8 +1265,8 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
               boxSizing: 'border-box'
             }}
           >
-            {/* Left: Donor Portrait Image */}
-            {showDonorPhoto && donorPhotoUrl && donorPhotoUrl.startsWith("data:") ? (
+            {/* Left: Donor Portrait Image (Only rendered if photo exists and toggled on) */}
+            {showDonorPhoto && donorPhotoUrl && donorPhotoUrl.startsWith("data:") && (
               <div 
                 className="gold-border"
                 style={{ 
@@ -1305,27 +1284,6 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                   backgroundRepeat: "no-repeat"
                 }}
               />
-            ) : (
-              <div 
-                className="gold-border"
-                style={{ 
-                  width: "160px", 
-                  height: "190px", 
-                  borderRadius: "14px", 
-                  overflow: "hidden", 
-                  flexShrink: 0, 
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center", 
-                  justifyContent: "center",
-                  border: '2.5px solid #C5A059', 
-                  backgroundColor: '#ffffff',
-                  color: '#D1D5DB'
-                }} 
-              >
-                <User className="h-10 w-10 mx-auto mb-1" style={{ color: '#D1D5DB' }} />
-                <p style={{ fontSize: "9px", fontWeight: "900", margin: 0, color: "#9CA3AF" }}>દાતાશ્રીનો ફોટો</p>
-              </div>
             )}
 
             {/* Right: Covered Dogs Collage */}
@@ -1357,7 +1315,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
             className="relative z-10" 
             style={{ 
               display: "grid", 
-              gridTemplateColumns: "1.2fr 0.8fr", 
+              gridTemplateColumns: showQrOnCard ? "1.2fr 0.8fr" : "1.4fr 0.6fr", 
               gap: "12px", 
               alignItems: "stretch",
               width: "100%",
@@ -1395,12 +1353,12 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
               className="gold-border" 
               style={{ 
                 backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                border: '1.5px solid #C5A059',
+                border: showQrOnCard ? '1.5px solid #C5A059' : '3px double #C5A059',
                 borderRadius: "14px",
                 padding: "8px 12px",
                 display: "flex",
                 flexDirection: "column",
-                justifyContent: "space-between",
+                justifyContent: showQrOnCard ? "space-between" : "center",
                 alignItems: "center"
               }}
             >
