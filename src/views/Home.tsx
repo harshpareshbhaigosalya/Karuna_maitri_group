@@ -26,7 +26,7 @@ export const Home: React.FC = () => {
   // Calendar states
   const [calendarDate, setCalendarDate] = useState(new Date());
   const [selectedCalendarDay, setSelectedCalendarDay] = useState<Date | null>(new Date());
-  const [calendarDonations, setCalendarDonations] = useState<Record<string, { donorName: string; sevaName: string }>>({});
+  const [calendarDonations, setCalendarDonations] = useState<Record<string, { donorName: string; sevaName: string }[]>>({});
   const [loadingCalendar, setLoadingCalendar] = useState(false);
   const [showCalendarModal, setShowCalendarModal] = useState(false);
 
@@ -75,14 +75,18 @@ export const Home: React.FC = () => {
         );
 
         const snap = await getDocs(q);
-        const mapped: Record<string, { donorName: string; sevaName: string }> = {};
+        const mapped: Record<string, { donorName: string; sevaName: string }[]> = {};
 
         snap.forEach((doc) => {
           const data = doc.data();
-          mapped[data.donationDate] = {
+          const dateKey = data.donationDate;
+          if (!mapped[dateKey]) {
+            mapped[dateKey] = [];
+          }
+          mapped[dateKey].push({
             donorName: data.donorNameSnapshot,
             sevaName: data.sevaNameSnapshot
-          };
+          });
         });
 
         setCalendarDonations(mapped);
@@ -534,14 +538,14 @@ export const Home: React.FC = () => {
                   if (!day) return <div key={`empty-${idx}`} className="bg-transparent aspect-square sm:aspect-video" />;
                   
                   const dateKey = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, "0")}-${String(day.getDate()).padStart(2, "0")}`;
-                  const donation = calendarDonations[dateKey];
+                  const donationsList = calendarDonations[dateKey] || [];
                   const isSelected = selectedCalendarDay && selectedCalendarDay.toDateString() === day.toDateString();
 
                   let cardStyle = "bg-white border-cream-200 hover:border-royal-400";
                   let indicatorText = "Open 🐾";
                   let indicatorColor = "text-amber-650 bg-amber-50 border-amber-100";
 
-                  if (donation) {
+                  if (donationsList.length > 0) {
                     cardStyle = "bg-emerald-50/30 border-emerald-250/50 hover:border-emerald-400";
                     indicatorText = "Booked ✓";
                     indicatorColor = "text-emerald-700 bg-emerald-100/50 border-emerald-150";
@@ -562,13 +566,19 @@ export const Home: React.FC = () => {
                       
                       {/* Desktop only details view inside box */}
                       <div className="hidden sm:flex flex-col items-start gap-1 w-full text-[10px] leading-tight">
-                        {donation ? (
+                        {donationsList.length > 0 ? (
                           <>
-                            <p className="font-extrabold text-royal-800 truncate w-full">👨‍💼 {donation.donorName}</p>
-                            <p className="text-emerald-700 font-extrabold truncate w-full">🐾 {donation.sevaName}</p>
+                            <p className="font-extrabold text-royal-800 truncate w-full">👨‍💼 {donationsList[0].donorName}</p>
+                            {donationsList.length === 1 ? (
+                              <p className="text-emerald-700 font-extrabold truncate w-full">🐾 {donationsList[0].sevaName}</p>
+                            ) : (
+                              <p className="text-emerald-750 font-bold tracking-tight truncate w-full text-[9px]">
+                                👥 (+ {donationsList.length - 1} sponsors)
+                              </p>
+                            )}
                           </>
                         ) : (
-                          <span className="text-amber-600 font-extrabold text-[9px] uppercase tracking-wider">સહયોગ બાકી</span>
+                          <span className="text-amber-650 font-extrabold text-[9px] uppercase tracking-wider">સહયોગ બાકી</span>
                         )}
                       </div>
 
@@ -609,17 +619,21 @@ export const Home: React.FC = () => {
                 
                 {(() => {
                   const dateKey = `${selectedCalendarDay.getFullYear()}-${String(selectedCalendarDay.getMonth() + 1).padStart(2, "0")}-${String(selectedCalendarDay.getDate()).padStart(2, "0")}`;
-                  const donation = calendarDonations[dateKey];
+                  const donationsList = calendarDonations[dateKey] || [];
 
-                  if (donation) {
+                  if (donationsList.length > 0) {
                     return (
-                      <div className="bg-emerald-100/40 border border-emerald-250/30 p-4 rounded-2xl space-y-2 text-left">
-                        <p className="text-xs text-gray-500 font-semibold text-center sm:text-left">આ તારીખે સેવા સહયોગ આપનાર દાતાશ્રી:</p>
-                        <p className="text-lg font-black text-emerald-800 text-center sm:text-left">🎉 દાતા શ્રી {donation.donorName}</p>
-                        <div className="h-px bg-emerald-200/40 my-2" />
-                        <p className="text-xs font-bold text-royal-800">
-                          🎯 સેવા હેતુ: <span className="underline decoration-wavy decoration-emerald-500 underline-offset-4 font-extrabold text-emerald-800 text-sm">{donation.sevaName}</span>
-                        </p>
+                      <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
+                        <p className="text-xs text-gray-500 font-bold text-center">આ તારીખે સેવા સહયોગ આપનાર દાતાશ્રીઓ:</p>
+                        {donationsList.map((don, dIdx) => (
+                          <div key={dIdx} className="bg-emerald-100/40 border border-emerald-250/30 p-4 rounded-2xl space-y-2 text-left">
+                            <p className="text-base font-black text-emerald-800">🎉 દાતા શ્રી {don.donorName}</p>
+                            <div className="h-px bg-emerald-200/45 my-1" />
+                            <p className="text-xs font-bold text-royal-800">
+                              🎯 સેવા પ્રકાર: <span className="font-extrabold text-emerald-800 text-sm">{don.sevaName}</span>
+                            </p>
+                          </div>
+                        ))}
                       </div>
                     );
                   } else {
