@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { db } from "../lib/firebase";
-import { collection, query, getDocs, doc, getDoc } from "firebase/firestore";
-import { Phone, MapPin, Sparkles, Building, QrCode, Lock, CreditCard, Heart, Share2, Download, Gift } from "lucide-react";
+import { collection, query, getDocs, doc, getDoc, where } from "firebase/firestore";
+import { Phone, MapPin, Sparkles, Building, QrCode, Lock, CreditCard, Heart, Share2, Download, Gift, Calendar } from "lucide-react";
 import { SevaType, OrganizationSettings } from "../types";
 import { DEFAULT_SEVA_TYPES } from "../lib/dbSeed";
 import html2canvas from "html2canvas";
@@ -22,6 +22,78 @@ export const Home: React.FC = () => {
   const [exportedAppealImage, setExportedAppealImage] = useState<string | null>(null);
 
   const appealCardRef = useRef<HTMLDivElement>(null);
+
+  // Calendar states
+  const [calendarDate, setCalendarDate] = useState(new Date());
+  const [selectedCalendarDay, setSelectedCalendarDay] = useState<Date | null>(new Date());
+  const [calendarDonations, setCalendarDonations] = useState<Record<string, { donorName: string; sevaName: string }>>({});
+  const [loadingCalendar, setLoadingCalendar] = useState(false);
+
+  const calendarYear = calendarDate.getFullYear();
+  const calendarMonth = calendarDate.getMonth();
+  const firstDay = new Date(calendarYear, calendarMonth, 1).getDay();
+  const daysNum = new Date(calendarYear, calendarMonth + 1, 0).getDate();
+
+  const calendarDays: (Date | null)[] = [];
+  for (let i = 0; i < firstDay; i++) {
+    calendarDays.push(null);
+  }
+  for (let d = 1; d <= daysNum; d++) {
+    calendarDays.push(new Date(calendarYear, calendarMonth, d));
+  }
+
+  const monthNamesGujarati = [
+    "જાન્યુઆરી (January)",
+    "ફેબ્રુઆરી (February)",
+    "માર્ચ (March)",
+    "એપ્રિલ (April)",
+    "મે (May)",
+    "જૂન (June)",
+    "જુલાઈ (July)",
+    "ઓગસ્ટ (August)",
+    "સપ્ટેમ્બર (September)",
+    "ઓક્ટોબર (October)",
+    "નવેમ્બર (November)",
+    "ડિસેમ્બર (December)"
+  ];
+
+  const weekdayNames = ["રવિ (Sun)", "સોમ (Mon)", "મંગળ (Tue)", "બુધ (Wed)", "ગુરૂ (Thu)", "શુક્ર (Fri)", "શનિ (Sat)"];
+
+  // Fetch calendar donations for selected month range
+  useEffect(() => {
+    const fetchCalendarDonations = async () => {
+      try {
+        setLoadingCalendar(true);
+        const startStr = `${calendarYear}-${String(calendarMonth + 1).padStart(2, "0")}-01`;
+        const endStr = `${calendarYear}-${String(calendarMonth + 1).padStart(2, "0")}-${String(daysNum).padStart(2, "0")}`;
+
+        const q = query(
+          collection(db, "donations"),
+          where("donationDate", ">=", startStr),
+          where("donationDate", "<=", endStr)
+        );
+
+        const snap = await getDocs(q);
+        const mapped: Record<string, { donorName: string; sevaName: string }> = {};
+
+        snap.forEach((doc) => {
+          const data = doc.data();
+          mapped[data.donationDate] = {
+            donorName: data.donorNameSnapshot,
+            sevaName: data.sevaNameSnapshot
+          };
+        });
+
+        setCalendarDonations(mapped);
+      } catch (err) {
+        console.error("Error loading calendar donations:", err);
+      } finally {
+        setLoadingCalendar(false);
+      }
+    };
+
+    fetchCalendarDonations();
+  }, [calendarYear, calendarMonth, daysNum]);
 
   useEffect(() => {
     const loadPublicData = async () => {
@@ -383,6 +455,151 @@ export const Home: React.FC = () => {
               );
             })}
           </div>
+        </div>
+
+        {/* 🐾 Seva Booking Calendar Section */}
+        <div className="bg-white rounded-3xl border border-cream-200 shadow-xl p-6 md:p-8 space-y-6 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-2 bg-royal-800" />
+          
+          <div className="text-center space-y-2">
+            <div className="inline-flex items-center gap-1 bg-royal-800/10 text-royal-800 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+              <Calendar className="h-3.5 w-3.5" />
+              <span>જીવદયા રોસ્ટર બુકિંગ</span>
+            </div>
+            <h2 className="text-2xl md:text-3xl font-extrabold text-royal-800">🐾 જીવદયા સેવા કેલેન્ડર (Seva Calendar)</h2>
+            <p className="text-gray-500 text-sm max-w-lg mx-auto leading-relaxed">
+              નીચેના કેલેન્ડર દ્વારા જોઈ શકો છો કે કઈ તારીખ કયા દાતાશ્રી દ્વારા બુક થયેલ છે. તમે પણ ખાલી તારીખ પસંદ કરી દાન મોકલી શકો છો.
+            </p>
+            <div className="h-1 w-16 bg-saffron-500 mx-auto rounded-full mt-2" />
+          </div>
+
+          {/* Month Navigator Row */}
+          <div className="flex items-center justify-between border-b border-cream-100 pb-4 max-w-md mx-auto">
+            <button
+              onClick={() => setCalendarDate(new Date(calendarYear, calendarMonth - 1, 1))}
+              className="p-2 border border-cream-200 hover:bg-cream-50 text-royal-800 rounded-xl transition-all font-bold text-sm"
+            >
+              ← પાછલો મહિનો
+            </button>
+            <span className="font-extrabold text-royal-800 text-base md:text-lg text-center">
+              {monthNamesGujarati[calendarMonth]} - {calendarYear}
+            </span>
+            <button
+              onClick={() => setCalendarDate(new Date(calendarYear, calendarMonth + 1, 1))}
+              className="p-2 border border-cream-200 hover:bg-cream-50 text-royal-800 rounded-xl transition-all font-bold text-sm"
+            >
+              આગલો મહિનો →
+            </button>
+          </div>
+
+          {/* Calendar Grid container */}
+          <div className="max-w-4xl mx-auto border border-cream-150 rounded-2xl overflow-hidden shadow-inner bg-cream-50/20 p-4">
+            
+            {/* Weekdays header */}
+            <div className="grid grid-cols-7 gap-2 mb-2 text-center text-xs font-extrabold text-royal-800 uppercase tracking-wider">
+              {weekdayNames.map((day) => (
+                <div key={day} className="py-2 bg-cream-100/50 rounded-lg">{day}</div>
+              ))}
+            </div>
+
+            {/* Days grid */}
+            {loadingCalendar ? (
+              <div className="h-64 flex flex-col items-center justify-center text-gray-400">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-royal-800 mb-2" />
+                <p className="text-xs font-bold">બુકિંગ વિગતો લોડ થઈ રહી છે...</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-7 gap-2">
+                {calendarDays.map((day, idx) => {
+                  if (!day) return <div key={`empty-${idx}`} className="bg-transparent aspect-square sm:aspect-video" />;
+                  
+                  const dateKey = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, "0")}-${String(day.getDate()).padStart(2, "0")}`;
+                  const donation = calendarDonations[dateKey];
+                  const isSelected = selectedCalendarDay && selectedCalendarDay.toDateString() === day.toDateString();
+
+                  let cardStyle = "bg-white border-cream-200 hover:border-royal-400";
+                  let indicatorText = "Open 🐾";
+                  let indicatorColor = "text-amber-650 bg-amber-50 border-amber-100";
+
+                  if (donation) {
+                    cardStyle = "bg-emerald-50/30 border-emerald-250/50 hover:border-emerald-400";
+                    indicatorText = "Booked ✓";
+                    indicatorColor = "text-emerald-700 bg-emerald-100/50 border-emerald-150";
+                  }
+
+                  return (
+                    <div
+                      key={dateKey}
+                      onClick={() => setSelectedCalendarDay(day)}
+                      className={`border-2 p-2 rounded-xl flex flex-col justify-between cursor-pointer aspect-square sm:aspect-video transition-all ${cardStyle} ${
+                        isSelected ? "ring-2 ring-royal-800 shadow-md font-bold" : ""
+                      }`}
+                    >
+                      <span className="self-end text-xs md:text-sm font-mono font-black text-royal-800">{day.getDate()}</span>
+                      
+                      {/* Desktop only details view inside box */}
+                      <div className="hidden sm:flex flex-col items-start gap-1 w-full text-[10px] leading-tight">
+                        {donation ? (
+                          <>
+                            <p className="font-extrabold text-royal-800 truncate w-full">👨‍💼 {donation.donorName}</p>
+                            <p className="text-emerald-700 font-extrabold truncate w-full">🐾 {donation.sevaName}</p>
+                          </>
+                        ) : (
+                          <span className="text-amber-600 font-extrabold text-[9px] uppercase tracking-wider">સહયોગ બાકી</span>
+                        )}
+                      </div>
+
+                      {/* Mobile dot indicator */}
+                      <span className={`sm:hidden self-center px-1.5 py-0.5 rounded-full text-[8px] font-black tracking-wider border ${indicatorColor}`}>
+                        {indicatorText}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Selected Date Details Box */}
+          {selectedCalendarDay && (
+            <div className="max-w-md mx-auto bg-cream-50 border border-cream-200 rounded-2xl p-5 text-center space-y-3 shadow-sm animate-in slide-in-from-bottom duration-250">
+              <p className="text-[10px] font-extrabold text-royal-500 uppercase tracking-widest font-mono">
+                📅 તારીખ પસંદગી (Selected Date)
+              </p>
+              <h4 className="text-lg font-black text-royal-800">
+                {selectedCalendarDay.getDate()} {monthNamesGujarati[selectedCalendarDay.getMonth()].split(" ")[0]}, {selectedCalendarDay.getFullYear()}
+              </h4>
+              
+              {(() => {
+                const dateKey = `${selectedCalendarDay.getFullYear()}-${String(selectedCalendarDay.getMonth() + 1).padStart(2, "0")}-${String(selectedCalendarDay.getDate()).padStart(2, "0")}`;
+                const donation = calendarDonations[dateKey];
+
+                if (donation) {
+                  return (
+                    <div className="bg-emerald-100/40 border border-emerald-250/30 p-4 rounded-xl space-y-1">
+                      <p className="text-xs text-gray-500 font-semibold">આ તારીખે સેવા સહયોગ આપનાર દાતાશ્રી:</p>
+                      <p className="text-base font-black text-emerald-800">🎉 દાતા શ્રી {donation.donorName}</p>
+                      <p className="text-xs font-bold text-royal-800 mt-1">સેવા પ્રકાર: <span className="underline decoration-wavy decoration-emerald-500 underline-offset-4">{donation.sevaName}</span></p>
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div className="bg-amber-50/70 border border-amber-250/30 p-4 rounded-xl space-y-3">
+                      <p className="text-xs text-amber-800 font-bold">આ તારીખે કોઈ પણ અબોલ જીવની સેવાનું બુકિંગ બાકી છે!</p>
+                      <p className="text-[11px] text-gray-500 leading-relaxed font-semibold">આ તારીખ પસંદ કરી દૂધપૌવા કે પશુ-પક્ષી સારવારના દાતા બનવા માટે નીચે સહયોગ આપો.</p>
+                      <a
+                        href="#donations"
+                        className="inline-block bg-royal-800 hover:bg-royal-900 text-cream-50 font-bold px-5 py-2 rounded-xl text-xs shadow-md transition-all active:scale-[0.98]"
+                      >
+                        હમણાં સહયોગ કરો 🐾
+                      </a>
+                    </div>
+                  );
+                }
+              })()}
+            </div>
+          )}
+
         </div>
 
         {/* Accepted Donation Details with Share Appeal Card integration */}
