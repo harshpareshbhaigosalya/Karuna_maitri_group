@@ -6,9 +6,21 @@
     <link rel="apple-touch-icon" href="/logo.jpg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>કરુણા-મૈત્રી ગ્રુપ - જીવદયા સેવા</title>
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#0B2F64" />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("/sw.js")
+            .then((reg) => console.log("ServiceWorker registered successfully"))
+            .catch((err) => console.warn("ServiceWorker registration failed:", err));
+        });
+      }
+    </script>
   </body>
 </html>

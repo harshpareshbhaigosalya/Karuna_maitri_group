@@ -85,6 +85,54 @@ export const DonationHistory: React.FC = () => {
     }
   };
 
+  // Export donations list to UTF-8 BOM CSV for correct Gujarati display in Microsoft Excel
+  const exportToCSV = () => {
+    const headers = [
+      "દાન તારીખ (Date)",
+      "દાતાનું નામ (Donor Name)",
+      "ફોન નંબર (Phone Number)",
+      "સેવા પ્રકાર (Seva Type)",
+      "રકમ (Amount)",
+      "પ્રસંગ (Occasion)"
+    ];
+
+    const cleanCsvValue = (val: any) => {
+      if (val === null || val === undefined) return "";
+      const str = String(val).replace(/"/g, '""');
+      if (str.includes(",") || str.includes("\n") || str.includes('"')) {
+        return `"${str}"`;
+      }
+      return str;
+    };
+
+    const rows = filteredDonations.map((don) => [
+      don.donationDate,
+      don.donorNameSnapshot,
+      don.phoneSnapshot,
+      don.sevaNameSnapshot,
+      don.amount,
+      don.occasionType && don.occasionType !== "કોઈ પ્રસંગ નથી" ? don.occasionType : ""
+    ]);
+
+    const csvContent = [
+      headers.join(","),
+      ...rows.map((row) => row.map(cleanCsvValue).join(","))
+    ].join("\n");
+
+    // Add UTF-8 BOM (\uFEFF) for Excel compatibility with Gujarati characters
+    const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    const dateStr = new Date().toISOString().split("T")[0];
+
+    link.setAttribute("href", url);
+    link.setAttribute("download", `KM-Donations-Report-${dateStr}.csv`);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   // Filter logic in client-side for smooth real-time experience
   const filteredDonations = donations.filter((don) => {
     const searchLower = searchQuery.toLowerCase();
@@ -113,17 +161,27 @@ export const DonationHistory: React.FC = () => {
           <h1 className="text-3xl font-extrabold text-royal-800 tracking-tight">દાન ઇતિહાસ (Donations History)</h1>
           <p className="text-gray-500 mt-1">બધી દાન રસીદો અને શેરિંગ વિગતોનું સંચાલન કરો.</p>
         </div>
-        <button
-          onClick={() => setShowFilters(!showFilters)}
-          className={`flex items-center justify-center gap-2 border px-4 py-2.5 rounded-xl font-semibold text-sm transition-all ${
-            showFilters || selectedSeva || selectedOccasion
-              ? "bg-royal-800 text-cream-50 border-royal-800"
-              : "bg-white text-royal-800 border-cream-200 hover:bg-cream-50/50"
-          }`}
-        >
-          <SlidersHorizontal className="h-4 w-4" />
-          <span>ફિલ્ટર્સ (Filters)</span>
-        </button>
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            onClick={exportToCSV}
+            disabled={filteredDonations.length === 0}
+            className="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-600/50 text-white px-4 py-2.5 rounded-xl font-bold text-sm shadow-sm transition-all active:scale-[0.98] disabled:opacity-50"
+          >
+            <Download className="h-4 w-4" />
+            <span>રીપોર્ટ ડાઉનલોડ (Excel Export)</span>
+          </button>
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+            className={`flex items-center justify-center gap-2 border px-4 py-2.5 rounded-xl font-semibold text-sm transition-all ${
+              showFilters || selectedSeva || selectedOccasion
+                ? "bg-royal-800 text-cream-50 border-royal-800"
+                : "bg-white text-royal-800 border-cream-200 hover:bg-cream-50/50"
+            }`}
+          >
+            <SlidersHorizontal className="h-4 w-4" />
+            <span>ફિલ્ટર્સ (Filters)</span>
+          </button>
+        </div>
       </div>
 
       {/* Filter drawer box */}
