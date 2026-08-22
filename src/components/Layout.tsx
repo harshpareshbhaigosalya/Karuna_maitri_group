@@ -181,6 +181,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             </div>
           </div>
         )}
+        <div className="text-center pb-4 pt-2 text-[9px] text-cream-200/30 font-mono uppercase tracking-widest">
+          By Harsh Gosaliya
+        </div>
       </aside>
 
       {/* Mobile Bottom Tab Bar */}

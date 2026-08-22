@@ -1056,6 +1056,9 @@ export const Home: React.FC = () => {
           <p className="text-cream-200/50 font-medium">
             © {new Date().getFullYear()} Karuna-Maitri Group. All Rights Reserved. Designed for Animal Welfare Seva.
           </p>
+          <p className="text-[10px] text-saffron-500 font-extrabold tracking-wider pt-1 font-mono uppercase">
+            Developed & Engineered by Harsh Gosaliya
+          </p>
         </div>
       </footer>
     </div>
