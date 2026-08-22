@@ -179,7 +179,7 @@ export const DonationEntry: React.FC = () => {
     const file = e.target.files?.[0];
     if (!file) return;
     try {
-      const base64 = await compressImageToBase64(file, 150, 150, 0.7);
+      const base64 = await compressImageToBase64(file, 450, 600, 0.85);
       setDonorPhotoUrl(base64);
       setShowDonorPhoto(true);
     } catch (err) {
