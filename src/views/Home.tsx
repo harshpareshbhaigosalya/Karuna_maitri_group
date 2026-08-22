@@ -28,6 +28,7 @@ export const Home: React.FC = () => {
   const [selectedCalendarDay, setSelectedCalendarDay] = useState<Date | null>(new Date());
   const [calendarDonations, setCalendarDonations] = useState<Record<string, { donorName: string; sevaName: string }>>({});
   const [loadingCalendar, setLoadingCalendar] = useState(false);
+  const [showCalendarModal, setShowCalendarModal] = useState(false);
 
   const calendarYear = calendarDate.getFullYear();
   const calendarMonth = calendarDate.getMonth();
@@ -549,7 +550,10 @@ export const Home: React.FC = () => {
                   return (
                     <div
                       key={dateKey}
-                      onClick={() => setSelectedCalendarDay(day)}
+                      onClick={() => {
+                        setSelectedCalendarDay(day);
+                        setShowCalendarModal(true);
+                      }}
                       className={`border-2 p-2 rounded-xl flex flex-col justify-between cursor-pointer aspect-square sm:aspect-video transition-all ${cardStyle} ${
                         isSelected ? "ring-2 ring-royal-800 shadow-md font-bold" : ""
                       }`}
@@ -579,43 +583,69 @@ export const Home: React.FC = () => {
             )}
           </div>
 
-          {/* Selected Date Details Box */}
-          {selectedCalendarDay && (
-            <div className="max-w-md mx-auto bg-cream-50 border border-cream-200 rounded-2xl p-5 text-center space-y-3 shadow-sm animate-in slide-in-from-bottom duration-250">
-              <p className="text-[10px] font-extrabold text-royal-500 uppercase tracking-widest font-mono">
-                📅 તારીખ પસંદગી (Selected Date)
-              </p>
-              <h4 className="text-lg font-black text-royal-800">
-                {selectedCalendarDay.getDate()} {monthNamesGujarati[selectedCalendarDay.getMonth()].split(" ")[0]}, {selectedCalendarDay.getFullYear()}
-              </h4>
-              
-              {(() => {
-                const dateKey = `${selectedCalendarDay.getFullYear()}-${String(selectedCalendarDay.getMonth() + 1).padStart(2, "0")}-${String(selectedCalendarDay.getDate()).padStart(2, "0")}`;
-                const donation = calendarDonations[dateKey];
+          {/* Selected Date Details Box (Rendered as a popup modal overlay) */}
+          {showCalendarModal && selectedCalendarDay && (
+            <div 
+              className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50 animate-in fade-in duration-200"
+              onClick={() => setShowCalendarModal(false)}
+            >
+              <div 
+                className="bg-white max-w-sm w-full p-6 rounded-3xl shadow-2xl border border-cream-200 text-center space-y-4 relative animate-in zoom-in-95 duration-200"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button 
+                  onClick={() => setShowCalendarModal(false)} 
+                  className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 font-black text-sm h-8 w-8 bg-cream-50 hover:bg-cream-100 rounded-full flex items-center justify-center transition-colors"
+                >
+                  ✕
+                </button>
+                
+                <p className="text-[10px] font-extrabold text-royal-500 uppercase tracking-widest font-mono">
+                  📅 તારીખ પસંદગી (Selected Date)
+                </p>
+                <h4 className="text-xl font-black text-royal-800 border-b border-cream-100 pb-2">
+                  {selectedCalendarDay.getDate()} {monthNamesGujarati[selectedCalendarDay.getMonth()].split(" ")[0]}, {selectedCalendarDay.getFullYear()}
+                </h4>
+                
+                {(() => {
+                  const dateKey = `${selectedCalendarDay.getFullYear()}-${String(selectedCalendarDay.getMonth() + 1).padStart(2, "0")}-${String(selectedCalendarDay.getDate()).padStart(2, "0")}`;
+                  const donation = calendarDonations[dateKey];
 
-                if (donation) {
-                  return (
-                    <div className="bg-emerald-100/40 border border-emerald-250/30 p-4 rounded-xl space-y-1">
-                      <p className="text-xs text-gray-500 font-semibold">આ તારીખે સેવા સહયોગ આપનાર દાતાશ્રી:</p>
-                      <p className="text-base font-black text-emerald-800">🎉 દાતા શ્રી {donation.donorName}</p>
-                      <p className="text-xs font-bold text-royal-800 mt-1">સેવા પ્રકાર: <span className="underline decoration-wavy decoration-emerald-500 underline-offset-4">{donation.sevaName}</span></p>
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div className="bg-amber-50/70 border border-amber-250/30 p-4 rounded-xl space-y-3">
-                      <p className="text-xs text-amber-800 font-bold">આ તારીખે કોઈ પણ અબોલ જીવની સેવાનું બુકિંગ બાકી છે!</p>
-                      <p className="text-[11px] text-gray-500 leading-relaxed font-semibold">આ તારીખ પસંદ કરી દૂધપૌવા કે પશુ-પક્ષી સારવારના દાતા બનવા માટે નીચે સહયોગ આપો.</p>
-                      <a
-                        href="#donations"
-                        className="inline-block bg-royal-800 hover:bg-royal-900 text-cream-50 font-bold px-5 py-2 rounded-xl text-xs shadow-md transition-all active:scale-[0.98]"
-                      >
-                        હમણાં સહયોગ કરો 🐾
-                      </a>
-                    </div>
-                  );
-                }
-              })()}
+                  if (donation) {
+                    return (
+                      <div className="bg-emerald-100/40 border border-emerald-250/30 p-4 rounded-2xl space-y-2 text-left">
+                        <p className="text-xs text-gray-500 font-semibold text-center sm:text-left">આ તારીખે સેવા સહયોગ આપનાર દાતાશ્રી:</p>
+                        <p className="text-lg font-black text-emerald-800 text-center sm:text-left">🎉 દાતા શ્રી {donation.donorName}</p>
+                        <div className="h-px bg-emerald-200/40 my-2" />
+                        <p className="text-xs font-bold text-royal-800">
+                          🎯 સેવા હેતુ: <span className="underline decoration-wavy decoration-emerald-500 underline-offset-4 font-extrabold text-emerald-800 text-sm">{donation.sevaName}</span>
+                        </p>
+                      </div>
+                    );
+                  } else {
+                    return (
+                      <div className="bg-amber-50/70 border border-amber-250/30 p-4 rounded-2xl space-y-3">
+                        <p className="text-xs text-amber-800 font-bold">આ તારીખે કોઈ પણ અબોલ જીવની સેવાનું બુકિંગ બાકી છે!</p>
+                        <p className="text-[11px] text-gray-500 leading-relaxed font-semibold">આ તારીખ પસંદ કરી દૂધપૌવા કે પશુ-પક્ષી સારવારના દાતા બનવા માટે નીચે સહયોગ આપો.</p>
+                        <a
+                          href="#donations"
+                          onClick={() => setShowCalendarModal(false)}
+                          className="inline-block w-full bg-royal-800 hover:bg-royal-900 text-cream-50 font-bold px-5 py-2.5 rounded-xl text-xs shadow-md transition-all active:scale-[0.98]"
+                        >
+                          હમણાં સહયોગ કરો 🐾
+                        </a>
+                      </div>
+                    );
+                  }
+                })()}
+
+                <button
+                  onClick={() => setShowCalendarModal(false)}
+                  className="w-full py-2.5 bg-cream-100 hover:bg-cream-200 text-royal-800 font-bold rounded-xl transition-all text-xs"
+                >
+                  બંધ કરો (Close)
+                </button>
+              </div>
             </div>
           )}
 
