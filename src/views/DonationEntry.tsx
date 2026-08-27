@@ -943,7 +943,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                     borderRight: "2.5px solid #C5A059",
                     borderBottom: "2.5px solid #C5A059",
                     zIndex: 30,
-                    display: headerBase64 ? "none" : "flex",
+                    display: "none",
                     flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "center",
@@ -964,7 +964,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                     borderLeft: "2.5px solid #C5A059",
                     borderBottom: "2.5px solid #C5A059",
                     zIndex: 30,
-                    display: headerBase64 ? "none" : "flex",
+                    display: "none",
                     flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "center",
@@ -985,7 +985,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                     borderRight: "2.5px solid #C5A059",
                     borderTop: "2.5px solid #C5A059",
                     zIndex: 30,
-                    display: footerBase64 ? "none" : "flex",
+                    display: "none",
                     flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "center",
@@ -1006,7 +1006,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                     borderLeft: "2.5px solid #C5A059",
                     borderTop: "2.5px solid #C5A059",
                     zIndex: 30,
-                    display: footerBase64 ? "none" : "flex",
+                    display: "none",
                     flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "center",
@@ -1038,7 +1038,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                   )}
 
                   {/* 1. Header Area */}
-                  <div className="relative z-10" style={{ display: headerBase64 ? "none" : "flex", flexDirection: "column", gap: "2px", width: "100%" }}>
+                  <div className="relative z-10" style={{ display: "none", flexDirection: "column", gap: "2px", width: "100%" }}>
                     {/* Top Slogans */}
                     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", margin: "0 0 4px 0" }}>
                       <span style={{ color: "#b91c1c", fontSize: "11.5px", fontWeight: "950" }}>॥ શ્રી મહાવીરાય નમઃ ॥</span>
@@ -1108,23 +1108,23 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                             flexShrink: 0
                           }}
                         >
-                          <div style={{ backgroundColor: "rgba(255,255,255,0.08)", padding: "4px", textAlign: "center", borderBottom: "1px solid rgba(197, 160, 89, 0.3)" }}>
+                          <div style={{ backgroundColor: "rgba(197, 160, 89, 0.18)", padding: "4px", textAlign: "center", borderBottom: "1.5px solid #C5A059" }}>
                             <p style={{ margin: 0, color: "white", fontSize: "10.5px", fontWeight: "950", textAlign: "center" }}>🐾 {activeDetail.title} 🐾</p>
                           </div>
                           
                           <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "0 6px", textAlign: "center" }}>
-                            <p style={{ margin: 0, color: "#C5A059", fontSize: "11px", fontWeight: "900" }}>{activeDetail.subtitle}</p>
-                            <p style={{ margin: "2px 0", color: "white", fontSize: "21px", fontWeight: "955", lineHeight: "1.1" }}>{activeDetail.highlightVal}</p>
-                            <p style={{ margin: 0, color: "#C5A059", fontSize: "11px", fontWeight: "900" }}>{activeDetail.highlightUnit}</p>
+                            <p style={{ margin: 0, color: "#FDE68A", fontSize: "11.5px", fontWeight: "900" }}>{activeDetail.subtitle}</p>
+                            <p style={{ margin: "2px 0", color: "#FFFFFF", fontSize: "22px", fontWeight: "955", lineHeight: "1.1", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>{activeDetail.highlightVal}</p>
+                            <p style={{ margin: 0, color: "#FDE68A", fontSize: "11.5px", fontWeight: "900" }}>{activeDetail.highlightUnit}</p>
                             
-                            <div style={{ backgroundColor: "#b91c1c", color: "#f59e0b", padding: "2px 10px", borderRadius: "6px", fontSize: "12px", fontWeight: "955", border: "1px solid #C5A059", marginTop: "4px" }}>
+                            <div style={{ backgroundColor: "#7f1d1d", color: "#ffffff", padding: "3px 12px", borderRadius: "9999px", fontSize: "12.5px", fontWeight: "955", border: "1.5px solid #C5A059", marginTop: "5px", boxShadow: "0 2px 4px rgba(0,0,0,0.2)" }}>
                               {activeDetail.boxText}
                             </div>
                             <p style={{ margin: "3px 0 0 0", color: "white", fontSize: "9.5px", fontWeight: "900" }}>{activeDetail.verb}</p>
                           </div>
 
-                          <div style={{ backgroundColor: "rgba(255,255,255,0.06)", padding: "3px", borderTop: "1px solid rgba(197, 160, 89, 0.2)" }}>
-                            <p style={{ margin: 0, color: "white", fontSize: "8.5px", fontWeight: "900", textAlign: "center", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
+                          <div style={{ backgroundColor: "rgba(0, 0, 0, 0.25)", padding: "3.5px", borderTop: "1px solid rgba(197, 160, 89, 0.4)" }}>
+                            <p style={{ margin: 0, color: "#FDE68A", fontSize: "9px", fontWeight: "955", textAlign: "center", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
                               {activeDetail.bottomBar}
                             </p>
                           </div>
@@ -1289,7 +1289,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                   <div 
                     className="relative z-10" 
                     style={{ 
-                      display: footerBase64 ? "none" : "grid", 
+                      display: "none", 
                       gridTemplateColumns: showQrOnCard ? "1.45fr 0.55fr" : "1fr", 
                       gap: "10px", 
                       alignItems: "stretch",
@@ -1342,7 +1342,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                   </div>
 
                   {/* 5. Footer & Contacts */}
-                  <div className="font-sans relative z-10" style={{ display: footerBase64 ? "none" : "flex", flexDirection: "column", gap: "4px", width: "100%" }}>
+                  <div className="font-sans relative z-10" style={{ display: "none", flexDirection: "column", gap: "4px", width: "100%" }}>
                     
                     {/* Dark Green Motto Slogan Bar */}
                     <div 
@@ -1488,7 +1488,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
             borderRight: "2.5px solid #C5A059",
             borderBottom: "2.5px solid #C5A059",
             zIndex: 30,
-            display: headerBase64 ? "none" : "flex",
+            display: "none",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
@@ -1509,7 +1509,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
             borderLeft: "2.5px solid #C5A059",
             borderBottom: "2.5px solid #C5A059",
             zIndex: 30,
-            display: headerBase64 ? "none" : "flex",
+            display: "none",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
@@ -1530,7 +1530,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
             borderRight: "2.5px solid #C5A059",
             borderTop: "2.5px solid #C5A059",
             zIndex: 30,
-            display: footerBase64 ? "none" : "flex",
+            display: "none",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
@@ -1552,7 +1552,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
             borderLeft: "2.5px solid #C5A059",
             borderTop: "2.5px solid #C5A059",
             zIndex: 30,
-            display: footerBase64 ? "none" : "flex",
+            display: "none",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
@@ -1584,7 +1584,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
           )}
 
           {/* 1. Header Area */}
-          <div className="relative z-10" style={{ display: headerBase64 ? "none" : "flex", flexDirection: "column", gap: "2px", width: "100%" }}>
+          <div className="relative z-10" style={{ display: "none", flexDirection: "column", gap: "2px", width: "100%" }}>
             {/* Top Slogans */}
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", margin: "0 0 4px 0" }}>
               <span style={{ color: "#b91c1c", fontSize: "11.5px", fontWeight: "950" }}>॥ શ્રી મહાવીરાય નમઃ ॥</span>
@@ -1654,23 +1654,23 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                     flexShrink: 0
                   }}
                 >
-                  <div style={{ backgroundColor: "rgba(255,255,255,0.08)", padding: "4px", textAlign: "center", borderBottom: "1px solid rgba(197, 160, 89, 0.3)" }}>
+                  <div style={{ backgroundColor: "rgba(197, 160, 89, 0.18)", padding: "4px", textAlign: "center", borderBottom: "1.5px solid #C5A059" }}>
                     <p style={{ margin: 0, color: "white", fontSize: "10.5px", fontWeight: "950", textAlign: "center" }}>🐾 {activeDetail.title} 🐾</p>
                   </div>
                   
                   <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "0 6px", textAlign: "center" }}>
-                    <p style={{ margin: 0, color: "#C5A059", fontSize: "11px", fontWeight: "900" }}>{activeDetail.subtitle}</p>
-                    <p style={{ margin: "2px 0", color: "white", fontSize: "21px", fontWeight: "955", lineHeight: "1.1" }}>{activeDetail.highlightVal}</p>
-                    <p style={{ margin: 0, color: "#C5A059", fontSize: "11px", fontWeight: "900" }}>{activeDetail.highlightUnit}</p>
+                    <p style={{ margin: 0, color: "#FDE68A", fontSize: "11.5px", fontWeight: "900" }}>{activeDetail.subtitle}</p>
+                    <p style={{ margin: "2px 0", color: "#FFFFFF", fontSize: "22px", fontWeight: "955", lineHeight: "1.1", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>{activeDetail.highlightVal}</p>
+                    <p style={{ margin: 0, color: "#FDE68A", fontSize: "11.5px", fontWeight: "900" }}>{activeDetail.highlightUnit}</p>
                     
-                    <div style={{ backgroundColor: "#b91c1c", color: "#f59e0b", padding: "2px 10px", borderRadius: "6px", fontSize: "12px", fontWeight: "955", border: "1px solid #C5A059", marginTop: "4px" }}>
+                    <div style={{ backgroundColor: "#7f1d1d", color: "#ffffff", padding: "3px 12px", borderRadius: "9999px", fontSize: "12.5px", fontWeight: "955", border: "1.5px solid #C5A059", marginTop: "5px", boxShadow: "0 2px 4px rgba(0,0,0,0.2)" }}>
                       {activeDetail.boxText}
                     </div>
                     <p style={{ margin: "3px 0 0 0", color: "white", fontSize: "9.5px", fontWeight: "900" }}>{activeDetail.verb}</p>
                   </div>
 
-                  <div style={{ backgroundColor: "rgba(255,255,255,0.06)", padding: "3px", borderTop: "1px solid rgba(197, 160, 89, 0.2)" }}>
-                    <p style={{ margin: 0, color: "white", fontSize: "8.5px", fontWeight: "900", textAlign: "center", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
+                  <div style={{ backgroundColor: "rgba(0, 0, 0, 0.25)", padding: "3.5px", borderTop: "1px solid rgba(197, 160, 89, 0.4)" }}>
+                    <p style={{ margin: 0, color: "#FDE68A", fontSize: "9px", fontWeight: "955", textAlign: "center", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
                       {activeDetail.bottomBar}
                     </p>
                   </div>
@@ -1835,7 +1835,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
           <div 
             className="relative z-10" 
             style={{ 
-              display: footerBase64 ? "none" : "grid", 
+              display: "none", 
               gridTemplateColumns: showQrOnCard ? "1.45fr 0.55fr" : "1fr", 
               gap: "10px", 
               alignItems: "stretch",
@@ -1888,7 +1888,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
           </div>
 
           {/* 5. Footer & Contacts */}
-          <div className="font-sans relative z-10" style={{ display: footerBase64 ? "none" : "flex", flexDirection: "column", gap: "4px", width: "100%" }}>
+          <div className="font-sans relative z-10" style={{ display: "none", flexDirection: "column", gap: "4px", width: "100%" }}>
             
             {/* Dark Green Motto Slogan Bar */}
             <div 

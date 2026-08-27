@@ -215,6 +215,8 @@ export const DonationDetail: React.FC = () => {
         el.style.borderColor = "#0B2F64";
       } else if (el.classList.contains("gray-border")) {
         el.style.borderColor = "#E5E7EB";
+      } else if (el.classList.contains("safe-card-export")) {
+        el.style.borderColor = "#043e22";
       } else {
         el.style.borderColor = "transparent";
       }
@@ -519,7 +521,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                   borderRight: "2.5px solid #C5A059",
                   borderBottom: "2.5px solid #C5A059",
                   zIndex: 30,
-                  display: "flex",
+                  display: "none",
                   flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
@@ -540,7 +542,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                   borderLeft: "2.5px solid #C5A059",
                   borderBottom: "2.5px solid #C5A059",
                   zIndex: 30,
-                  display: "flex",
+                  display: "none",
                   flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
@@ -561,7 +563,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                   borderRight: "2.5px solid #C5A059",
                   borderTop: "2.5px solid #C5A059",
                   zIndex: 30,
-                  display: "flex",
+                  display: "none",
                   flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
@@ -582,7 +584,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                   borderLeft: "2.5px solid #C5A059",
                   borderTop: "2.5px solid #C5A059",
                   zIndex: 30,
-                  display: "flex",
+                  display: "none",
                   flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
@@ -595,26 +597,24 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                 </div>
 
                 {/* 1. Header Banner Image */}
-                {headerBase64 && (
-                  <img 
-                    src={headerBase64} 
-                    alt="Header" 
-                    style={{ 
-                      width: "584px", 
-                      height: "217px", 
-                      marginLeft: "-20px",
-                      marginRight: "-20px",
-                      marginTop: "-20px",
-                      borderBottom: "2.5px solid #C5A059",
-                      zIndex: 10,
-                      position: "relative",
-                      display: "block"
-                    }} 
-                  />
-                )}
+                <img 
+                  src="/header_banner.jpg" 
+                  alt="Header" 
+                  style={{ 
+                    width: "584px", 
+                    height: "217px", 
+                    marginLeft: "-20px",
+                    marginRight: "-20px",
+                    marginTop: "-20px",
+                    borderBottom: "2.5px solid #C5A059",
+                    zIndex: 10,
+                    position: "relative",
+                    display: "block"
+                  }} 
+                />
 
                 {/* 1. Header Area */}
-                <div className="relative z-10" style={{ display: headerBase64 ? "none" : "flex", flexDirection: "column", gap: "2px", width: "100%" }}>
+                <div className="relative z-10" style={{ display: "none", flexDirection: "column", gap: "2px", width: "100%" }}>
                   {/* Top Slogans */}
                   <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", margin: "0 0 4px 0" }}>
                     <span style={{ color: "#b91c1c", fontSize: "11.5px", fontWeight: "950" }}>॥ શ્રી મહાવીરાય નમઃ ॥</span>
@@ -674,7 +674,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                         style={{
                           width: "190px",
                           height: "175px",
-                          backgroundColor: "#0B2F64",
+                          backgroundColor: "#043e22",
                           border: "2.5px solid #C5A059",
                           borderRadius: "14px",
                           display: "flex",
@@ -684,23 +684,23 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                           flexShrink: 0
                         }}
                       >
-                        <div style={{ backgroundColor: "rgba(255,255,255,0.08)", padding: "4px", textAlign: "center", borderBottom: "1px solid rgba(197, 160, 89, 0.3)" }}>
-                          <p style={{ margin: 0, color: "white", fontSize: "10.5px", fontWeight: "950", textAlign: "center" }}>🐾 {activeDetail.title} 🐾</p>
+                        <div style={{ backgroundColor: "rgba(197, 160, 89, 0.18)", padding: "4px", textAlign: "center", borderBottom: "1.5px solid #C5A059" }}>
+                          <p style={{ margin: 0, color: "#FFFFFF", fontSize: "11px", fontWeight: "955", textAlign: "center", letterSpacing: "0.2px" }}>✨ {activeDetail.title} ✨</p>
                         </div>
                         
                         <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "0 6px", textAlign: "center" }}>
-                          <p style={{ margin: 0, color: "#C5A059", fontSize: "11px", fontWeight: "900" }}>{activeDetail.subtitle}</p>
-                          <p style={{ margin: "2px 0", color: "white", fontSize: "21px", fontWeight: "955", lineHeight: "1.1" }}>{activeDetail.highlightVal}</p>
-                          <p style={{ margin: 0, color: "#C5A059", fontSize: "11px", fontWeight: "900" }}>{activeDetail.highlightUnit}</p>
+                          <p style={{ margin: 0, color: "#FDE68A", fontSize: "11.5px", fontWeight: "900" }}>{activeDetail.subtitle}</p>
+                          <p style={{ margin: "2px 0", color: "#FFFFFF", fontSize: "22px", fontWeight: "955", lineHeight: "1.1", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>{activeDetail.highlightVal}</p>
+                          <p style={{ margin: 0, color: "#FDE68A", fontSize: "11.5px", fontWeight: "900" }}>{activeDetail.highlightUnit}</p>
                           
-                          <div style={{ backgroundColor: "#b91c1c", color: "#f59e0b", padding: "2px 10px", borderRadius: "6px", fontSize: "12px", fontWeight: "955", border: "1px solid #C5A059", marginTop: "4px" }}>
+                          <div style={{ backgroundColor: "#7f1d1d", color: "#ffffff", padding: "3px 12px", borderRadius: "9999px", fontSize: "12.5px", fontWeight: "955", border: "1.5px solid #C5A059", marginTop: "5px", boxShadow: "0 2px 4px rgba(0,0,0,0.2)" }}>
                             {activeDetail.boxText}
                           </div>
-                          <p style={{ margin: "3px 0 0 0", color: "white", fontSize: "9.5px", fontWeight: "900" }}>{activeDetail.verb}</p>
+                          <p style={{ margin: "3px 0 0 0", color: "#FFFFFF", fontSize: "10px", fontWeight: "900" }}>{activeDetail.verb}</p>
                         </div>
 
-                        <div style={{ backgroundColor: "rgba(255,255,255,0.06)", padding: "3px", borderTop: "1px solid rgba(197, 160, 89, 0.2)" }}>
-                          <p style={{ margin: 0, color: "white", fontSize: "8.5px", fontWeight: "900", textAlign: "center", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
+                        <div style={{ backgroundColor: "rgba(0, 0, 0, 0.25)", padding: "3.5px", borderTop: "1px solid rgba(197, 160, 89, 0.4)" }}>
+                          <p style={{ margin: 0, color: "#FDE68A", fontSize: "9px", fontWeight: "955", textAlign: "center", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
                             {activeDetail.bottomBar}
                           </p>
                         </div>
@@ -842,7 +842,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                 <div 
                   className="relative z-10" 
                   style={{ 
-                    display: footerBase64 ? "none" : "grid", 
+                    display: "none", 
                     gridTemplateColumns: showQrOnCard ? "1.45fr 0.55fr" : "1fr", 
                     gap: "10px", 
                     alignItems: "stretch",
@@ -895,26 +895,24 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                 </div>
 
                 {/* 4. Footer Banner Image */}
-                {footerBase64 && (
-                  <img 
-                    src={footerBase64} 
-                    alt="Footer" 
-                    style={{ 
-                      width: "584px", 
-                      height: "143px", 
-                      marginLeft: "-20px",
-                      marginRight: "-20px",
-                      marginBottom: "-20px",
-                      borderTop: "2.5px solid #C5A059",
-                      zIndex: 10,
-                      position: "relative",
-                      display: "block"
-                    }} 
-                  />
-                )}
+                <img 
+                  src="/footer_banner.jpg" 
+                  alt="Footer" 
+                  style={{ 
+                    width: "584px", 
+                    height: "143px", 
+                    marginLeft: "-20px",
+                    marginRight: "-20px",
+                    marginBottom: "-20px",
+                    borderTop: "2.5px solid #C5A059",
+                    zIndex: 10,
+                    position: "relative",
+                    display: "block"
+                  }} 
+                />
 
                 {/* 5. Footer quotes and slogans */}
-                <div className="font-sans relative z-10" style={{ display: footerBase64 ? "none" : "flex", flexDirection: "column", gap: "4px", width: "100%" }}>
+                <div className="font-sans relative z-10" style={{ display: "none", flexDirection: "column", gap: "4px", width: "100%" }}>
                   
                   {/* Dark Green Motto Slogan Bar */}
                   <div 
@@ -1065,7 +1063,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
             borderRight: "2.5px solid #C5A059",
             borderBottom: "2.5px solid #C5A059",
             zIndex: 30,
-            display: headerBase64 ? "none" : "flex",
+            display: "none",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
@@ -1086,7 +1084,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
             borderLeft: "2.5px solid #C5A059",
             borderBottom: "2.5px solid #C5A059",
             zIndex: 30,
-            display: headerBase64 ? "none" : "flex",
+            display: "none",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
@@ -1107,7 +1105,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
             borderRight: "2.5px solid #C5A059",
             borderTop: "2.5px solid #C5A059",
             zIndex: 30,
-            display: footerBase64 ? "none" : "flex",
+            display: "none",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
@@ -1128,7 +1126,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
             borderLeft: "2.5px solid #C5A059",
             borderTop: "2.5px solid #C5A059",
             zIndex: 30,
-            display: footerBase64 ? "none" : "flex",
+            display: "none",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
@@ -1141,26 +1139,24 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
           </div>
 
           {/* 1. Header Banner Image */}
-          {headerBase64 && (
-            <img 
-              src={headerBase64} 
-              alt="Header" 
-              style={{ 
-                width: "584px", 
-                height: "217px", 
-                marginLeft: "-20px",
-                marginRight: "-20px",
-                marginTop: "-20px",
-                borderBottom: "2.5px solid #C5A059",
-                zIndex: 10,
-                position: "relative",
-                display: "block"
-              }} 
-            />
-          )}
+          <img 
+            src="/header_banner.jpg" 
+            alt="Header" 
+            style={{ 
+              width: "584px", 
+              height: "217px", 
+              marginLeft: "-20px",
+              marginRight: "-20px",
+              marginTop: "-20px",
+              borderBottom: "2.5px solid #C5A059",
+              zIndex: 10,
+              position: "relative",
+              display: "block"
+            }} 
+          />
 
           {/* 1. Header Area */}
-          <div className="relative z-10" style={{ display: headerBase64 ? "none" : "flex", flexDirection: "column", gap: "2px", width: "100%" }}>
+          <div className="relative z-10" style={{ display: "none", flexDirection: "column", gap: "2px", width: "100%" }}>
             {/* Top Slogans */}
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", margin: "0 0 4px 0" }}>
               <span style={{ color: "#b91c1c", fontSize: "11.5px", fontWeight: "950" }}>॥ શ્રી મહાવીરાય નમઃ ॥</span>
@@ -1220,7 +1216,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                   style={{
                     width: "190px",
                     height: "175px",
-                    backgroundColor: "#0B2F64",
+                    backgroundColor: "#043e22",
                     border: "2.5px solid #C5A059",
                     borderRadius: "14px",
                     display: "flex",
@@ -1230,23 +1226,23 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                     flexShrink: 0
                   }}
                 >
-                  <div style={{ backgroundColor: "rgba(255,255,255,0.08)", padding: "4px", textAlign: "center", borderBottom: "1px solid rgba(197, 160, 89, 0.3)" }}>
-                    <p style={{ margin: 0, color: "white", fontSize: "10.5px", fontWeight: "950", textAlign: "center" }}>🐾 {activeDetail.title} 🐾</p>
+                  <div style={{ backgroundColor: "rgba(197, 160, 89, 0.18)", padding: "4px", textAlign: "center", borderBottom: "1.5px solid #C5A059" }}>
+                    <p style={{ margin: 0, color: "#FFFFFF", fontSize: "11px", fontWeight: "955", textAlign: "center", letterSpacing: "0.2px" }}>✨ {activeDetail.title} ✨</p>
                   </div>
                   
                   <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", padding: "0 6px", textAlign: "center", justifyContent: "center" }}>
-                    <p style={{ margin: 0, color: "#C5A059", fontSize: "11px", fontWeight: "900" }}>{activeDetail.subtitle}</p>
-                    <p style={{ margin: "2px 0", color: "white", fontSize: "21px", fontWeight: "955", lineHeight: "1.1" }}>{activeDetail.highlightVal}</p>
-                    <p style={{ margin: 0, color: "#C5A059", fontSize: "11px", fontWeight: "900" }}>{activeDetail.highlightUnit}</p>
+                    <p style={{ margin: 0, color: "#FDE68A", fontSize: "11.5px", fontWeight: "900" }}>{activeDetail.subtitle}</p>
+                    <p style={{ margin: "2px 0", color: "#FFFFFF", fontSize: "22px", fontWeight: "955", lineHeight: "1.1", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>{activeDetail.highlightVal}</p>
+                    <p style={{ margin: 0, color: "#FDE68A", fontSize: "11.5px", fontWeight: "900" }}>{activeDetail.highlightUnit}</p>
                     
-                    <div style={{ backgroundColor: "#b91c1c", color: "#f59e0b", padding: "2px 10px", borderRadius: "6px", fontSize: "12px", fontWeight: "955", border: "1px solid #C5A059", marginTop: "4px" }}>
+                    <div style={{ backgroundColor: "#7f1d1d", color: "#ffffff", padding: "3px 12px", borderRadius: "9999px", fontSize: "12.5px", fontWeight: "955", border: "1.5px solid #C5A059", marginTop: "5px", boxShadow: "0 2px 4px rgba(0,0,0,0.2)" }}>
                       {activeDetail.boxText}
                     </div>
-                    <p style={{ margin: "3px 0 0 0", color: "white", fontSize: "9.5px", fontWeight: "900" }}>{activeDetail.verb}</p>
+                    <p style={{ margin: "3px 0 0 0", color: "#FFFFFF", fontSize: "10px", fontWeight: "900" }}>{activeDetail.verb}</p>
                   </div>
 
-                  <div style={{ backgroundColor: "rgba(255,255,255,0.06)", padding: "3px", borderTop: "1px solid rgba(197, 160, 89, 0.2)" }}>
-                    <p style={{ margin: 0, color: "white", fontSize: "8.5px", fontWeight: "900", textAlign: "center", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
+                  <div style={{ backgroundColor: "rgba(0, 0, 0, 0.25)", padding: "3.5px", borderTop: "1px solid rgba(197, 160, 89, 0.4)" }}>
+                    <p style={{ margin: 0, color: "#FDE68A", fontSize: "9px", fontWeight: "955", textAlign: "center", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
                       {activeDetail.bottomBar}
                     </p>
                   </div>
@@ -1389,27 +1385,27 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
           })()}
 
           {/* 4. Footer Banner Image */}
-          {footerBase64 && (
-            <img 
-              src={footerBase64} 
-              alt="Footer" 
-              style={{ 
-                width: "100%", 
-                height: "auto", 
-                borderRadius: "14px", 
-                border: '2.5px solid #C5A059',
-                zIndex: 10,
-                position: "relative",
-                display: "block"
-              }} 
-            />
-          )}
+          <img 
+            src="/footer_banner.jpg" 
+            alt="Footer" 
+            style={{ 
+              width: "584px", 
+              height: "143px", 
+              marginLeft: "-20px",
+              marginRight: "-20px",
+              marginBottom: "-20px",
+              borderTop: "2.5px solid #C5A059",
+              zIndex: 10,
+              position: "relative",
+              display: "block"
+            }} 
+          />
 
           {/* 4. Hospital Activity / QR Code Grid */}
           <div 
             className="relative z-10" 
             style={{ 
-              display: footerBase64 ? "none" : "grid", 
+              display: "none", 
               gridTemplateColumns: showQrOnCard ? "1.45fr 0.55fr" : "1fr", 
               gap: "10px", 
               alignItems: "stretch",
@@ -1462,7 +1458,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
           </div>
 
           {/* 5. Footer & Contacts */}
-          <div className="font-sans relative z-10" style={{ display: footerBase64 ? "none" : "flex", flexDirection: "column", gap: "4px", width: "100%" }}>
+          <div className="font-sans relative z-10" style={{ display: "none", flexDirection: "column", gap: "4px", width: "100%" }}>
             
             {/* Dark Green Motto Slogan Bar */}
             <div 
