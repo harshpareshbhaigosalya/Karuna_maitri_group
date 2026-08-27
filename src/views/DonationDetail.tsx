@@ -466,7 +466,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                   border: "8px solid #043e22", // Forest green outer border
                   background: "#FAF5EC", // Match background to banner cream color
                   boxSizing: 'border-box',
-                  padding: "20px"
+                  padding: "0"
                 }}
               >
                 {/* Cloned override stylesheet for sandbox styling inside html2canvas */}
@@ -598,20 +598,20 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
 
                 {/* 1. Header Banner Image */}
                 <img 
-                  src="/header_banner.jpg" 
+                  src={headerBase64 || "/header_banner.jpg"} 
                   alt="Header" 
                   style={{ 
-                    width: "584px", 
+                    width: "100%", 
                     height: "217px", 
-                    marginLeft: "-20px",
-                    marginRight: "-20px",
-                    marginTop: "-20px",
                     borderBottom: "2.5px solid #C5A059",
                     zIndex: 10,
                     position: "relative",
                     display: "block"
                   }} 
                 />
+
+                {/* Main Middle Container with 20px padding */}
+                <div style={{ flex: 1, padding: "10px 20px", display: "flex", flexDirection: "column", justifyContent: "space-around", gap: "10px", zIndex: 10, position: "relative" }}>
 
                 {/* 1. Header Area */}
                 <div className="relative z-10" style={{ display: "none", flexDirection: "column", gap: "2px", width: "100%" }}>
@@ -893,17 +893,15 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                     </div>
                   )}
                 </div>
+                </div>
 
                 {/* 4. Footer Banner Image */}
                 <img 
-                  src="/footer_banner.jpg" 
+                  src={footerBase64 || "/footer_banner.jpg"} 
                   alt="Footer" 
                   style={{ 
-                    width: "584px", 
+                    width: "100%", 
                     height: "143px", 
-                    marginLeft: "-20px",
-                    marginRight: "-20px",
-                    marginBottom: "-20px",
                     borderTop: "2.5px solid #C5A059",
                     zIndex: 10,
                     position: "relative",
@@ -1008,7 +1006,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
             border: "8px solid #043e22", // Forest green outer border
             background: "#FAF5EC", // Match background to banner cream color
             boxSizing: 'border-box',
-            padding: "20px"
+            padding: "0"
           }}
         >
           {/* Cloned override stylesheet for sandbox styling inside html2canvas */}
@@ -1140,20 +1138,20 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
 
           {/* 1. Header Banner Image */}
           <img 
-            src="/header_banner.jpg" 
+            src={headerBase64 || "/header_banner.jpg"} 
             alt="Header" 
             style={{ 
-              width: "584px", 
+              width: "100%", 
               height: "217px", 
-              marginLeft: "-20px",
-              marginRight: "-20px",
-              marginTop: "-20px",
               borderBottom: "2.5px solid #C5A059",
               zIndex: 10,
               position: "relative",
               display: "block"
             }} 
           />
+
+          {/* Main Middle Container with 20px padding */}
+          <div style={{ flex: 1, padding: "10px 20px", display: "flex", flexDirection: "column", justifyContent: "space-around", gap: "10px", zIndex: 10, position: "relative" }}>
 
           {/* 1. Header Area */}
           <div className="relative z-10" style={{ display: "none", flexDirection: "column", gap: "2px", width: "100%" }}>
@@ -1456,6 +1454,21 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
               </div>
             )}
           </div>
+          </div>
+
+          {/* 4. Footer Banner Image */}
+          <img 
+            src={footerBase64 || "/footer_banner.jpg"} 
+            alt="Footer" 
+            style={{ 
+              width: "100%", 
+              height: "143px", 
+              borderTop: "2.5px solid #C5A059",
+              zIndex: 10,
+              position: "relative",
+              display: "block"
+            }} 
+          />
 
           {/* 5. Footer & Contacts */}
           <div className="font-sans relative z-10" style={{ display: "none", flexDirection: "column", gap: "4px", width: "100%" }}>

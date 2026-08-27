@@ -888,7 +888,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                     border: "8px solid #043e22", // Forest green outer border
                     background: "#FAF5EC", // Match background to banner cream color
                     boxSizing: 'border-box',
-                    padding: "20px"
+                    padding: "0"
                   }}
                 >
                   {/* Cloned override stylesheet for sandbox styling inside html2canvas */}
@@ -1019,23 +1019,21 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                   </div>
 
                   {/* 1. Header Banner Image */}
-                  {headerBase64 && (
-                    <img 
-                      src={headerBase64} 
-                      alt="Header" 
-                      style={{ 
-                        width: "584px", 
-                        height: "217px", 
-                        marginLeft: "-20px",
-                        marginRight: "-20px",
-                        marginTop: "-20px",
-                        borderBottom: "2.5px solid #C5A059",
-                        zIndex: 10,
-                        position: "relative",
-                        display: "block"
-                      }} 
-                    />
-                  )}
+                  <img 
+                    src={headerBase64 || "/header_banner.jpg"} 
+                    alt="Header" 
+                    style={{ 
+                      width: "100%", 
+                      height: "217px", 
+                      borderBottom: "2.5px solid #C5A059",
+                      zIndex: 10,
+                      position: "relative",
+                      display: "block"
+                    }} 
+                  />
+
+                  {/* Main Middle Container with 20px padding */}
+                  <div style={{ flex: 1, padding: "10px 20px", display: "flex", flexDirection: "column", justifyContent: "space-around", gap: "10px", zIndex: 10, position: "relative" }}>
 
                   {/* 1. Header Area */}
                   <div className="relative z-10" style={{ display: "none", flexDirection: "column", gap: "2px", width: "100%" }}>
@@ -1188,7 +1186,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                         {/* Left column: Text details */}
                         <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: "3px" }}>
                           {/* Header badge */}
-                          <div style={{ backgroundColor: "#7f1d1d", color: "white", padding: "2px 16px", borderRadius: "9999px", fontSize: "11px", fontWeight: "955", border: "1.5px solid #C5A059", display: "inline-block" }}>
+                          <div style={{ backgroundColor: "#7f1d1d", color: "white", padding: "2px 16px", borderRadius: "9999px", fontSize: "11px", fontWeight: "955", border: "1.5px solid #C5A059", display: "block" }}>
                             {activeSeva?.nameGujarati || "જીવદયા"} સેવા ના દાતા શ્રી
                           </div>
 
@@ -1217,7 +1215,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                               "{customMessage}"
                             </p>
                           ) : (
-                            <div style={{ backgroundColor: "rgba(11, 47, 100, 0.05)", border: "1px dashed rgba(11, 47, 100, 0.2)", padding: "2px 15px", borderRadius: "9999px", fontSize: "11px", fontWeight: "900", color: "#0B2F64", marginTop: "2px" }}>
+                            <div style={{ backgroundColor: "rgba(11, 47, 100, 0.05)", border: "1px dashed rgba(11, 47, 100, 0.2)", padding: "2px 15px", borderRadius: "9999px", fontSize: "11px", fontWeight: "900", color: "#0B2F64", marginTop: "2px", display: "block" }}>
                               હસ્તે, {hasteName ? hasteName : (donorName ? `${donorName} સહ પરિવાર` : "દાતાશ્રી સહ પરિવાર")}
                             </div>
                           )}
@@ -1232,7 +1230,9 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                               fontWeight: "955",
                               padding: "3px 28px",
                               borderRadius: "9999px",
-                              display: "inline-block",
+                              display: "inline-flex",
+                              alignItems: "center",
+                              justifyContent: "center",
                               marginTop: "4px",
                               lineHeight: "1",
                               boxShadow: "0 3px 5px rgba(0,0,0,0.15)"
@@ -1340,8 +1340,23 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                       </div>
                     )}
                   </div>
+                </div>
 
-                  {/* 5. Footer & Contacts */}
+                {/* 4. Footer Banner Image */}
+                <img 
+                  src={footerBase64 || "/footer_banner.jpg"} 
+                  alt="Footer" 
+                  style={{ 
+                    width: "100%", 
+                    height: "143px", 
+                    borderTop: "2.5px solid #C5A059",
+                    zIndex: 10,
+                    position: "relative",
+                    display: "block"
+                  }} 
+                />
+
+                {/* 5. Footer & Contacts */}
                   <div className="font-sans relative z-10" style={{ display: "none", flexDirection: "column", gap: "4px", width: "100%" }}>
                     
                     {/* Dark Green Motto Slogan Bar */}
@@ -1433,7 +1448,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
             border: "8px solid #043e22", // Forest green outer border
             background: "#FAF5EC", // Match background to banner cream color
             boxSizing: 'border-box',
-            padding: "20px"
+            padding: "0"
           }}
         >
           {/* Cloned override stylesheet for sandbox styling inside html2canvas */}
@@ -1565,23 +1580,21 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
           </div>
 
           {/* 1. Header Banner Image */}
-          {headerBase64 && (
-            <img 
-              src={headerBase64} 
-              alt="Header" 
-              style={{ 
-                width: "584px", 
-                height: "217px", 
-                marginLeft: "-20px",
-                marginRight: "-20px",
-                marginTop: "-20px",
-                borderBottom: "2.5px solid #C5A059",
-                zIndex: 10,
-                position: "relative",
-                display: "block"
-              }} 
-            />
-          )}
+          <img 
+            src={headerBase64 || "/header_banner.jpg"} 
+            alt="Header" 
+            style={{ 
+              width: "100%", 
+              height: "217px", 
+              borderBottom: "2.5px solid #C5A059",
+              zIndex: 10,
+              position: "relative",
+              display: "block"
+            }} 
+          />
+
+          {/* Main Middle Container with 20px padding */}
+          <div style={{ flex: 1, padding: "10px 20px", display: "flex", flexDirection: "column", justifyContent: "space-around", gap: "10px", zIndex: 10, position: "relative" }}>
 
           {/* 1. Header Area */}
           <div className="relative z-10" style={{ display: "none", flexDirection: "column", gap: "2px", width: "100%" }}>
@@ -1734,7 +1747,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                 {/* Left column: Text details */}
                 <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: "3px" }}>
                   {/* Header badge */}
-                  <div style={{ backgroundColor: "#7f1d1d", color: "white", padding: "2px 16px", borderRadius: "9999px", fontSize: "11px", fontWeight: "955", border: "1.5px solid #C5A059", display: "inline-block" }}>
+                  <div style={{ backgroundColor: "#7f1d1d", color: "white", padding: "2px 16px", borderRadius: "9999px", fontSize: "11px", fontWeight: "955", border: "1.5px solid #C5A059", display: "block" }}>
                     {activeSeva?.nameGujarati || "જીવદયા"} સેવા ના દાતા શ્રી
                   </div>
 
@@ -1763,7 +1776,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                       "{customMessage}"
                     </p>
                   ) : (
-                    <div style={{ backgroundColor: "rgba(11, 47, 100, 0.05)", border: "1px dashed rgba(11, 47, 100, 0.2)", padding: "2px 15px", borderRadius: "9999px", fontSize: "11px", fontWeight: "900", color: "#0B2F64", marginTop: "2px" }}>
+                    <div style={{ backgroundColor: "rgba(11, 47, 100, 0.05)", border: "1px dashed rgba(11, 47, 100, 0.2)", padding: "2px 15px", borderRadius: "9999px", fontSize: "11px", fontWeight: "900", color: "#0B2F64", marginTop: "2px", display: "block" }}>
                       હસ્તે, {hasteName ? hasteName : (donorName ? `${donorName} સહ પરિવાર` : "દાતાશ્રી સહ પરિવાર")}
                     </div>
                   )}
@@ -1778,7 +1791,9 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                       fontWeight: "955",
                       padding: "3px 28px",
                       borderRadius: "9999px",
-                      display: "inline-block",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
                       marginTop: "4px",
                       lineHeight: "1",
                       boxShadow: "0 3px 5px rgba(0,0,0,0.15)"
@@ -1886,6 +1901,21 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
               </div>
             )}
           </div>
+          </div>
+
+          {/* 4. Footer Banner Image */}
+          <img 
+            src={footerBase64 || "/footer_banner.jpg"} 
+            alt="Footer" 
+            style={{ 
+              width: "100%", 
+              height: "143px", 
+              borderTop: "2.5px solid #C5A059",
+              zIndex: 10,
+              position: "relative",
+              display: "block"
+            }} 
+          />
 
           {/* 5. Footer & Contacts */}
           <div className="font-sans relative z-10" style={{ display: "none", flexDirection: "column", gap: "4px", width: "100%" }}>
