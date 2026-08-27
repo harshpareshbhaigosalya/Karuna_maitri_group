@@ -462,7 +462,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                 style={{ 
                   fontFamily: "'Noto Sans Gujarati', sans-serif",
                   border: "8px solid #043e22", // Forest green outer border
-                  background: "linear-gradient(180deg, #FAF9F6 0%, #FFFDF9 100%)",
+                  background: "#FAF5EC", // Match background to banner cream color
                   boxSizing: 'border-box',
                   padding: "20px"
                 }}
@@ -470,8 +470,8 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                 {/* Cloned override stylesheet for sandbox styling inside html2canvas */}
                 <style dangerouslySetInnerHTML={{__html: `
                   .safe-card-export, .safe-card-export * {
-                    --border-color: #FAF9F6 !important;
-                    border-color: #FAF9F6 !important;
+                    --border-color: #FAF5EC !important;
+                    border-color: #FAF5EC !important;
                     outline-color: transparent !important;
                     box-shadow: none !important;
                     text-shadow: none !important;
@@ -594,8 +594,27 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                   <span style={{ fontSize: "11px", fontWeight: "900", color: "#C5A059", lineHeight: "1" }}>જીવદયા</span>
                 </div>
 
+                {/* 1. Header Banner Image */}
+                {headerBase64 && (
+                  <img 
+                    src={headerBase64} 
+                    alt="Header" 
+                    style={{ 
+                      width: "584px", 
+                      height: "217px", 
+                      marginLeft: "-20px",
+                      marginRight: "-20px",
+                      marginTop: "-20px",
+                      borderBottom: "2.5px solid #C5A059",
+                      zIndex: 10,
+                      position: "relative",
+                      display: "block"
+                    }} 
+                  />
+                )}
+
                 {/* 1. Header Area */}
-                <div className="relative z-10" style={{ display: "flex", flexDirection: "column", gap: "2px", width: "100%" }}>
+                <div className="relative z-10" style={{ display: headerBase64 ? "none" : "flex", flexDirection: "column", gap: "2px", width: "100%" }}>
                   {/* Top Slogans */}
                   <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", margin: "0 0 4px 0" }}>
                     <span style={{ color: "#b91c1c", fontSize: "11.5px", fontWeight: "950" }}>॥ શ્રી મહાવીરાય નમઃ ॥</span>
@@ -697,13 +716,21 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                           overflow: "hidden", 
                           border: '2.5px solid #C5A059', 
                           backgroundColor: '#FAF9F6',
-                          backgroundImage: bgBase64 ? `url(${bgBase64})` : "none",
-                          backgroundSize: "cover",
-                          backgroundPosition: "center",
-                          backgroundRepeat: "no-repeat"
+                          position: "relative"
                         }}
                       >
-                        {!bgBase64 && (
+                        {bgBase64 ? (
+                          <img 
+                            src={bgBase64} 
+                            alt="Seva Collage" 
+                            style={{ 
+                              width: "100%", 
+                              height: "100%", 
+                              objectFit: "cover", 
+                              display: "block" 
+                            }} 
+                          />
+                        ) : (
                           <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", color: "#9CA3AF" }}>
                             જીવદયા પ્રવૃત્તિઓ
                           </div>
@@ -735,7 +762,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                       }}
                     >
                       {/* Left column: Text details */}
-                      <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: hasPhoto ? "flex-start" : "center", textAlign: hasPhoto ? "left" : "center", gap: "3px" }}>
+                      <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: "3px" }}>
                         {/* Header badge */}
                         <div style={{ backgroundColor: "#7f1d1d", color: "white", padding: "2px 16px", borderRadius: "9999px", fontSize: "11px", fontWeight: "955", border: "1.5px solid #C5A059", display: "inline-block" }}>
                           {activeSeva?.nameGujarati || donation.sevaNameSnapshot} ના દાતા શ્રી
@@ -815,7 +842,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                 <div 
                   className="relative z-10" 
                   style={{ 
-                    display: "grid", 
+                    display: footerBase64 ? "none" : "grid", 
                     gridTemplateColumns: showQrOnCard ? "1.45fr 0.55fr" : "1fr", 
                     gap: "10px", 
                     alignItems: "stretch",
@@ -867,8 +894,27 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                   )}
                 </div>
 
+                {/* 4. Footer Banner Image */}
+                {footerBase64 && (
+                  <img 
+                    src={footerBase64} 
+                    alt="Footer" 
+                    style={{ 
+                      width: "584px", 
+                      height: "143px", 
+                      marginLeft: "-20px",
+                      marginRight: "-20px",
+                      marginBottom: "-20px",
+                      borderTop: "2.5px solid #C5A059",
+                      zIndex: 10,
+                      position: "relative",
+                      display: "block"
+                    }} 
+                  />
+                )}
+
                 {/* 5. Footer quotes and slogans */}
-                <div className="font-sans relative z-10" style={{ display: "flex", flexDirection: "column", gap: "4px", width: "100%" }}>
+                <div className="font-sans relative z-10" style={{ display: footerBase64 ? "none" : "flex", flexDirection: "column", gap: "4px", width: "100%" }}>
                   
                   {/* Dark Green Motto Slogan Bar */}
                   <div 
@@ -962,7 +1008,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
           style={{ 
             fontFamily: "'Noto Sans Gujarati', sans-serif",
             border: "8px solid #043e22", // Forest green outer border
-            background: "linear-gradient(180deg, #FAF9F6 0%, #FFFDF9 100%)",
+            background: "#FAF5EC", // Match background to banner cream color
             boxSizing: 'border-box',
             padding: "20px"
           }}
@@ -970,8 +1016,8 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
           {/* Cloned override stylesheet for sandbox styling inside html2canvas */}
           <style dangerouslySetInnerHTML={{__html: `
             .safe-card-export, .safe-card-export * {
-              --border-color: #FAF9F6 !important;
-              border-color: #FAF9F6 !important;
+              --border-color: #FAF5EC !important;
+              border-color: #FAF5EC !important;
               outline-color: transparent !important;
               box-shadow: none !important;
               text-shadow: none !important;
@@ -1100,14 +1146,15 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
               src={headerBase64} 
               alt="Header" 
               style={{ 
-                width: "100%", 
-                height: "auto", 
-                borderRadius: "14px", 
-                border: '2.5px solid #C5A059',
+                width: "584px", 
+                height: "217px", 
+                marginLeft: "-20px",
+                marginRight: "-20px",
+                marginTop: "-20px",
+                borderBottom: "2.5px solid #C5A059",
                 zIndex: 10,
                 position: "relative",
-                display: "block",
-                marginBottom: "4px"
+                display: "block"
               }} 
             />
           )}
@@ -1215,13 +1262,21 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                     overflow: "hidden", 
                     border: '2.5px solid #C5A059', 
                     backgroundColor: '#FAF9F6',
-                    backgroundImage: bgBase64 ? `url(${bgBase64})` : "none",
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat"
+                    position: "relative"
                   }}
                 >
-                  {!bgBase64 && (
+                  {bgBase64 ? (
+                    <img 
+                      src={bgBase64} 
+                      alt="Seva Collage" 
+                      style={{ 
+                        width: "100%", 
+                        height: "100%", 
+                        objectFit: "cover", 
+                        display: "block" 
+                      }} 
+                    />
+                  ) : (
                     <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", color: "#9CA3AF" }}>
                       જીવદયા પ્રવૃત્તિઓ
                     </div>

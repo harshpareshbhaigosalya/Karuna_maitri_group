@@ -886,7 +886,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                   style={{ 
                     fontFamily: "'Noto Sans Gujarati', sans-serif",
                     border: "8px solid #043e22", // Forest green outer border
-                    background: "linear-gradient(180deg, #FAF9F6 0%, #FFFDF9 100%)",
+                    background: "#FAF5EC", // Match background to banner cream color
                     boxSizing: 'border-box',
                     padding: "20px"
                   }}
@@ -894,8 +894,8 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                   {/* Cloned override stylesheet for sandbox styling inside html2canvas */}
                   <style dangerouslySetInnerHTML={{__html: `
                     .safe-card-export, .safe-card-export * {
-                      --border-color: #FAF9F6 !important;
-                      border-color: #FAF9F6 !important;
+                      --border-color: #FAF5EC !important;
+                      border-color: #FAF5EC !important;
                       outline-color: transparent !important;
                       box-shadow: none !important;
                       text-shadow: none !important;
@@ -1024,14 +1024,15 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                       src={headerBase64} 
                       alt="Header" 
                       style={{ 
-                        width: "100%", 
-                        height: "auto", 
-                        borderRadius: "14px", 
-                        border: '2.5px solid #C5A059',
+                        width: "584px", 
+                        height: "217px", 
+                        marginLeft: "-20px",
+                        marginRight: "-20px",
+                        marginTop: "-20px",
+                        borderBottom: "2.5px solid #C5A059",
                         zIndex: 10,
                         position: "relative",
-                        display: "block",
-                        marginBottom: "4px"
+                        display: "block"
                       }} 
                     />
                   )}
@@ -1139,13 +1140,21 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                             overflow: "hidden", 
                             border: '2.5px solid #C5A059', 
                             backgroundColor: '#FAF9F6',
-                            backgroundImage: bgBase64 ? `url(${bgBase64})` : "none",
-                            backgroundSize: "cover",
-                            backgroundPosition: "center",
-                            backgroundRepeat: "no-repeat"
+                            position: "relative"
                           }}
                         >
-                          {!bgBase64 && (
+                          {bgBase64 ? (
+                            <img 
+                              src={bgBase64} 
+                              alt="Seva Collage" 
+                              style={{ 
+                                width: "100%", 
+                                height: "100%", 
+                                objectFit: "cover", 
+                                display: "block" 
+                              }} 
+                            />
+                          ) : (
                             <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", color: "#9CA3AF" }}>
                               જીવદયા પ્રવૃત્તિઓ
                             </div>
@@ -1263,10 +1272,12 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                       src={footerBase64} 
                       alt="Footer" 
                       style={{ 
-                        width: "100%", 
-                        height: "auto", 
-                        borderRadius: "14px", 
-                        border: '2.5px solid #C5A059',
+                        width: "584px", 
+                        height: "143px", 
+                        marginLeft: "-20px",
+                        marginRight: "-20px",
+                        marginBottom: "-20px",
+                        borderTop: "2.5px solid #C5A059",
                         zIndex: 10,
                         position: "relative",
                         display: "block"
@@ -1420,7 +1431,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
           style={{ 
             fontFamily: "'Noto Sans Gujarati', sans-serif",
             border: "8px solid #043e22", // Forest green outer border
-            background: "linear-gradient(180deg, #FAF9F6 0%, #FFFDF9 100%)",
+            background: "#FAF5EC", // Match background to banner cream color
             boxSizing: 'border-box',
             padding: "20px"
           }}
@@ -1428,8 +1439,8 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
           {/* Cloned override stylesheet for sandbox styling inside html2canvas */}
           <style dangerouslySetInnerHTML={{__html: `
             .safe-card-export, .safe-card-export * {
-              --border-color: #FAF9F6 !important;
-              border-color: #FAF9F6 !important;
+              --border-color: #FAF5EC !important;
+              border-color: #FAF5EC !important;
               outline-color: transparent !important;
               box-shadow: none !important;
               text-shadow: none !important;
@@ -1559,14 +1570,15 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
               src={headerBase64} 
               alt="Header" 
               style={{ 
-                width: "100%", 
-                height: "auto", 
-                borderRadius: "14px", 
-                border: '2.5px solid #C5A059',
+                width: "584px", 
+                height: "217px", 
+                marginLeft: "-20px",
+                marginRight: "-20px",
+                marginTop: "-20px",
+                borderBottom: "2.5px solid #C5A059",
                 zIndex: 10,
                 position: "relative",
-                display: "block",
-                marginBottom: "4px"
+                display: "block"
               }} 
             />
           )}
@@ -1674,13 +1686,21 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                     overflow: "hidden", 
                     border: '2.5px solid #C5A059', 
                     backgroundColor: '#FAF9F6',
-                    backgroundImage: bgBase64 ? `url(${bgBase64})` : "none",
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat"
+                    position: "relative"
                   }}
                 >
-                  {!bgBase64 && (
+                  {bgBase64 ? (
+                    <img 
+                      src={bgBase64} 
+                      alt="Seva Collage" 
+                      style={{ 
+                        width: "100%", 
+                        height: "100%", 
+                        objectFit: "cover", 
+                        display: "block" 
+                      }} 
+                    />
+                  ) : (
                     <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", color: "#9CA3AF" }}>
                       જીવદયા પ્રવૃત્તિઓ
                     </div>
@@ -1798,10 +1818,12 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
               src={footerBase64} 
               alt="Footer" 
               style={{ 
-                width: "100%", 
-                height: "auto", 
-                borderRadius: "14px", 
-                border: '2.5px solid #C5A059',
+                width: "584px", 
+                height: "143px", 
+                marginLeft: "-20px",
+                marginRight: "-20px",
+                marginBottom: "-20px",
+                borderTop: "2.5px solid #C5A059",
                 zIndex: 10,
                 position: "relative",
                 display: "block"
