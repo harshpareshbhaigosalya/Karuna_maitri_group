@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { db } from "../lib/firebase";
-import { collection, query, where, getDocs, orderBy, limit, onSnapshot } from "firebase/firestore";
+import { collection, query, where, getDocs, orderBy, limit, onSnapshot, doc, getDoc } from "firebase/firestore";
 import { format, startOfMonth, startOfYear } from "date-fns";
 import { 
   IndianRupee, 
@@ -93,6 +93,12 @@ export const Dashboard: React.FC = () => {
           totalAmt += doc.data().amount || 0;
         });
 
+        // Fetch settings to include lifetime archived stats
+        const settingsSnap = await getDoc(doc(db, "settings", "org"));
+        const settingsData = settingsSnap.exists() ? settingsSnap.data() : null;
+        const archivedAmt = Number(settingsData?.lifetimeArchivedAmount || 0);
+        const archivedCount = Number(settingsData?.lifetimeArchivedCount || 0);
+
         const allDonorsSnap = await getDocs(collection(db, "donors"));
 
         setStats((prev) => ({
@@ -102,8 +108,8 @@ export const Dashboard: React.FC = () => {
           yearAmount: yearAmt,
           yearCount: yearSnap.size,
           totalDonors: allDonorsSnap.size,
-          totalDonations: allDonationsSnap.size,
-          totalAmount: totalAmt,
+          totalDonations: allDonationsSnap.size + archivedCount,
+          totalAmount: totalAmt + archivedAmt,
         }));
       } catch (error) {
         console.error("Error loading stats:", error);

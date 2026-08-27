@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../lib/firebase";
-import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, limit, doc, getDoc } from "firebase/firestore";
 import { BarChart, Heart, Users, Calendar, TrendingUp, IndianRupee } from "lucide-react";
 import { Donation, SevaType } from "../types";
 import { format, parseISO } from "date-fns";
@@ -83,10 +83,19 @@ export const Analytics: React.FC = () => {
           .slice(0, 5);
         setTopDonors(sortedDonors);
 
+        // Fetch settings to include lifetime archived metrics
+        const settingsSnap = await getDoc(doc(db, "settings", "org"));
+        const settingsData = settingsSnap.exists() ? settingsSnap.data() : null;
+        const archivedAmt = Number(settingsData?.lifetimeArchivedAmount || 0);
+        const archivedCount = Number(settingsData?.lifetimeArchivedCount || 0);
+
+        const finalTotalCount = donationsSnap.size + archivedCount;
+        const finalTotalAmount = totalAmt + archivedAmt;
+
         setTotalMetrics({
-          count: donationsSnap.size,
-          amount: totalAmt,
-          avg: donationsSnap.size > 0 ? Math.round(totalAmt / donationsSnap.size) : 0,
+          count: finalTotalCount,
+          amount: finalTotalAmount,
+          avg: finalTotalCount > 0 ? Math.round(finalTotalAmount / finalTotalCount) : 0,
         });
 
       } catch (error) {

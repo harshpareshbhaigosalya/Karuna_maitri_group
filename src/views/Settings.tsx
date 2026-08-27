@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../lib/firebase";
-import { doc, getDoc, setDoc, updateDoc, collection, getDocs, serverTimestamp, deleteDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc, collection, getDocs, serverTimestamp, deleteDoc, writeBatch } from "firebase/firestore";
 import { seedDatabase, DEFAULT_ORG_SETTINGS, DEFAULT_SEVA_TYPES } from "../lib/dbSeed";
 import { compressImageToBase64 } from "../utils/image";
-import { Heart, Building, Phone, QrCode, Bell, Plus, Edit, Upload, Sparkles, CreditCard, Trash2, UserPlus, CheckCircle } from "lucide-react";
-import { OrganizationSettings, SevaType } from "../types";
+import { Heart, Building, Phone, QrCode, Bell, Plus, Edit, Upload, Sparkles, CreditCard, Trash2, UserPlus, CheckCircle, FileSpreadsheet, Archive, AlertTriangle, Database, ShieldAlert, Download } from "lucide-react";
+import { OrganizationSettings, SevaType, Donation } from "../types";
 
 export const Settings: React.FC = () => {
   const [settings, setSettings] = useState<OrganizationSettings | null>(null);
@@ -34,6 +34,159 @@ export const Settings: React.FC = () => {
   const [sevaActive, setSevaActive] = useState(true);
   const [sevaSortOrder, setSevaSortOrder] = useState("1");
   const [sevaHeroImageBase64, setSevaHeroImageBase64] = useState("");
+
+  // Archive Modal and state
+  const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
+  const [archiveConfirmInput, setArchiveConfirmInput] = useState("");
+  const [archiving, setArchiving] = useState(false);
+  const [archiveProgressMsg, setArchiveProgressMsg] = useState("");
+
+  // Function to export all donation entries to a UTF-8 BOM CSV/Excel file
+  const exportFullBackupToExcel = async () => {
+    try {
+      const donSnap = await getDocs(collection(db, "donations"));
+      const docsList: Donation[] = [];
+      donSnap.forEach((d) => docsList.push({ id: d.id, ...d.data() } as Donation));
+
+      // Sort by date descending
+      docsList.sort((a, b) => (b.donationDate || "").localeCompare(a.donationDate || ""));
+
+      // Define CSV headers
+      const headers = [
+        "એન્ટ્રી ID",
+        "તારીખ (Date)",
+        "દાતાનું નામ (Donor Name)",
+        "ફોન નંબર (Phone Number)",
+        "સેવા પ્રવૃત્તિ (Seva Type)",
+        "રકમ (Amount ₹)",
+        "પ્રસંગ પ્રકાર (Occasion)",
+        "પ્રસંગ તારીખ (Occasion Date)",
+        "હસ્તે (Presented By / Through)",
+        "સંદેશા (Custom Message)"
+      ];
+
+      const csvRows = [headers.join(",")];
+
+      docsList.forEach((don) => {
+        const row = [
+          `"${don.id || ""}"`,
+          `"${don.donationDate || ""}"`,
+          `"${(don.donorNameSnapshot || "").replace(/"/g, '""')}"`,
+          `"${don.phoneSnapshot || ""}"`,
+          `"${(don.sevaNameSnapshot || "").replace(/"/g, '""')}"`,
+          don.amount || 0,
+          `"${(don.occasionType || "").replace(/"/g, '""')}"`,
+          `"${don.occasionDate || ""}"`,
+          `"${(don.hasteName || "").replace(/"/g, '""')}"`,
+          `"${(don.customMessage || "").replace(/"/g, '""')}"`
+        ];
+        csvRows.push(row.join(","));
+      });
+
+      // Include UTF-8 BOM byte marker so Excel opens Gujarati text cleanly
+      const csvContent = "\uFEFF" + csvRows.join("\n");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      const todayStr = new Date().toISOString().split("T")[0];
+      link.setAttribute("href", url);
+      link.setAttribute("download", `Karuna_Maitri_Full_Donation_Backup_${todayStr}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      return docsList;
+    } catch (err) {
+      console.error("Backup export failed:", err);
+      alert("Excel બેકઅપ ફાઈલ બનાવવામાં ખામી સર્જાઈ.");
+      throw err;
+    }
+  };
+
+  // Safe Archive and Database Reset Handler
+  const handleArchiveAndResetDatabase = async () => {
+    if (archiveConfirmInput.trim().toUpperCase() !== "ARCHIVE") {
+      alert("કૃપા કરીને ખાતરી કરવા માટે 'ARCHIVE' ટાઇપ કરો.");
+      return;
+    }
+
+    try {
+      setArchiving(true);
+      
+      // Step 1: Export complete Excel backup
+      setArchiveProgressMsg("૧/૪: બધા દાનનો Excel બેકઅપ ડાઉનલોડ થઈ રહ્યો છે...");
+      const currentDonations = await exportFullBackupToExcel();
+
+      // Step 2: Calculate total amount and count
+      setArchiveProgressMsg("૨/૪: જૂના હિસાબની ગણતરી અને કાયમી સંગ્રહ...");
+      let currentTotalAmount = 0;
+      currentDonations.forEach((d) => {
+        currentTotalAmount += Number(d.amount || 0);
+      });
+      const currentTotalCount = currentDonations.length;
+
+      // Update Settings org document with cumulative archived numbers
+      const prevArchivedAmount = settings?.lifetimeArchivedAmount || 0;
+      const prevArchivedCount = settings?.lifetimeArchivedCount || 0;
+      const prevYearlyArchives = settings?.yearlyArchives || [];
+
+      const newYearLabel = `Reset-${new Date().toISOString().split("T")[0]}`;
+      const newYearlyEntry = {
+        yearLabel: newYearLabel,
+        totalAmount: currentTotalAmount,
+        totalCount: currentTotalCount,
+        archivedAt: new Date().toISOString()
+      };
+
+      const updatedArchivedAmount = prevArchivedAmount + currentTotalAmount;
+      const updatedArchivedCount = prevArchivedCount + currentTotalCount;
+      const updatedYearlyArchives = [...prevYearlyArchives, newYearlyEntry];
+
+      const orgDocRef = doc(db, "settings", "org");
+      await updateDoc(orgDocRef, {
+        lifetimeArchivedAmount: updatedArchivedAmount,
+        lifetimeArchivedCount: updatedArchivedCount,
+        yearlyArchives: updatedYearlyArchives,
+        updatedAt: serverTimestamp()
+      });
+
+      // Step 3: Batch delete active donations collection
+      setArchiveProgressMsg("૩/૪: દાન એન્ટ્રીઓ ડિલીટ થઈ રહી છે (ડેટાબેઝ ક્લીનઅપ)...");
+      const BATCH_SIZE = 400;
+      for (let i = 0; i < currentDonations.length; i += BATCH_SIZE) {
+        const chunk = currentDonations.slice(i, i + BATCH_SIZE);
+        const batch = writeBatch(db);
+        chunk.forEach((don) => {
+          batch.delete(doc(db, "donations", don.id));
+        });
+        await batch.commit();
+      }
+
+      // Step 4: Finish up
+      setArchiveProgressMsg("૪/૪: સફળતાપૂર્વક આર્કાઇવ પૂર્ણ થયું!");
+      
+      // Update local state
+      if (settings) {
+        setSettings({
+          ...settings,
+          lifetimeArchivedAmount: updatedArchivedAmount,
+          lifetimeArchivedCount: updatedArchivedCount,
+          yearlyArchives: updatedYearlyArchives
+        });
+      }
+
+      setMsg({ text: "ડેટાબેઝ સફળતાપૂર્વક આર્કાઇવ થઈ ગયો છે! દાનનો હિસાબ સુરક્ષિત છે.", type: "success" });
+      setIsArchiveModalOpen(false);
+      setArchiveConfirmInput("");
+    } catch (err) {
+      console.error("Archive failed:", err);
+      alert("ડેટાબેઝ આર્કાઇવ કરવામાં ખામી સર્જાઈ.");
+    } finally {
+      setArchiving(false);
+      setArchiveProgressMsg("");
+    }
+  };
 
   const loadSettingsAndSeva = async () => {
     try {
@@ -642,6 +795,72 @@ export const Settings: React.FC = () => {
               </div>
             </div>
 
+            {/* Database Archive & Maintenance (Reset) Section */}
+            <div className="bg-white p-6 rounded-2xl border-2 border-amber-300 shadow-sm space-y-4 relative overflow-hidden bg-gradient-to-b from-amber-50/30 to-white">
+              <div className="flex items-center justify-between border-b border-amber-200 pb-3">
+                <h2 className="text-lg font-bold text-royal-850 flex items-center gap-2">
+                  <Database className="h-5 w-5 text-amber-600" />
+                  ડેટાબેઝ આર્કાઇવ અને રીસેટ (Database Archive & Maintenance)
+                </h2>
+                <span className="bg-amber-100 text-amber-800 text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase border border-amber-300">
+                  Firebase Free Tier Safe
+                </span>
+              </div>
+
+              <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-4 space-y-2 text-xs text-amber-900 leading-relaxed">
+                <div className="flex items-start gap-2">
+                  <ShieldAlert className="h-4.5 w-4.5 text-amber-700 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-bold text-amber-950">સુરક્ષા અને કાયમી સંગ્રહ માર્ગદર્શિકા:</p>
+                    <ul className="list-disc list-inside mt-1 space-y-1 text-gray-700">
+                      <li><strong>દાતાઓની યાદી (Donors Directory)</strong> સંપૂર્ણ સુરક્ષિત રહેશે - કોઈ દાતા કાઢી નાખવામાં આવશે નહીં.</li>
+                      <li><strong>કુલ દાન રકમ અને વાર્ષિક હિસાબ</strong> કાયમી ધોરણે સુરક્ષિત સંગ્રહિત થશે.</li>
+                      <li>આર્કાઇવ કરતાં પહેલાં <strong>તમામ દાનનો પૂરતો Excel બેકઅપ</strong> સ્વચાલિત ડાઉનલોડ થશે.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              {/* Archive Stats Overview */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <div className="bg-cream-50/60 p-3 rounded-xl border border-cream-200 text-center">
+                  <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">કાયમી આર્કાઇવ થયેલ રકમ (All-Time Saved ₹)</p>
+                  <p className="text-lg font-extrabold text-royal-850 mt-0.5">
+                    ₹ {(settings.lifetimeArchivedAmount || 0).toLocaleString("en-IN")}
+                  </p>
+                </div>
+                <div className="bg-cream-50/60 p-3 rounded-xl border border-cream-200 text-center">
+                  <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">આર્કાઇવ થયેલ દાન સંખ્યા (Archived Entries)</p>
+                  <p className="text-lg font-extrabold text-royal-850 mt-0.5">
+                    {(settings.lifetimeArchivedCount || 0).toLocaleString("en-IN")} દાન એન્ટ્રીઓ
+                  </p>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => exportFullBackupToExcel()}
+                  className="flex-1 flex items-center justify-center gap-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 px-4 rounded-xl shadow-sm text-xs transition-all active:scale-[0.98]"
+                >
+                  <FileSpreadsheet className="h-4 w-4" />
+                  <span>ડાઉનલોડ કરો Excel બેકઅપ (.csv)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsArchiveModalOpen(true);
+                    setArchiveConfirmInput("");
+                  }}
+                  className="flex-1 flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-4 rounded-xl shadow-sm text-xs transition-all active:scale-[0.98]"
+                >
+                  <Archive className="h-4 w-4" />
+                  <span>આર્કાઇવ અને ડેટાબેઝ રીસેટ કરો</span>
+                </button>
+              </div>
+            </div>
+
             {/* Save Button */}
             <div>
               <button
@@ -858,6 +1077,76 @@ export const Settings: React.FC = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      {/* Archive & Reset Safety Confirmation Modal */}
+      {isArchiveModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border-2 border-red-200 space-y-5 animate-in fade-in zoom-in duration-200">
+            <div className="flex items-center gap-3 text-red-600 border-b border-red-100 pb-3">
+              <div className="p-2.5 bg-red-100 rounded-2xl">
+                <AlertTriangle className="h-6 w-6 text-red-600" />
+              </div>
+              <div>
+                <h3 className="text-base font-extrabold text-red-950">⚠️ ડેટાબેઝ આર્કાઇવ સુરક્ષા ખરાઈ</h3>
+                <p className="text-[11px] font-bold text-red-700">ડેટાબેઝ રીસેટ કરતાં પહેલાં ધ્યાન આપો</p>
+              </div>
+            </div>
+
+            <div className="space-y-3 text-xs text-gray-700 leading-relaxed bg-red-50/50 p-4 rounded-2xl border border-red-100">
+              <p className="font-bold text-red-950">પ્રક્રિયા દરમિયાન શું થશે?</p>
+              <ol className="list-decimal list-inside space-y-1.5 text-gray-800 font-medium">
+                <li>સૌપ્રથમ <strong>બધા દાનનો પૂરતો Excel બેકઅપ ફાઈલ (.csv)</strong> આપોઆપ ડાઉનલોડ થઈ જશે.</li>
+                <li>તમામ જૂની એન્ટ્રીઓનો <strong>કુલ દાન રકમનો સરવાળો</strong> કાયમી ધોરણે હિસાબમાં ઉમેરાઈ જશે.</li>
+                <li><strong>દાતાઓની માહિતી અને ફોન નંબરો</strong> સંપૂર્ણ સુરક્ષિત રહેશે (કાઢી નાખવામાં આવશે નહીં).</li>
+                <li>ડેટાબેઝમાંથી જૂના દાનની એન્ટ્રીઓ સાફ કરવામાં આવશે.</li>
+              </ol>
+            </div>
+
+            {archiving ? (
+              <div className="p-4 bg-amber-50 rounded-2xl border border-amber-200 text-center space-y-2">
+                <div className="inline-block animate-spin rounded-full h-6 w-6 border-2 border-amber-600 border-t-transparent"></div>
+                <p className="text-xs font-bold text-amber-900">{archiveProgressMsg}</p>
+                <p className="text-[10px] text-amber-700 font-medium">કૃપા કરીને પૃષ્ઠ બંધ કરશો નહીં...</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">
+                    ખાતરી કરવા માટે નીચેના બોક્સમાં <span className="text-red-600 font-mono font-extrabold">ARCHIVE</span> લખો:
+                  </label>
+                  <input
+                    type="text"
+                    value={archiveConfirmInput}
+                    onChange={(e) => setArchiveConfirmInput(e.target.value)}
+                    placeholder="ARCHIVE"
+                    className="w-full px-3.5 py-2.5 border-2 border-red-200 focus:border-red-500 rounded-xl text-sm font-mono font-bold uppercase tracking-wider outline-none transition-all"
+                  />
+                </div>
+
+                <div className="flex gap-3 pt-2 text-xs font-bold">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsArchiveModalOpen(false);
+                      setArchiveConfirmInput("");
+                    }}
+                    className="flex-1 py-3 border border-gray-300 rounded-xl text-gray-600 hover:bg-gray-50 transition-colors"
+                  >
+                    રદ કરો (Cancel)
+                  </button>
+                  <button
+                    type="button"
+                    disabled={archiveConfirmInput.trim().toUpperCase() !== "ARCHIVE"}
+                    onClick={handleArchiveAndResetDatabase}
+                    className="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    હા, આર્કાઇવ કરો
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

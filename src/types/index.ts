@@ -84,6 +84,13 @@ export interface ContactPerson {
   phone: string;
 }
 
+export interface YearlyArchive {
+  yearLabel: string;
+  totalAmount: number;
+  totalCount: number;
+  archivedAt: string;
+}
+
 export interface OrganizationSettings {
   orgNameGujarati: string;
   orgNameEnglish: string;
@@ -110,6 +117,9 @@ export interface OrganizationSettings {
   donationMethods?: string; // Customizable bank transfer details
   defaultHeroImage?: string; // Base64 of default dog/cow collage image
   members?: Array<{ name: string; phone: string; showOnCard: boolean; }>;
+  lifetimeArchivedAmount?: number;
+  lifetimeArchivedCount?: number;
+  yearlyArchives?: YearlyArchive[];
   updatedAt: any;
 }
 
