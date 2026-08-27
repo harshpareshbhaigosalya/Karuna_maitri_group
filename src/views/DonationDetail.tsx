@@ -671,28 +671,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                         </div>
                       </div>
 
-                      {/* Middle Column: Donor Portrait Photo (Optional) */}
-                      {donorPhotoBase64 && donorPhotoBase64.startsWith("data:") && (
-                        <div 
-                          className="gold-border"
-                          style={{ 
-                            width: "135px", 
-                            height: "175px", 
-                            borderRadius: "14px", 
-                            overflow: "hidden", 
-                            flexShrink: 0,
-                            padding: "2px",
-                            border: '2.5px solid #C5A059', 
-                            backgroundColor: '#ffffff',
-                            backgroundImage: `url(${donorPhotoBase64})`,
-                            backgroundSize: "cover",
-                            backgroundPosition: "center",
-                            backgroundRepeat: "no-repeat"
-                          }}
-                        />
-                      )}
-
-                      {/* Right Column: Seva Photo (Dogs Collage / custom) */}
+                      {/* Right Column: Seva Photo (Dogs Collage / custom) - covers full remaining space */}
                       <div 
                         className="gold-border"
                         style={{ 
@@ -718,66 +697,103 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                   );
                 })()}
 
-                {/* 3. Donor Info Area (Main highlight block) */}
-                <div 
-                  className="text-center relative z-10 gold-border" 
-                  style={{ 
-                    backgroundColor: 'rgba(255, 255, 255, 0.98)', 
-                    border: '2px solid #C5A059',
-                    borderRadius: "18px",
-                    padding: "10px 15px",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: "4px",
-                    width: "100%",
-                    boxSizing: 'border-box'
-                  }}
-                >
-                  {/* Header badge */}
-                  <div style={{ backgroundColor: "#7f1d1d", color: "white", padding: "2px 16px", borderRadius: "9999px", fontSize: "11px", fontWeight: "955", border: "1.5px solid #C5A059" }}>
-                    {activeSeva?.nameGujarati || donation.sevaNameSnapshot} ના દાતા શ્રી
-                  </div>
+                {/* 3. Donor Info Area (Main highlight block with dynamic photo alignment) */}
+                {(() => {
+                  const hasPhoto = donorPhotoBase64 && donorPhotoBase64.startsWith("data:");
+                  const isDeceasedOccasion = donation.occasionType && ["તિથિ", "પુણ્યતિથિ", "સ્મૃતિ દિવસ", "સ્વર્ગવાસી"].includes(donation.occasionType);
+                  return (
+                    <div 
+                      className="relative z-10 gold-border" 
+                      style={{ 
+                        backgroundColor: 'rgba(255, 255, 255, 0.98)', 
+                        border: '2px solid #C5A059',
+                        borderRadius: "18px",
+                        padding: hasPhoto ? "12px 18px" : "10px 15px",
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: hasPhoto ? "space-between" : "center",
+                        gap: "15px",
+                        width: "100%",
+                        boxSizing: 'border-box'
+                      }}
+                    >
+                      {/* Left column: Text details */}
+                      <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: hasPhoto ? "flex-start" : "center", textAlign: hasPhoto ? "left" : "center", gap: "3px" }}>
+                        {/* Header badge */}
+                        <div style={{ backgroundColor: "#7f1d1d", color: "white", padding: "2px 16px", borderRadius: "9999px", fontSize: "11px", fontWeight: "955", border: "1.5px solid #C5A059", display: "inline-block" }}>
+                          {activeSeva?.nameGujarati || donation.sevaNameSnapshot} ના દાતા શ્રી
+                        </div>
 
-                  <h3 style={{ color: '#7f1d1d', fontSize: "25px", fontWeight: "950", margin: "3px 0 1px 0", lineHeight: "1.2", letterSpacing: "0.2px" }}>
-                    {donation.donorNameSnapshot}
-                  </h3>
-                  
-                  {donation.occasionType && donation.occasionType !== "કોઈ પ્રસંગ નથી" && (
-                    <p style={{ margin: 0, color: '#0b2f64', fontSize: "15px", fontWeight: "950" }}>
-                      🎉 {donation.occasionType} {donation.occasionDate ? `(${donation.occasionDate})` : ""} નિમિત્તે
-                    </p>
-                  )}
+                        <h3 style={{ color: '#7f1d1d', fontSize: hasPhoto ? "31px" : "36px", fontWeight: "950", margin: "4px 0 2px 0", lineHeight: "1.2", letterSpacing: "0.2px" }}>
+                          {donation.donorNameSnapshot}
+                        </h3>
+                        
+                        {donation.occasionType && donation.occasionType !== "કોઈ પ્રસંગ નથી" && (
+                          <p style={{ margin: 0, color: '#0b2f64', fontSize: "15px", fontWeight: "955" }}>
+                            {donation.occasionType} {donation.occasionDate ? `(${donation.occasionDate})` : ""} {donation.occasionType.endsWith("સ્મરણાર્થે") || ["તિથિ", "પુણ્યતિથિ", "સ્મૃતિ દિવસ", "સ્વર્ગવાસી"].includes(donation.occasionType) ? "" : "નિમિત્તે"}
+                          </p>
+                        )}
 
-                  {donation.customMessage ? (
-                    <p style={{ margin: "2px 0", color: '#0B2F64', fontSize: "12.5px", fontWeight: "900", fontStyle: "italic", lineHeight: "1.3" }}>
-                      "{donation.customMessage}"
-                    </p>
-                  ) : (
-                    <div style={{ backgroundColor: "rgba(11, 47, 100, 0.05)", border: "1px dashed rgba(11, 47, 100, 0.2)", padding: "2px 15px", borderRadius: "9999px", fontSize: "11px", fontWeight: "900", color: "#0B2F64", marginTop: "2px" }}>
-                      હસ્તે, {donation.donorNameSnapshot} સહ પરિવાર
+                        {isDeceasedOccasion && (
+                          <p style={{ margin: "2px 0", color: '#b91c1c', fontSize: "13px", fontWeight: "955", fontStyle: "italic" }}>
+                            🙏 ભગવાન તેમના દિવ્ય આત્માને પરમ શાંતિ અર્પે 🙏
+                          </p>
+                        )}
+
+                        {donation.customMessage ? (
+                          <p style={{ margin: "2px 0", color: '#0B2F64', fontSize: "12.5px", fontWeight: "900", fontStyle: "italic", lineHeight: "1.3" }}>
+                            "{donation.customMessage}"
+                          </p>
+                        ) : (
+                          <div style={{ backgroundColor: "rgba(11, 47, 100, 0.05)", border: "1px dashed rgba(11, 47, 100, 0.2)", padding: "2px 15px", borderRadius: "9999px", fontSize: "11px", fontWeight: "900", color: "#0B2F64", marginTop: "2px" }}>
+                            હસ્તે, {donation.hasteName ? donation.hasteName : `${donation.donorNameSnapshot} સહ પરિવાર`}
+                          </div>
+                        )}
+
+                        {/* Amount Banner Box */}
+                        <div 
+                          style={{ 
+                            background: "radial-gradient(circle, #7f1d1d 0%, #581c1c 100%)",
+                            border: "3px double #C5A059",
+                            color: "#f59e0b",
+                            fontSize: "23px",
+                            fontWeight: "955",
+                            padding: "3px 28px",
+                            borderRadius: "9999px",
+                            display: "inline-block",
+                            marginTop: "4px",
+                            lineHeight: "1",
+                            boxShadow: "0 3px 5px rgba(0,0,0,0.15)"
+                          }}
+                        >
+                          ₹ {donation.amount ? Number(donation.amount).toLocaleString("en-IN") : "0"} /-
+                        </div>
+                      </div>
+
+                      {/* Right column: Donor photo */}
+                      {hasPhoto && (
+                        <div 
+                          className="gold-border"
+                          style={{ 
+                            width: "120px", 
+                            height: "155px", 
+                            borderRadius: "14px", 
+                            overflow: "hidden", 
+                            flexShrink: 0,
+                            padding: "2px",
+                            border: '2.5px solid #C5A059', 
+                            backgroundColor: '#ffffff',
+                            backgroundImage: `url(${donorPhotoBase64})`,
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
+                            backgroundRepeat: "no-repeat"
+                          }}
+                        />
+                      )}
                     </div>
-                  )}
-
-                  {/* Amount Banner Box */}
-                  <div 
-                    style={{ 
-                      background: "radial-gradient(circle, #7f1d1d 0%, #581c1c 100%)",
-                      border: "3px double #C5A059",
-                      color: "#f59e0b",
-                      fontSize: "23px",
-                      fontWeight: "955",
-                      padding: "3px 28px",
-                      borderRadius: "9999px",
-                      display: "inline-block",
-                      marginTop: "4px",
-                      lineHeight: "1",
-                      boxShadow: "0 3px 5px rgba(0,0,0,0.15)"
-                    }}
-                  >
-                    ₹ {donation.amount ? Number(donation.amount).toLocaleString("en-IN") : "0"} /-
-                  </div>
-                </div>
+                  );
+                })()}
 
                 {/* 4. Hospital Activity / QR Code Grid */}
                 <div 
@@ -1137,7 +1153,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                     <p style={{ margin: 0, color: "white", fontSize: "10.5px", fontWeight: "950", textAlign: "center" }}>🐾 {activeDetail.title} 🐾</p>
                   </div>
                   
-                  <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "0 6px", textAlign: "center" }}>
+                  <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", padding: "0 6px", textAlign: "center", justifyContent: "center" }}>
                     <p style={{ margin: 0, color: "#C5A059", fontSize: "11px", fontWeight: "900" }}>{activeDetail.subtitle}</p>
                     <p style={{ margin: "2px 0", color: "white", fontSize: "21px", fontWeight: "955", lineHeight: "1.1" }}>{activeDetail.highlightVal}</p>
                     <p style={{ margin: 0, color: "#C5A059", fontSize: "11px", fontWeight: "900" }}>{activeDetail.highlightUnit}</p>
@@ -1155,28 +1171,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                   </div>
                 </div>
 
-                {/* Middle Column: Donor Portrait Photo (Optional) */}
-                {donorPhotoBase64 && donorPhotoBase64.startsWith("data:") && (
-                  <div 
-                    className="gold-border"
-                    style={{ 
-                      width: "135px", 
-                      height: "175px", 
-                      borderRadius: "14px", 
-                      overflow: "hidden", 
-                      flexShrink: 0,
-                      padding: "2px",
-                      border: '2.5px solid #C5A059', 
-                      backgroundColor: '#ffffff',
-                      backgroundImage: `url(${donorPhotoBase64})`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                      backgroundRepeat: "no-repeat"
-                    }}
-                  />
-                )}
-
-                {/* Right Column: Seva Photo (Dogs Collage / custom) */}
+                {/* Right Column: Seva Photo (Dogs Collage / custom) - covers full remaining space */}
                 <div 
                   className="gold-border"
                   style={{ 
@@ -1202,66 +1197,103 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
             );
           })()}
 
-          {/* 3. Donor Info Area (Main highlight block) */}
-          <div 
-            className="text-center relative z-10 gold-border" 
-            style={{ 
-              backgroundColor: 'rgba(255, 255, 255, 0.98)', 
-              border: '2px solid #C5A059',
-              borderRadius: "18px",
-              padding: "10px 15px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "4px",
-              width: "100%",
-              boxSizing: 'border-box'
-            }}
-          >
-            {/* Header badge */}
-            <div style={{ backgroundColor: "#7f1d1d", color: "white", padding: "2px 16px", borderRadius: "9999px", fontSize: "11px", fontWeight: "955", border: "1.5px solid #C5A059" }}>
-              {activeSeva?.nameGujarati || donation.sevaNameSnapshot} ના દાતા શ્રી
-            </div>
+          {/* 3. Donor Info Area (Main highlight block with dynamic photo alignment) */}
+          {(() => {
+            const hasPhoto = donorPhotoBase64 && donorPhotoBase64.startsWith("data:");
+            const isDeceasedOccasion = donation.occasionType && ["તિથિ", "પુણ્યતિથિ", "સ્મૃતિ દિવસ", "સ્વર્ગવાસી"].includes(donation.occasionType);
+            return (
+              <div 
+                className="relative z-10 gold-border" 
+                style={{ 
+                  backgroundColor: 'rgba(255, 255, 255, 0.98)', 
+                  border: '2px solid #C5A059',
+                  borderRadius: "18px",
+                  padding: hasPhoto ? "12px 18px" : "10px 15px",
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: hasPhoto ? "space-between" : "center",
+                  gap: "15px",
+                  width: "100%",
+                  boxSizing: 'border-box'
+                }}
+              >
+                {/* Left column: Text details */}
+                <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: hasPhoto ? "flex-start" : "center", textAlign: hasPhoto ? "left" : "center", gap: "3px" }}>
+                  {/* Header badge */}
+                  <div style={{ backgroundColor: "#7f1d1d", color: "white", padding: "2px 16px", borderRadius: "9999px", fontSize: "11px", fontWeight: "955", border: "1.5px solid #C5A059", display: "inline-block" }}>
+                    {activeSeva?.nameGujarati || donation.sevaNameSnapshot} ના દાતા શ્રી
+                  </div>
 
-            <h3 style={{ color: '#7f1d1d', fontSize: "25px", fontWeight: "950", margin: "3px 0 1px 0", lineHeight: "1.2", letterSpacing: "0.2px" }}>
-              {donation.donorNameSnapshot}
-            </h3>
-            
-            {donation.occasionType && donation.occasionType !== "કોઈ પ્રસંગ નથી" && (
-              <p style={{ margin: 0, color: '#0b2f64', fontSize: "15px", fontWeight: "950" }}>
-                🎉 {donation.occasionType} {donation.occasionDate ? `(${donation.occasionDate})` : ""} નિમિત્તે
-              </p>
-            )}
+                  <h3 style={{ color: '#7f1d1d', fontSize: hasPhoto ? "31px" : "36px", fontWeight: "950", margin: "4px 0 2px 0", lineHeight: "1.2", letterSpacing: "0.2px" }}>
+                    {donation.donorNameSnapshot}
+                  </h3>
+                  
+                  {donation.occasionType && donation.occasionType !== "કોઈ પ્રસંગ નથી" && (
+                    <p style={{ margin: 0, color: '#0b2f64', fontSize: "15px", fontWeight: "955" }}>
+                      {donation.occasionType} {donation.occasionDate ? `(${donation.occasionDate})` : ""} {donation.occasionType.endsWith("સ્મરણાર્થે") || ["તિથિ", "પુણ્યતિથિ", "સ્મૃતિ દિવસ", "સ્વર્ગવાસી"].includes(donation.occasionType) ? "" : "નિમિત્તે"}
+                    </p>
+                  )}
 
-            {donation.customMessage ? (
-              <p style={{ margin: "2px 0", color: '#0B2F64', fontSize: "12.5px", fontWeight: "900", fontStyle: "italic", lineHeight: "1.3" }}>
-                "{donation.customMessage}"
-              </p>
-            ) : (
-              <div style={{ backgroundColor: "rgba(11, 47, 100, 0.05)", border: "1px dashed rgba(11, 47, 100, 0.2)", padding: "2px 15px", borderRadius: "9999px", fontSize: "11px", fontWeight: "900", color: "#0B2F64", marginTop: "2px" }}>
-                હસ્તે, {donation.donorNameSnapshot} સહ પરિવાર
+                  {isDeceasedOccasion && (
+                    <p style={{ margin: "2px 0", color: '#b91c1c', fontSize: "13px", fontWeight: "955", fontStyle: "italic" }}>
+                      🙏 ભગવાન તેમના દિવ્ય આત્માને પરમ શાંતિ અર્પે 🙏
+                    </p>
+                  )}
+
+                  {donation.customMessage ? (
+                    <p style={{ margin: "2px 0", color: '#0B2F64', fontSize: "12.5px", fontWeight: "900", fontStyle: "italic", lineHeight: "1.3" }}>
+                      "{donation.customMessage}"
+                    </p>
+                  ) : (
+                    <div style={{ backgroundColor: "rgba(11, 47, 100, 0.05)", border: "1px dashed rgba(11, 47, 100, 0.2)", padding: "2px 15px", borderRadius: "9999px", fontSize: "11px", fontWeight: "900", color: "#0B2F64", marginTop: "2px" }}>
+                      હસ્તે, {donation.hasteName ? donation.hasteName : `${donation.donorNameSnapshot} સહ પરિવાર`}
+                    </div>
+                  )}
+
+                  {/* Amount Banner Box */}
+                  <div 
+                    style={{ 
+                      background: "radial-gradient(circle, #7f1d1d 0%, #581c1c 100%)",
+                      border: "3px double #C5A059",
+                      color: "#f59e0b",
+                      fontSize: "23px",
+                      fontWeight: "955",
+                      padding: "3px 28px",
+                      borderRadius: "9999px",
+                      display: "inline-block",
+                      marginTop: "4px",
+                      lineHeight: "1",
+                      boxShadow: "0 3px 5px rgba(0,0,0,0.15)"
+                    }}
+                  >
+                    ₹ {donation.amount ? Number(donation.amount).toLocaleString("en-IN") : "0"} /-
+                  </div>
+                </div>
+
+                {/* Right column: Donor photo */}
+                {hasPhoto && (
+                  <div 
+                    className="gold-border"
+                    style={{ 
+                      width: "120px", 
+                      height: "155px", 
+                      borderRadius: "14px", 
+                      overflow: "hidden", 
+                      flexShrink: 0,
+                      padding: "2px",
+                      border: '2.5px solid #C5A059', 
+                      backgroundColor: '#ffffff',
+                      backgroundImage: `url(${donorPhotoBase64})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      backgroundRepeat: "no-repeat"
+                    }}
+                  />
+                )}
               </div>
-            )}
-
-            {/* Amount Banner Box */}
-            <div 
-              style={{ 
-                background: "radial-gradient(circle, #7f1d1d 0%, #581c1c 100%)",
-                border: "3px double #C5A059",
-                color: "#f59e0b",
-                fontSize: "23px",
-                fontWeight: "955",
-                padding: "3px 28px",
-                borderRadius: "9999px",
-                display: "inline-block",
-                marginTop: "4px",
-                lineHeight: "1",
-                boxShadow: "0 3px 5px rgba(0,0,0,0.15)"
-              }}
-            >
-              ₹ {donation.amount ? Number(donation.amount).toLocaleString("en-IN") : "0"} /-
-            </div>
-          </div>
+            );
+          })()}
 
           {/* 4. Hospital Activity / QR Code Grid */}
           <div 

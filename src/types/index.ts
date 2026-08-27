@@ -35,6 +35,7 @@ export interface Donation {
   donorPhotoUrl?: string;
   customImageUrl?: string;
   templateId?: string;
+  hasteName?: string;
   createdBy: string; // User ID of creator
   createdAt: any;
   updatedAt: any;
