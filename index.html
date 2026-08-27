@@ -13,13 +13,20 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <script>
+      // Active cleanup script: unregisters legacy service workers and purges stale cache
       if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-          navigator.serviceWorker
-            .register("/sw.js")
-            .then((reg) => console.log("ServiceWorker registered successfully"))
-            .catch((err) => console.warn("ServiceWorker registration failed:", err));
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
+          for (let registration of registrations) {
+            registration.unregister();
+          }
         });
+        if ("caches" in window) {
+          caches.keys().then((names) => {
+            for (let name of names) {
+              caches.delete(name);
+            }
+          });
+        }
       }
     </script>
   </body>

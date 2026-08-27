@@ -39,12 +39,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   useEffect(() => {
-    // Check if session exists in localStorage
-    const session = localStorage.getItem("km_auth_session");
-    if (session === "authenticated") {
-      setCurrentUser({ uid: "admin", role: "admin", email: "admin@karunamaitri.org" });
+    try {
+      // Check if session exists in localStorage
+      const session = localStorage.getItem("km_auth_session");
+      if (session === "authenticated") {
+        setCurrentUser({ uid: "admin", role: "admin", email: "admin@karunamaitri.org" });
+      }
+    } catch (err) {
+      console.warn("Failed to read auth session from storage:", err);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   const value = {
