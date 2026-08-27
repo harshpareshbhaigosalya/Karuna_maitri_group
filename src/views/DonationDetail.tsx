@@ -6,6 +6,62 @@ import { ArrowLeft, Download, Share2, Calendar, User, Heart, Gift } from "lucide
 import { Donation, OrganizationSettings, SevaType } from "../types";
 import html2canvas from "html2canvas";
 
+const SEVA_DETAILS_MAP: Record<string, {
+  title: string;
+  subtitle: string;
+  highlightVal: string;
+  highlightUnit: string;
+  boxText: string;
+  verb: string;
+  bottomBar: string;
+}> = {
+  "dudh-pova": {
+    title: "અમારી રોજની પ્રવૃતિ",
+    subtitle: "દરરોજ આશરે",
+    highlightVal: "350 થી 400",
+    highlightUnit: "કૂતરાઓને",
+    boxText: "દૂધપૌવા",
+    verb: "જમાડવામાં આવે છે.",
+    bottomBar: "દૂધ પૌવા જમાડવામાં આવે છે."
+  },
+  "bird-nest-pot": {
+    title: "અમારી રોજની પ્રવૃતિ",
+    subtitle: "અમે દર વર્ષે",
+    highlightVal: "5000 થી વધુ",
+    highlightUnit: "પક્ષીઓ માટે",
+    boxText: "માળા-કુંડા",
+    verb: "વિતરણ કરીએ છીએ.",
+    bottomBar: "માળા-કુંડા વિતરણ કરવામાં આવે છે."
+  },
+  "panjrapole": {
+    title: "અમારી રોજની પ્રવૃતિ",
+    subtitle: "ગૌશાળા સેવા",
+    highlightVal: "પાંજરાપોળ ગાયો",
+    highlightUnit: "માટે પૌષ્ટિક",
+    boxText: "લીલો ઘાસચારો",
+    verb: "પૂરો પાડીએ છીએ.",
+    bottomBar: "ઘાસચારો પૂરો પાડવામાં આવે છે."
+  },
+  "sick-animal": {
+    title: "અમારી રોજની પ્રવૃતિ",
+    subtitle: "બીમાર જીવોની",
+    highlightVal: "તાત્કાલિક સારવાર",
+    highlightUnit: "પશુ-પક્ષીઓની",
+    boxText: "દવા-સારવાર",
+    verb: "સેવા પૂરી પાડીએ છીએ.",
+    bottomBar: "સારવાર પૂરી પાડવામાં આવે છે."
+  },
+  "bird-camp": {
+    title: "અમારી રોજની પ્રવૃતિ",
+    subtitle: "દર ઉત્તરાયણ",
+    highlightVal: "બર્ડ કેમ્પ",
+    highlightUnit: "ઘાયલ પક્ષીઓને",
+    boxText: "ઓપરેશન-સારવાર",
+    verb: "આપી બચાવીએ છીએ.",
+    bottomBar: "પક્ષીઓનો જીવ બચાવીએ છીએ."
+  }
+};
+
 export const DonationDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
@@ -382,15 +438,15 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
           </div>
 
           <div className="w-full flex justify-center overflow-hidden py-4 border border-cream-100 rounded-2xl bg-cream-50/20">
-            <div className="w-[600px] h-[780px] scale-[0.52] sm:scale-[0.78] md:scale-100 origin-top shrink-0 -mb-[360px] sm:-mb-[170px] md:mb-0">
+            <div className="w-[600px] h-[820px] scale-[0.48] sm:scale-[0.72] md:scale-100 origin-top shrink-0 -mb-[420px] sm:-mb-[220px] md:mb-0">
               
               {/* Visual preview replica */}
               <div 
-                className="w-[600px] h-[780px] select-none flex flex-col justify-between relative overflow-hidden safe-card-export"
+                className="w-[600px] h-[820px] select-none flex flex-col justify-between relative overflow-hidden safe-card-export"
                 style={{ 
                   fontFamily: "'Noto Sans Gujarati', sans-serif",
-                  border: "6px solid #C5A059",
-                  backgroundImage: "linear-gradient(180deg, #FAF9F6 0%, #FFFDF9 100%)",
+                  border: "8px solid #043e22", // Forest green outer border
+                  background: "linear-gradient(180deg, #FAF9F6 0%, #FFFDF9 100%)",
                   boxSizing: 'border-box',
                   padding: "20px"
                 }}
@@ -415,7 +471,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                   }
                 `}} />
 
-                {/* Watermark Background collage at 5% opacity behind details */}
+                {/* Watermark Background collage at 4% opacity behind details */}
                 {bgBase64 && (
                   <div 
                     style={{
@@ -424,256 +480,424 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                       backgroundImage: `url(${bgBase64})`,
                       backgroundSize: "cover",
                       backgroundPosition: "center",
-                      opacity: 0.05,
+                      opacity: 0.04,
                       zIndex: 0
                     }}
                   />
                 )}
 
+                {/* Inner gold frame border */}
                 <div 
                   className="absolute pointer-events-none z-20 gold-border" 
                   style={{ inset: "8px", border: "2px solid #C5A059", borderRadius: "12px" }} 
                 />
 
-                {/* Corner leafs */}
-                <div className="absolute w-2 h-2 z-30" style={{ top: "12px", left: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
-                <div className="absolute w-2 h-2 z-30" style={{ top: "12px", right: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
-                <div className="absolute w-2 h-2 z-30" style={{ bottom: "12px", left: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
-                <div className="absolute w-2 h-2 z-30" style={{ bottom: "12px", right: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
-
-                {/* 1. Header (Compact reference design layout) */}
-                <div className="relative z-10" style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                  {/* Top Slogan Bar */}
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", padding: "0 10px" }}>
-                    <span style={{ color: "#b91c1c", fontSize: "13px", fontWeight: "900" }}>🚩 જીવદયા</span>
-                    <span style={{ color: "#0B2F64", fontSize: "18px", fontWeight: "900", letterSpacing: "1px" }}>અહિંસા પરમો ધર્મઃ</span>
-                    <span style={{ color: "#b91c1c", fontSize: "13px", fontWeight: "900" }}>કરુણા 🚩</span>
-                  </div>
-
-                  {/* Logo & Org left, Contacts right */}
-                  <div className="blue-border" style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid #0B2F64", borderBottom: "1px solid #0B2F64", padding: "6px 10px", marginTop: "2px" }}>
-                    <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px" }}>
-                      {logoBase64 && logoBase64.startsWith("data:") ? (
-                        <img 
-                          src={logoBase64} 
-                          alt="Logo" 
-                          className="h-14 w-14 rounded-full object-contain bg-white gold-border" 
-                          style={{ border: '2px solid #C5A059' }}
-                        />
-                      ) : (
-                        <div className="h-14 w-14 rounded-full flex items-center justify-center text-white font-bold text-[10px] p-2 text-center leading-none gold-border" style={{ border: '2px solid #C5A059', backgroundColor: '#0B2F64' }}>કરુણા મૈત્રી</div>
-                      )}
-                      <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-                        <h2 style={{ color: '#0B2F64', fontSize: "17px", fontWeight: "900", margin: 0, lineHeight: "1.1" }}>{settings?.orgNameGujarati || "કરુણા-મૈત્રી ગ્રુપ"}</h2>
-                        <span style={{ color: '#C5A059', fontSize: "10.5px", fontWeight: "900", margin: 0 }}>📍 {settings?.location || "સુરેન્દ્રનગર"}</span>
-                      </div>
-                    </div>
-
-                    {/* Members list */}
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", fontSize: "9.5px", fontWeight: "900", color: "#374151", lineHeight: "1.3" }}>
-                      {displayMembers.slice(0, 3).map((m, idx) => (
-                        <p key={idx} style={{ margin: 0 }}>{m.name}: <span style={{ color: '#0B2F64', fontFamily: "monospace" }}>{m.phone}</span></p>
-                      ))}
-                      {displayMembers.length === 0 && (
-                        <>
-                          <p style={{ margin: 0 }}>કેતલ વોરા: <span style={{ color: '#0B2F64', fontFamily: "monospace" }}>98242 55909</span></p>
-                          <p style={{ margin: 0 }}>મયુર શાહ: <span style={{ color: '#0B2F64', fontFamily: "monospace" }}>94290 99906</span></p>
-                        </>
-                      )}
-                    </div>
-                  </div>
+                {/* 4 Arched Green Corners */}
+                {/* Top-Left */}
+                <div style={{
+                  position: "absolute",
+                  top: 0, left: 0,
+                  width: "80px", height: "80px",
+                  background: "#043e22",
+                  borderBottomRightRadius: "100%",
+                  borderRight: "2.5px solid #C5A059",
+                  borderBottom: "2.5px solid #C5A059",
+                  zIndex: 30,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  paddingRight: "12px",
+                  paddingBottom: "12px",
+                  color: "white"
+                }}>
+                  <span style={{ fontSize: "11px", fontWeight: "900", color: "#C5A059", lineHeight: "1" }}>કરુણા</span>
+                  <span style={{ fontSize: "13px", marginTop: "2px" }}>🖐️</span>
+                </div>
+                {/* Top-Right */}
+                <div style={{
+                  position: "absolute",
+                  top: 0, right: 0,
+                  width: "80px", height: "80px",
+                  background: "#043e22",
+                  borderBottomLeftRadius: "100%",
+                  borderLeft: "2.5px solid #C5A059",
+                  borderBottom: "2.5px solid #C5A059",
+                  zIndex: 30,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  paddingLeft: "12px",
+                  paddingBottom: "12px",
+                  color: "white"
+                }}>
+                  <span style={{ fontSize: "11px", fontWeight: "900", color: "#C5A059", lineHeight: "1" }}>મૈત્રી</span>
+                  <span style={{ fontSize: "13px", marginTop: "2px" }}>🤝</span>
+                </div>
+                {/* Bottom-Left */}
+                <div style={{
+                  position: "absolute",
+                  bottom: 0, left: 0,
+                  width: "80px", height: "80px",
+                  background: "#043e22",
+                  borderTopRightRadius: "100%",
+                  borderRight: "2.5px solid #C5A059",
+                  borderTop: "2.5px solid #C5A059",
+                  zIndex: 30,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  paddingRight: "12px",
+                  paddingTop: "12px",
+                  color: "white"
+                }}>
+                  <span style={{ fontSize: "13px", marginBottom: "2px" }}>❤️</span>
+                  <span style={{ fontSize: "11px", fontWeight: "900", color: "#C5A059", lineHeight: "1" }}>અનુકંપા</span>
+                </div>
+                {/* Bottom-Right */}
+                <div style={{
+                  position: "absolute",
+                  bottom: 0, right: 0,
+                  width: "80px", height: "80px",
+                  background: "#043e22",
+                  borderTopLeftRadius: "100%",
+                  borderLeft: "2.5px solid #C5A059",
+                  borderTop: "2.5px solid #C5A059",
+                  zIndex: 30,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  paddingLeft: "12px",
+                  paddingTop: "12px",
+                  color: "white"
+                }}>
+                  <span style={{ fontSize: "13px", marginBottom: "2px" }}>🐾</span>
+                  <span style={{ fontSize: "11px", fontWeight: "900", color: "#C5A059", lineHeight: "1" }}>જીવદયા</span>
                 </div>
 
-                {/* 2. Donor Details Box */}
+                {/* 1. Header Area */}
+                <div className="relative z-10" style={{ display: "flex", flexDirection: "column", gap: "2px", width: "100%" }}>
+                  {/* Top Slogans */}
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", margin: "0 0 4px 0" }}>
+                    <span style={{ color: "#b91c1c", fontSize: "11.5px", fontWeight: "950" }}>॥ શ્રી મહાવીરાય નમઃ ॥</span>
+                    <span style={{ color: "#b91c1c", fontSize: "13.5px", fontWeight: "950", marginTop: "2px" }}>✨ અહિંસા પરમો ધર્મ ✨</span>
+                  </div>
+
+                  {/* Logo & Main Title Banner */}
+                  <div className="blue-border" style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "12px", borderTop: "1.5px solid #0B2F64", borderBottom: "1.5px solid #0B2F64", padding: "5px 0", justifyContent: "center" }}>
+                    {logoBase64 && logoBase64.startsWith("data:") ? (
+                      <img 
+                        src={logoBase64} 
+                        alt="Logo" 
+                        className="h-16 w-16 rounded-full object-cover bg-white gold-border shrink-0" 
+                        style={{ border: '2px solid #C5A059' }}
+                      />
+                    ) : (
+                      <div className="h-16 w-16 rounded-full flex items-center justify-center text-white font-bold text-[9px] p-1.5 text-center leading-none gold-border shrink-0" style={{ border: '2px solid #C5A059', backgroundColor: '#0B2F64' }}>કરુણા મૈત્રી</div>
+                    )}
+                    
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                      <h2 style={{ color: '#043e22', fontSize: "28px", fontWeight: "950", margin: 0, lineHeight: "1.1", textShadow: "1.5px 1.5px 0px rgba(185, 28, 28, 0.4)" }}>
+                        {settings?.orgNameGujarati || "કરુણા મૈત્રી ગ્રુપ"}
+                      </h2>
+                      
+                      <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "3px" }}>
+                        <span style={{ backgroundColor: '#0b2f64', color: 'white', fontSize: "11px", fontWeight: "955", padding: "1px 12px", borderRadius: "9999px" }}>
+                          📍 {settings?.location || "સુરેન્દ્રનગર"} 📍
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Subtitle */}
+                  <p style={{ margin: "2px 0 0 0", color: "#b91c1c", fontSize: "11px", fontWeight: "900", fontStyle: "italic", textAlign: "center" }}>
+                    "પ્રેમ, સેવા અને કરુણાથી બનાવીએ એક સુંદર સમાજ..."
+                  </p>
+                </div>
+
+                {/* 2. Seva Activity Row */}
+                {(() => {
+                  const activeDetail = SEVA_DETAILS_MAP[donation.sevaTypeId] || SEVA_DETAILS_MAP["dudh-pova"];
+                  return (
+                    <div 
+                      className="relative z-10" 
+                      style={{ 
+                        display: "flex", 
+                        flexDirection: "row", 
+                        gap: "10px", 
+                        width: "100%",
+                        height: "175px",
+                        boxSizing: 'border-box'
+                      }}
+                    >
+                      {/* Left Column: Activity Info Banner Card */}
+                      <div 
+                        className="gold-border"
+                        style={{
+                          width: "190px",
+                          height: "175px",
+                          backgroundColor: "#0B2F64",
+                          border: "2.5px solid #C5A059",
+                          borderRadius: "14px",
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "space-between",
+                          overflow: "hidden",
+                          flexShrink: 0
+                        }}
+                      >
+                        <div style={{ backgroundColor: "rgba(255,255,255,0.08)", padding: "4px", textAlign: "center", borderBottom: "1px solid rgba(197, 160, 89, 0.3)" }}>
+                          <p style={{ margin: 0, color: "white", fontSize: "10.5px", fontWeight: "950", textAlign: "center" }}>🐾 {activeDetail.title} 🐾</p>
+                        </div>
+                        
+                        <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "0 6px", textAlign: "center" }}>
+                          <p style={{ margin: 0, color: "#C5A059", fontSize: "11px", fontWeight: "900" }}>{activeDetail.subtitle}</p>
+                          <p style={{ margin: "2px 0", color: "white", fontSize: "21px", fontWeight: "955", lineHeight: "1.1" }}>{activeDetail.highlightVal}</p>
+                          <p style={{ margin: 0, color: "#C5A059", fontSize: "11px", fontWeight: "900" }}>{activeDetail.highlightUnit}</p>
+                          
+                          <div style={{ backgroundColor: "#b91c1c", color: "#f59e0b", padding: "2px 10px", borderRadius: "6px", fontSize: "12px", fontWeight: "955", border: "1px solid #C5A059", marginTop: "4px" }}>
+                            {activeDetail.boxText}
+                          </div>
+                          <p style={{ margin: "3px 0 0 0", color: "white", fontSize: "9.5px", fontWeight: "900" }}>{activeDetail.verb}</p>
+                        </div>
+
+                        <div style={{ backgroundColor: "rgba(255,255,255,0.06)", padding: "3px", borderTop: "1px solid rgba(197, 160, 89, 0.2)" }}>
+                          <p style={{ margin: 0, color: "white", fontSize: "8.5px", fontWeight: "900", textAlign: "center", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
+                            {activeDetail.bottomBar}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Middle Column: Donor Portrait Photo (Optional) */}
+                      {donorPhotoBase64 && donorPhotoBase64.startsWith("data:") && (
+                        <div 
+                          className="gold-border"
+                          style={{ 
+                            width: "135px", 
+                            height: "175px", 
+                            borderRadius: "14px", 
+                            overflow: "hidden", 
+                            flexShrink: 0,
+                            padding: "2px",
+                            border: '2.5px solid #C5A059', 
+                            backgroundColor: '#ffffff',
+                            backgroundImage: `url(${donorPhotoBase64})`,
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
+                            backgroundRepeat: "no-repeat"
+                          }}
+                        />
+                      )}
+
+                      {/* Right Column: Seva Photo (Dogs Collage / custom) */}
+                      <div 
+                        className="gold-border"
+                        style={{ 
+                          flex: 1,
+                          height: "175px", 
+                          borderRadius: "14px", 
+                          overflow: "hidden", 
+                          border: '2.5px solid #C5A059', 
+                          backgroundColor: '#FAF9F6',
+                          backgroundImage: bgBase64 ? `url(${bgBase64})` : "none",
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
+                          backgroundRepeat: "no-repeat"
+                        }}
+                      >
+                        {!bgBase64 && (
+                          <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", color: "#9CA3AF" }}>
+                            જીવદયા પ્રવૃત્તિઓ
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {/* 3. Donor Info Area (Main highlight block) */}
                 <div 
-                  className="text-center relative z-10" 
+                  className="text-center relative z-10 gold-border" 
                   style={{ 
                     backgroundColor: 'rgba(255, 255, 255, 0.98)', 
-                    color: '#111827',
-                    padding: "8px 12px",
+                    border: '2px solid #C5A059',
+                    borderRadius: "18px",
+                    padding: "10px 15px",
                     display: "flex",
                     flexDirection: "column",
-                    gap: "3px",
+                    alignItems: "center",
+                    gap: "4px",
+                    width: "100%",
                     boxSizing: 'border-box'
                   }}
                 >
-                  <p style={{ margin: 0, color: '#0B2F64', fontSize: "18px", fontWeight: "900" }}>
-                    આજના <span style={{ textDecoration: "underline", textUnderlineOffset: "4px" }}>{activeSeva?.nameGujarati || donation.sevaNameSnapshot}</span> ના દાતા શ્રી,
-                  </p>
-                  <h3 style={{ color: '#b91c1c', fontSize: "24px", fontWeight: "950", margin: "2px 0" }}>
+                  {/* Header badge */}
+                  <div style={{ backgroundColor: "#7f1d1d", color: "white", padding: "2px 16px", borderRadius: "9999px", fontSize: "11px", fontWeight: "955", border: "1.5px solid #C5A059" }}>
+                    {activeSeva?.nameGujarati || donation.sevaNameSnapshot} ના દાતા શ્રી
+                  </div>
+
+                  <h3 style={{ color: '#7f1d1d', fontSize: "25px", fontWeight: "950", margin: "3px 0 1px 0", lineHeight: "1.2", letterSpacing: "0.2px" }}>
                     {donation.donorNameSnapshot}
                   </h3>
                   
                   {donation.occasionType && donation.occasionType !== "કોઈ પ્રસંગ નથી" && (
-                    <p style={{ margin: 0, color: '#C5A059', fontSize: "16px", fontWeight: "900" }}>
+                    <p style={{ margin: 0, color: '#0b2f64', fontSize: "15px", fontWeight: "950" }}>
                       🎉 {donation.occasionType} {donation.occasionDate ? `(${donation.occasionDate})` : ""} નિમિત્તે
                     </p>
                   )}
 
                   {donation.customMessage ? (
-                    <p style={{ margin: 0, color: '#0B2F64', fontSize: "14px", fontWeight: "900", fontStyle: "italic" }}>
-                      {donation.customMessage}
+                    <p style={{ margin: "2px 0", color: '#0B2F64', fontSize: "12.5px", fontWeight: "900", fontStyle: "italic", lineHeight: "1.3" }}>
+                      "{donation.customMessage}"
                     </p>
                   ) : (
-                    <p style={{ margin: 0, color: '#0B2F64', fontSize: "14px", fontWeight: "900", fontStyle: "italic" }}>
+                    <div style={{ backgroundColor: "rgba(11, 47, 100, 0.05)", border: "1px dashed rgba(11, 47, 100, 0.2)", padding: "2px 15px", borderRadius: "9999px", fontSize: "11px", fontWeight: "900", color: "#0B2F64", marginTop: "2px" }}>
                       હસ્તે, {donation.donorNameSnapshot} સહ પરિવાર
-                    </p>
-                  )}
-                </div>
-
-                {/* 3. Photos Side-by-Side (large Portrait donor image, covered Dogs Collage) */}
-                <div 
-                  className="relative z-10" 
-                  style={{ 
-                    display: "flex", 
-                    flexDirection: "row", 
-                    gap: "12px", 
-                    justifyContent: "space-between", 
-                    width: "100%",
-                    boxSizing: 'border-box'
-                  }}
-                >
-                  {/* Left: Donor Portrait Image (Only rendered if photo exists) */}
-                  {donorPhotoBase64 && donorPhotoBase64.startsWith("data:") && (
-                    <div 
-                      className="gold-border"
-                      style={{ 
-                        width: "160px", 
-                        height: "190px", 
-                        borderRadius: "14px", 
-                        overflow: "hidden", 
-                        flexShrink: 0,
-                        padding: "2px",
-                        border: '2.5px solid #C5A059', 
-                        backgroundColor: '#ffffff',
-                        backgroundImage: `url(${donorPhotoBase64})`,
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                        backgroundRepeat: "no-repeat"
-                      }}
-                    />
+                    </div>
                   )}
 
-                  {/* Right: Covered Dogs Collage */}
+                  {/* Amount Banner Box */}
                   <div 
-                    className="gold-border"
                     style={{ 
-                      flex: 1,
-                      height: "190px", 
-                      borderRadius: "14px", 
-                      overflow: "hidden", 
-                      border: '2.5px solid #C5A059', 
-                      backgroundColor: '#FAF9F6',
-                      backgroundImage: bgBase64 ? `url(${bgBase64})` : "none",
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                      backgroundRepeat: "no-repeat"
+                      background: "radial-gradient(circle, #7f1d1d 0%, #581c1c 100%)",
+                      border: "3px double #C5A059",
+                      color: "#f59e0b",
+                      fontSize: "23px",
+                      fontWeight: "955",
+                      padding: "3px 28px",
+                      borderRadius: "9999px",
+                      display: "inline-block",
+                      marginTop: "4px",
+                      lineHeight: "1",
+                      boxShadow: "0 3px 5px rgba(0,0,0,0.15)"
                     }}
                   >
-                    {!bgBase64 && (
-                      <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", color: "#9CA3AF" }}>
-                        જીવદયા પ્રવૃત્તિઓ
-                      </div>
-                    )}
+                    ₹ {donation.amount ? Number(donation.amount).toLocaleString("en-IN") : "0"} /-
                   </div>
                 </div>
 
-                {/* 4. Services list & Donation Details/QR Grid */}
+                {/* 4. Hospital Activity / QR Code Grid */}
                 <div 
                   className="relative z-10" 
                   style={{ 
                     display: "grid", 
-                    gridTemplateColumns: showQrOnCard ? "1.2fr 0.8fr" : "1.4fr 0.6fr", 
-                    gap: "12px", 
+                    gridTemplateColumns: showQrOnCard ? "1.45fr 0.55fr" : "1fr", 
+                    gap: "10px", 
                     alignItems: "stretch",
                     width: "100%",
                     boxSizing: 'border-box'
                   }}
                 >
-                  
-                  {/* Left: main services list */}
+                  {/* Left/Main Card: Weekly Hospital Fruits Service */}
                   <div 
                     className="gold-border" 
                     style={{ 
                       backgroundColor: 'rgba(197, 160, 89, 0.04)', 
                       border: '1.5px solid rgba(197, 160, 89, 0.2)',
                       borderRadius: "14px",
-                      padding: "10px 12px",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "4px"
-                    }}
-                  >
-                    <p style={{ color: '#0B2F64', fontSize: "11px", fontWeight: "900", borderBottom: "1.5px solid rgba(11, 47, 100, 0.15)", paddingBottom: "2px", margin: 0 }}>
-                      🐾 કરુણા-મૈત્રી મુખ્ય જીવદયા કાર્યો :
-                    </p>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "2px", fontSize: "10.5px", fontWeight: "900", color: "#374151" }}>
-                      {sevaList.slice(0, 5).map((s, idx) => (
-                        <p key={idx} style={{ margin: 0 }}>
-                          <span style={{ color: '#b91c1c' }}>{idx + 1})</span> {s.nameGujarati}
-                        </p>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Right: Donation Details and QR scanner */}
-                  <div 
-                    className="gold-border" 
-                    style={{ 
-                      backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                      border: showQrOnCard ? '1.5px solid #C5A059' : '3px double #C5A059',
-                      borderRadius: "14px",
                       padding: "8px 12px",
                       display: "flex",
                       flexDirection: "column",
-                      justifyContent: showQrOnCard ? "space-between" : "center",
-                      alignItems: "center"
+                      gap: "3px",
+                      justifyContent: "center"
                     }}
                   >
-                    <div style={{ textAlign: "center", width: "100%" }}>
-                      <p style={{ margin: 0, fontSize: "10px", fontWeight: "900", color: "#6B7280" }}>દાન રકમ (Amount)</p>
-                      <p style={{ margin: 0, fontSize: "18px", fontWeight: "950", color: "#0B2F64", fontFamily: "monospace" }}>
-                        ₹{donation.amount.toLocaleString("en-IN")}/-
-                      </p>
-                      <p style={{ margin: "2px 0 0 0", fontSize: "10px", fontWeight: "900", color: "#374151", fontFamily: "monospace" }}>
-                        તારીખ: {donation.donationDate}
-                      </p>
-                    </div>
-
-                    {/* QR code */}
-                    {settings?.showQR && settings?.qrImageUrl && settings.qrImageUrl.startsWith("data:") ? (
-                      <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "4px", borderTop: "1.5px solid #FAF9F6", paddingTop: "4.5px", marginTop: "4.5px", width: "100%", justifyContent: "center" }}>
-                        <img src={settings.qrImageUrl} alt="Custom QR" className="h-10 w-10 p-0.5 bg-white object-contain" />
-                        <span style={{ fontSize: "7px", fontWeight: "900", color: "#374151", lineHeight: "1.1", width: "45px" }}>UPI દાન સ્કેન કોડ</span>
-                      </div>
-                    ) : null}
+                    <p style={{ color: '#b91c1c', fontSize: "11px", fontWeight: "955", borderBottom: "1px solid rgba(185, 28, 28, 0.15)", paddingBottom: "2px", margin: 0 }}>
+                      🏥 રવિવાર વિશેષ પ્રવૃતિ (Hospital Seva) :
+                    </p>
+                    <p style={{ margin: 0, fontSize: "10px", fontWeight: "900", color: "#374151", lineHeight: "1.4" }}>
+                      દર રવિવારે ગાંધી હોસ્પિટલ, સી.જે. હોસ્પિટલ અને ટી.બી. હોસ્પિટલના જનરલ વોર્ડમાં દર્દીઓને પૌષ્ટિક ફ્રુટ (ફળ) વિતરણ કરવામાં આવે છે.
+                    </p>
                   </div>
 
+                  {/* Right: QR Scan Code (If toggled) */}
+                  {showQrOnCard && settings?.qrImageUrl && settings.qrImageUrl.startsWith("data:") && (
+                    <div 
+                      className="gold-border" 
+                      style={{ 
+                        backgroundColor: '#ffffff',
+                        border: '1.5px solid #C5A059',
+                        borderRadius: "14px",
+                        padding: "6px",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        gap: "3px"
+                      }}
+                    >
+                      <img src={settings.qrImageUrl} alt="UPI QR" className="h-11 w-11 p-0.5 bg-white object-contain" />
+                      <span style={{ fontSize: "6.5px", fontWeight: "955", color: "#0B2F64", textAlign: "center", lineHeight: "1" }}>UPI દાન સ્કેન કોડ</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* 5. Footer quotes and slogans */}
-                <div className="font-sans relative z-10 gray-border" style={{ display: "flex", flexDirection: "column", gap: "6px", borderTop: "1px solid #FAF9F6", paddingTop: "6px" }}>
-                  <p style={{ color: "#0B2F64", fontSize: "11px", fontWeight: "900", fontStyle: "italic", textAlign: "center", margin: 0 }}>
-                    “ભવિષ્યમાં આપના તરફથી આજ રીતે જીવદયાના પુનિત કાર્યમાં સાથ સહકાર મળતો રહે તેવી અપેક્ષા સહ...આભાર..”
-                  </p>
+                <div className="font-sans relative z-10" style={{ display: "flex", flexDirection: "column", gap: "4px", width: "100%" }}>
                   
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "11px", fontWeight: "900", color: "#C5A059", padding: "0 12px" }}>
-                    <span style={{ color: "#b91c1c" }}>અનુકંપા 🚩</span>
-                    <span style={{ color: "#0B2F64" }}>"અમે તો માત્ર નિમિત્ત છીએ"</span>
-                    <span style={{ color: "#b91c1c" }}>🚩 જય જિનેન્દ્ર • આભાર</span>
-                  </div>
-
+                  {/* Dark Green Motto Slogan Bar */}
                   <div 
-                    className="w-full text-center text-[9.5px] font-black tracking-wider gold-border" 
+                    className="w-full text-center" 
                     style={{ 
-                      background: 'linear-gradient(to right, #051A3B, #0B2F64, #051A3B)', 
+                      backgroundColor: '#043e22', 
                       color: '#C5A059', 
-                      border: '1px solid rgba(197, 160, 89, 0.2)',
-                      padding: "5px",
-                      borderRadius: "10px"
+                      padding: "3px 0",
+                      fontSize: "9px",
+                      fontWeight: "955",
+                      letterSpacing: "0.2px"
                     }}
                   >
-                    ← કરુણા થી કૃત્ય સુધી, મૈત્રી થી માનવતા સુધી →
+                    🐾 સેવા એ જ ધર્મ, પ્રેમ એ જ શક્તિ, સહકાર એ જ મૈત્રી, જીવદયા એ જ મહાધર્મ 🐾
+                  </div>
+
+                  {/* Slogan */}
+                  <p style={{ color: "#0B2F64", fontSize: "10px", fontWeight: "900", fontStyle: "italic", textAlign: "center", margin: "1px 0" }}>
+                    “ભવિષ્યમાં આપના તરફથી આજ રીતે જીવદયાના કાર્યમાં સહકાર મળતો રહે તેવી અપેક્ષા સહ... આભાર.”
+                  </p>
+
+                  {/* Jai Jinendra and Contacts section */}
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "10px", fontWeight: "955", color: "#374151", borderTop: "1px solid rgba(197, 160, 89, 0.2)", paddingTop: "4px", paddingLeft: "4px", paddingRight: "4px" }}>
+                    <span style={{ color: "#b91c1c" }}>🙏 જય જિનેન્દ્ર</span>
+                    <span>તારીખ: {donation.donationDate}</span>
+                    <span style={{ color: "#b91c1c" }}>આભાર સહ ❇️</span>
+                  </div>
+
+                  {/* Three Contacts Row */}
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "4px", textAlign: "center", fontSize: "8.5px", fontWeight: "955", color: "#4B5563", marginTop: "2px" }}>
+                    <div className="bg-cream-50/50 p-1 border border-cream-100 rounded-lg">
+                      <p style={{ margin: 0, color: "#0B2F64" }}>કેતલ વોરા</p>
+                      <p style={{ margin: 0, fontFamily: "monospace" }}>9824255909</p>
+                    </div>
+                    <div className="bg-cream-50/50 p-1 border border-cream-100 rounded-lg">
+                      <p style={{ margin: 0, color: "#0B2F64" }}>મયુર શાહ</p>
+                      <p style={{ margin: 0, fontFamily: "monospace" }}>9429099906</p>
+                    </div>
+                    <div className="bg-cream-50/50 p-1 border border-cream-100 rounded-lg">
+                      <p style={{ margin: 0, color: "#0B2F64" }}>મલય વસાણી</p>
+                      <p style={{ margin: 0, fontFamily: "monospace" }}>9825530444</p>
+                    </div>
+                  </div>
+
+                  {/* Funding and FB badge */}
+                  <div 
+                    className="w-full text-center" 
+                    style={{ 
+                      background: 'linear-gradient(to right, #7f1d1d, #b91c1c, #7f1d1d)', 
+                      color: 'white', 
+                      padding: "3px 0",
+                      borderRadius: "8px",
+                      fontSize: "8px",
+                      fontWeight: "955",
+                      display: "flex",
+                      justifyContent: "space-around",
+                      alignItems: "center"
+                    }}
+                  >
+                    <span>💰 ઓનલાઈન ફંડ માટે Mo. 99041 37061</span>
+                    <span style={{ opacity: 0.8 }}>f / KARUNA MAITRI GROUP, SURENDRANAGAR</span>
                   </div>
                 </div>
 
@@ -696,16 +920,16 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
           left: "-9999px", 
           top: "0",
           width: "600px",
-          height: "780px",
+          height: "820px",
           overflow: "hidden"
         }}
       >
         <div 
           ref={cardRef}
-          className="w-[600px] h-[780px] select-none flex flex-col justify-between relative overflow-hidden safe-card-export"
+          className="w-[600px] h-[820px] select-none flex flex-col justify-between relative overflow-hidden safe-card-export"
           style={{ 
             fontFamily: "'Noto Sans Gujarati', sans-serif",
-            border: "6px solid #C5A059", // Solid Gold border
+            border: "8px solid #043e22", // Forest green outer border
             background: "linear-gradient(180deg, #FAF9F6 0%, #FFFDF9 100%)",
             boxSizing: 'border-box',
             padding: "20px"
@@ -731,7 +955,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
             }
           `}} />
 
-          {/* Watermark Background collage at 5% opacity behind details */}
+          {/* Watermark Background collage at 4% opacity behind details */}
           {bgBase64 && (
             <div 
               style={{
@@ -740,258 +964,426 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                 backgroundImage: `url(${bgBase64})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
-                opacity: 0.05,
+                opacity: 0.04,
                 zIndex: 0
               }}
             />
           )}
 
-          {/* Inner gold border */}
+          {/* Inner gold frame border */}
           <div 
             className="absolute pointer-events-none z-20 gold-border" 
             style={{ inset: "8px", border: "2px solid #C5A059", borderRadius: "12px" }} 
           />
 
-          {/* Corner leafs */}
-          <div className="absolute w-2.5 h-2.5 z-30" style={{ top: "12px", left: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
-          <div className="absolute w-2.5 h-2.5 z-30" style={{ top: "12px", right: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
-          <div className="absolute w-2.5 h-2.5 z-30" style={{ bottom: "12px", left: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
-          <div className="absolute w-2.5 h-2.5 z-30" style={{ bottom: "12px", right: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
-
-          {/* 1. Header (Compact reference design layout) */}
-          <div className="relative z-10" style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-            {/* Top Slogan Bar */}
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", padding: "0 10px" }}>
-              <span style={{ color: "#b91c1c", fontSize: "13px", fontWeight: "900" }}>🚩 જીવદયા</span>
-              <span style={{ color: "#0B2F64", fontSize: "18px", fontWeight: "900", letterSpacing: "1px" }}>અહિંસા પરમો ધર્મઃ</span>
-              <span style={{ color: "#b91c1c", fontSize: "13px", fontWeight: "900" }}>કરુણા 🚩</span>
-            </div>
-
-            {/* Logo & Org left, Contacts right */}
-            <div className="blue-border" style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid #0B2F64", borderBottom: "1px solid #0B2F64", padding: "6px 10px", marginTop: "2px" }}>
-              <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px" }}>
-                {logoBase64 && logoBase64.startsWith("data:") ? (
-                  <img 
-                    src={logoBase64} 
-                    alt="Logo" 
-                    className="h-14 w-14 rounded-full object-contain bg-white gold-border" 
-                    style={{ border: '2.5px solid #C5A059' }}
-                  />
-                ) : (
-                  <div className="h-14 w-14 rounded-full flex items-center justify-center text-white font-bold text-[10px] p-2 text-center leading-none gold-border" style={{ border: '2.5px solid #C5A059', backgroundColor: '#0B2F64' }}>કરુણા મૈત્રી</div>
-                )}
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-                  <h2 style={{ color: '#0B2F64', fontSize: "17px", fontWeight: "900", margin: 0, lineHeight: "1.1" }}>{settings?.orgNameGujarati || "કરુણા-મૈત્રી ગ્રુપ"}</h2>
-                  <span style={{ color: '#C5A059', fontSize: "10.5px", fontWeight: "900", margin: 0 }}>📍 {settings?.location || "સુરેન્દ્રનગર"}</span>
-                </div>
-              </div>
-
-              {/* Members list */}
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", fontSize: "9.5px", fontWeight: "900", color: "#374151", lineHeight: "1.3" }}>
-                {displayMembers.slice(0, 3).map((m, idx) => (
-                  <p key={idx} style={{ margin: 0 }}>{m.name}: <span style={{ color: '#0B2F64', fontFamily: "monospace" }}>{m.phone}</span></p>
-                ))}
-                {displayMembers.length === 0 && (
-                  <>
-                    <p style={{ margin: 0 }}>કેતલ વોરા: <span style={{ color: '#0B2F64', fontFamily: "monospace" }}>98242 55909</span></p>
-                    <p style={{ margin: 0 }}>મયુર શાહ: <span style={{ color: '#0B2F64', fontFamily: "monospace" }}>94290 99906</span></p>
-                  </>
-                )}
-              </div>
-            </div>
+          {/* 4 Arched Green Corners */}
+          {/* Top-Left */}
+          <div style={{
+            position: "absolute",
+            top: 0, left: 0,
+            width: "80px", height: "80px",
+            background: "#043e22",
+            borderBottomRightRadius: "100%",
+            borderRight: "2.5px solid #C5A059",
+            borderBottom: "2.5px solid #C5A059",
+            zIndex: 30,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            paddingRight: "12px",
+            paddingBottom: "12px",
+            color: "white"
+          }}>
+            <span style={{ fontSize: "11px", fontWeight: "900", color: "#C5A059", lineHeight: "1" }}>કરુણા</span>
+            <span style={{ fontSize: "13px", marginTop: "2px" }}>🖐️</span>
+          </div>
+          {/* Top-Right */}
+          <div style={{
+            position: "absolute",
+            top: 0, right: 0,
+            width: "80px", height: "80px",
+            background: "#043e22",
+            borderBottomLeftRadius: "100%",
+            borderLeft: "2.5px solid #C5A059",
+            borderBottom: "2.5px solid #C5A059",
+            zIndex: 30,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            paddingLeft: "12px",
+            paddingBottom: "12px",
+            color: "white"
+          }}>
+            <span style={{ fontSize: "11px", fontWeight: "900", color: "#C5A059", lineHeight: "1" }}>મૈત્રી</span>
+            <span style={{ fontSize: "13px", marginTop: "2px" }}>🤝</span>
+          </div>
+          {/* Bottom-Left */}
+          <div style={{
+            position: "absolute",
+            bottom: 0, left: 0,
+            width: "80px", height: "80px",
+            background: "#043e22",
+            borderTopRightRadius: "100%",
+            borderRight: "2.5px solid #C5A059",
+            borderTop: "2.5px solid #C5A059",
+            zIndex: 30,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            paddingRight: "12px",
+            paddingTop: "12px",
+            color: "white"
+          }}>
+            <span style={{ fontSize: "13px", marginBottom: "2px" }}>❤️</span>
+            <span style={{ fontSize: "11px", fontWeight: "900", color: "#C5A059", lineHeight: "1" }}>અનુકંપા</span>
+          </div>
+          {/* Bottom-Right */}
+          <div style={{
+            position: "absolute",
+            bottom: 0, right: 0,
+            width: "80px", height: "80px",
+            background: "#043e22",
+            borderTopLeftRadius: "100%",
+            borderLeft: "2.5px solid #C5A059",
+            borderTop: "2.5px solid #C5A059",
+            zIndex: 30,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            paddingLeft: "12px",
+            paddingTop: "12px",
+            color: "white"
+          }}>
+            <span style={{ fontSize: "13px", marginBottom: "2px" }}>🐾</span>
+            <span style={{ fontSize: "11px", fontWeight: "900", color: "#C5A059", lineHeight: "1" }}>જીવદયા</span>
           </div>
 
-          {/* 2. Donor Details Box */}
+          {/* 1. Header Area */}
+          <div className="relative z-10" style={{ display: "flex", flexDirection: "column", gap: "2px", width: "100%" }}>
+            {/* Top Slogans */}
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", margin: "0 0 4px 0" }}>
+              <span style={{ color: "#b91c1c", fontSize: "11.5px", fontWeight: "950" }}>॥ શ્રી મહાવીરાય નમઃ ॥</span>
+              <span style={{ color: "#b91c1c", fontSize: "13.5px", fontWeight: "950", marginTop: "2px" }}>✨ અહિંસા પરમો ધર્મ ✨</span>
+            </div>
+
+            {/* Logo & Main Title Banner */}
+            <div className="blue-border" style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "12px", borderTop: "1.5px solid #0B2F64", borderBottom: "1.5px solid #0B2F64", padding: "5px 0", justifyContent: "center" }}>
+              {logoBase64 && logoBase64.startsWith("data:") ? (
+                <img 
+                  src={logoBase64} 
+                  alt="Logo" 
+                  className="h-16 w-16 rounded-full object-cover bg-white gold-border shrink-0" 
+                  style={{ border: '2px solid #C5A059' }}
+                />
+              ) : (
+                <div className="h-16 w-16 rounded-full flex items-center justify-center text-white font-bold text-[9px] p-1.5 text-center leading-none gold-border shrink-0" style={{ border: '2px solid #C5A059', backgroundColor: '#0B2F64' }}>કરુણા મૈત્રી</div>
+              )}
+              
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <h2 style={{ color: '#043e22', fontSize: "28px", fontWeight: "955", margin: 0, lineHeight: "1.1", textShadow: "1.5px 1.5px 0px rgba(185, 28, 28, 0.4)" }}>
+                  {settings?.orgNameGujarati || "કરુણા મૈત્રી ગ્રુપ"}
+                </h2>
+                
+                <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "3px" }}>
+                  <span style={{ backgroundColor: '#0b2f64', color: 'white', fontSize: "11px", fontWeight: "955", padding: "1px 12px", borderRadius: "9999px" }}>
+                    📍 {settings?.location || "સુરેન્દ્રનગર"} 📍
+                  </span>
+                </div>
+              </div>
+            </div>
+            
+            {/* Subtitle */}
+            <p style={{ margin: "2px 0 0 0", color: "#b91c1c", fontSize: "11px", fontWeight: "900", fontStyle: "italic", textAlign: "center" }}>
+              "પ્રેમ, સેવા અને કરુણાથી બનાવીએ એક સુંદર સમાજ..."
+            </p>
+          </div>
+
+          {/* 2. Seva Activity Row */}
+          {(() => {
+            const activeDetail = SEVA_DETAILS_MAP[donation.sevaTypeId] || SEVA_DETAILS_MAP["dudh-pova"];
+            return (
+              <div 
+                className="relative z-10" 
+                style={{ 
+                  display: "flex", 
+                  flexDirection: "row", 
+                  gap: "10px", 
+                  width: "100%",
+                  height: "175px",
+                  boxSizing: 'border-box'
+                }}
+              >
+                {/* Left Column: Activity Info Banner Card */}
+                <div 
+                  className="gold-border"
+                  style={{
+                    width: "190px",
+                    height: "175px",
+                    backgroundColor: "#0B2F64",
+                    border: "2.5px solid #C5A059",
+                    borderRadius: "14px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    overflow: "hidden",
+                    flexShrink: 0
+                  }}
+                >
+                  <div style={{ backgroundColor: "rgba(255,255,255,0.08)", padding: "4px", textAlign: "center", borderBottom: "1px solid rgba(197, 160, 89, 0.3)" }}>
+                    <p style={{ margin: 0, color: "white", fontSize: "10.5px", fontWeight: "950", textAlign: "center" }}>🐾 {activeDetail.title} 🐾</p>
+                  </div>
+                  
+                  <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "0 6px", textAlign: "center" }}>
+                    <p style={{ margin: 0, color: "#C5A059", fontSize: "11px", fontWeight: "900" }}>{activeDetail.subtitle}</p>
+                    <p style={{ margin: "2px 0", color: "white", fontSize: "21px", fontWeight: "955", lineHeight: "1.1" }}>{activeDetail.highlightVal}</p>
+                    <p style={{ margin: 0, color: "#C5A059", fontSize: "11px", fontWeight: "900" }}>{activeDetail.highlightUnit}</p>
+                    
+                    <div style={{ backgroundColor: "#b91c1c", color: "#f59e0b", padding: "2px 10px", borderRadius: "6px", fontSize: "12px", fontWeight: "955", border: "1px solid #C5A059", marginTop: "4px" }}>
+                      {activeDetail.boxText}
+                    </div>
+                    <p style={{ margin: "3px 0 0 0", color: "white", fontSize: "9.5px", fontWeight: "900" }}>{activeDetail.verb}</p>
+                  </div>
+
+                  <div style={{ backgroundColor: "rgba(255,255,255,0.06)", padding: "3px", borderTop: "1px solid rgba(197, 160, 89, 0.2)" }}>
+                    <p style={{ margin: 0, color: "white", fontSize: "8.5px", fontWeight: "900", textAlign: "center", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
+                      {activeDetail.bottomBar}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Middle Column: Donor Portrait Photo (Optional) */}
+                {donorPhotoBase64 && donorPhotoBase64.startsWith("data:") && (
+                  <div 
+                    className="gold-border"
+                    style={{ 
+                      width: "135px", 
+                      height: "175px", 
+                      borderRadius: "14px", 
+                      overflow: "hidden", 
+                      flexShrink: 0,
+                      padding: "2px",
+                      border: '2.5px solid #C5A059', 
+                      backgroundColor: '#ffffff',
+                      backgroundImage: `url(${donorPhotoBase64})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      backgroundRepeat: "no-repeat"
+                    }}
+                  />
+                )}
+
+                {/* Right Column: Seva Photo (Dogs Collage / custom) */}
+                <div 
+                  className="gold-border"
+                  style={{ 
+                    flex: 1,
+                    height: "175px", 
+                    borderRadius: "14px", 
+                    overflow: "hidden", 
+                    border: '2.5px solid #C5A059', 
+                    backgroundColor: '#FAF9F6',
+                    backgroundImage: bgBase64 ? `url(${bgBase64})` : "none",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat"
+                  }}
+                >
+                  {!bgBase64 && (
+                    <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", color: "#9CA3AF" }}>
+                      જીવદયા પ્રવૃત્તિઓ
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* 3. Donor Info Area (Main highlight block) */}
           <div 
-            className="text-center relative z-10" 
+            className="text-center relative z-10 gold-border" 
             style={{ 
               backgroundColor: 'rgba(255, 255, 255, 0.98)', 
-              color: '#111827',
-              padding: "8px 12px",
+              border: '2px solid #C5A059',
+              borderRadius: "18px",
+              padding: "10px 15px",
               display: "flex",
               flexDirection: "column",
-              gap: "3px",
+              alignItems: "center",
+              gap: "4px",
+              width: "100%",
               boxSizing: 'border-box'
             }}
           >
-            <p style={{ margin: 0, color: '#0B2F64', fontSize: "18px", fontWeight: "900" }}>
-              આજના <span style={{ textDecoration: "underline", textUnderlineOffset: "4px" }}>{activeSeva?.nameGujarati || donation.sevaNameSnapshot}</span> ના દાતા શ્રી,
-            </p>
-            <h3 style={{ color: '#b91c1c', fontSize: "24px", fontWeight: "950", margin: "2px 0" }}>
+            {/* Header badge */}
+            <div style={{ backgroundColor: "#7f1d1d", color: "white", padding: "2px 16px", borderRadius: "9999px", fontSize: "11px", fontWeight: "955", border: "1.5px solid #C5A059" }}>
+              {activeSeva?.nameGujarati || donation.sevaNameSnapshot} ના દાતા શ્રી
+            </div>
+
+            <h3 style={{ color: '#7f1d1d', fontSize: "25px", fontWeight: "950", margin: "3px 0 1px 0", lineHeight: "1.2", letterSpacing: "0.2px" }}>
               {donation.donorNameSnapshot}
             </h3>
             
             {donation.occasionType && donation.occasionType !== "કોઈ પ્રસંગ નથી" && (
-              <p style={{ margin: 0, color: '#C5A059', fontSize: "16px", fontWeight: "900" }}>
+              <p style={{ margin: 0, color: '#0b2f64', fontSize: "15px", fontWeight: "950" }}>
                 🎉 {donation.occasionType} {donation.occasionDate ? `(${donation.occasionDate})` : ""} નિમિત્તે
               </p>
             )}
 
             {donation.customMessage ? (
-              <p style={{ margin: 0, color: '#0B2F64', fontSize: "14px", fontWeight: "900", fontStyle: "italic" }}>
-                {donation.customMessage}
+              <p style={{ margin: "2px 0", color: '#0B2F64', fontSize: "12.5px", fontWeight: "900", fontStyle: "italic", lineHeight: "1.3" }}>
+                "{donation.customMessage}"
               </p>
             ) : (
-              <p style={{ margin: 0, color: '#0B2F64', fontSize: "14px", fontWeight: "900", fontStyle: "italic" }}>
+              <div style={{ backgroundColor: "rgba(11, 47, 100, 0.05)", border: "1px dashed rgba(11, 47, 100, 0.2)", padding: "2px 15px", borderRadius: "9999px", fontSize: "11px", fontWeight: "900", color: "#0B2F64", marginTop: "2px" }}>
                 હસ્તે, {donation.donorNameSnapshot} સહ પરિવાર
-              </p>
-            )}
-          </div>
-
-          {/* 3. Photos Side-by-Side (large Portrait donor image, covered Dogs Collage) */}
-          <div 
-            className="relative z-10" 
-            style={{ 
-              display: "flex", 
-              flexDirection: "row", 
-              gap: "12px", 
-              justifyContent: "space-between", 
-              width: "100%",
-              boxSizing: 'border-box'
-            }}
-          >
-            {/* Left: Donor Portrait Image (Only rendered if photo exists) */}
-            {donorPhotoBase64 && donorPhotoBase64.startsWith("data:") && (
-              <div 
-                className="gold-border"
-                style={{ 
-                  width: "160px", 
-                  height: "190px", 
-                  borderRadius: "14px", 
-                  overflow: "hidden", 
-                  flexShrink: 0,
-                  padding: "2px",
-                  border: '2.5px solid #C5A059', 
-                  backgroundColor: '#ffffff',
-                  backgroundImage: `url(${donorPhotoBase64})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  backgroundRepeat: "no-repeat"
-                }}
-              />
+              </div>
             )}
 
-            {/* Right: Covered Dogs Collage */}
+            {/* Amount Banner Box */}
             <div 
-              className="gold-border"
               style={{ 
-                flex: 1,
-                height: "190px", 
-                borderRadius: "14px", 
-                overflow: "hidden", 
-                border: '2.5px solid #C5A059', 
-                backgroundColor: '#FAF9F6',
-                backgroundImage: bgBase64 ? `url(${bgBase64})` : "none",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat"
+                background: "radial-gradient(circle, #7f1d1d 0%, #581c1c 100%)",
+                border: "3px double #C5A059",
+                color: "#f59e0b",
+                fontSize: "23px",
+                fontWeight: "955",
+                padding: "3px 28px",
+                borderRadius: "9999px",
+                display: "inline-block",
+                marginTop: "4px",
+                lineHeight: "1",
+                boxShadow: "0 3px 5px rgba(0,0,0,0.15)"
               }}
             >
-              {!bgBase64 && (
-                <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", color: "#9CA3AF" }}>
-                  જીવદયા પ્રવૃત્તિઓ
-                </div>
-              )}
+              ₹ {donation.amount ? Number(donation.amount).toLocaleString("en-IN") : "0"} /-
             </div>
           </div>
 
-          {/* 4. Services list & Donation Details/QR Grid */}
+          {/* 4. Hospital Activity / QR Code Grid */}
           <div 
             className="relative z-10" 
             style={{ 
               display: "grid", 
-              gridTemplateColumns: showQrOnCard ? "1.2fr 0.8fr" : "1.4fr 0.6fr", 
-              gap: "12px", 
+              gridTemplateColumns: showQrOnCard ? "1.45fr 0.55fr" : "1fr", 
+              gap: "10px", 
               alignItems: "stretch",
               width: "100%",
               boxSizing: 'border-box'
             }}
           >
-            
-            {/* Left: main services list */}
+            {/* Left/Main Card: Weekly Hospital Fruits Service */}
             <div 
               className="gold-border" 
               style={{ 
                 backgroundColor: 'rgba(197, 160, 89, 0.04)', 
                 border: '1.5px solid rgba(197, 160, 89, 0.2)',
                 borderRadius: "14px",
-                padding: "10px 12px",
-                display: "flex",
-                flexDirection: "column",
-                gap: "4px"
-              }}
-            >
-              <p style={{ color: '#0B2F64', fontSize: "11px", fontWeight: "900", borderBottom: "1.5px solid rgba(11, 47, 100, 0.15)", paddingBottom: "2px", margin: 0 }}>
-                🐾 કરુણા-મૈત્રી મુખ્ય જીવદયા કાર્યો :
-              </p>
-              <div style={{ display: "flex", flexDirection: "column", gap: "2px", fontSize: "10.5px", fontWeight: "900", color: "#374151" }}>
-                {sevaList.slice(0, 5).map((s, idx) => (
-                  <p key={idx} style={{ margin: 0 }}>
-                    <span style={{ color: '#b91c1c' }}>{idx + 1})</span> {s.nameGujarati}
-                  </p>
-                ))}
-              </div>
-            </div>
-
-            {/* Right: Donation Details and QR scanner */}
-            <div 
-              className="gold-border" 
-              style={{ 
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                border: showQrOnCard ? '1.5px solid #C5A059' : '3px double #C5A059',
-                borderRadius: "14px",
                 padding: "8px 12px",
                 display: "flex",
                 flexDirection: "column",
-                justifyContent: showQrOnCard ? "space-between" : "center",
+                gap: "3px",
+                justifyContent: "center"
+              }}
+            >
+              <p style={{ color: '#b91c1c', fontSize: "11px", fontWeight: "955", borderBottom: "1px solid rgba(185, 28, 28, 0.15)", paddingBottom: "2px", margin: 0 }}>
+                🏥 રવિવાર વિશેષ પ્રવૃતિ (Hospital Seva) :
+              </p>
+              <p style={{ margin: 0, fontSize: "10px", fontWeight: "900", color: "#374151", lineHeight: "1.4" }}>
+                દર રવિવારે ગાંધી હોસ્પિટલ, સી.જે. હોસ્પિટલ અને ટી.બી. હોસ્પિટલના જનરલ વોર્ડમાં દર્દીઓને પૌષ્ટિક ફ્રુટ (ફળ) વિતરણ કરવામાં આવે છે.
+              </p>
+            </div>
+
+            {/* Right: QR Scan Code (If toggled) */}
+            {showQrOnCard && settings?.qrImageUrl && settings.qrImageUrl.startsWith("data:") && (
+              <div 
+                className="gold-border" 
+                style={{ 
+                  backgroundColor: '#ffffff',
+                  border: '1.5px solid #C5A059',
+                  borderRadius: "14px",
+                  padding: "6px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "3px"
+                }}
+              >
+                <img src={settings.qrImageUrl} alt="UPI QR" className="h-11 w-11 p-0.5 bg-white object-contain" />
+                <span style={{ fontSize: "6.5px", fontWeight: "955", color: "#0B2F64", textAlign: "center", lineHeight: "1" }}>UPI દાન સ્કેન કોડ</span>
+              </div>
+            )}
+          </div>
+
+          {/* 5. Footer & Contacts */}
+          <div className="font-sans relative z-10" style={{ display: "flex", flexDirection: "column", gap: "4px", width: "100%" }}>
+            
+            {/* Dark Green Motto Slogan Bar */}
+            <div 
+              className="w-full text-center" 
+              style={{ 
+                backgroundColor: '#043e22', 
+                color: '#C5A059', 
+                padding: "3px 0",
+                fontSize: "9px",
+                fontWeight: "955",
+                letterSpacing: "0.2px"
+              }}
+            >
+              🐾 સેવા એ જ ધર્મ, પ્રેમ એ જ શક્તિ, સહકાર એ જ મૈત્રી, જીવદયા એ જ મહાધર્મ 🐾
+            </div>
+
+            {/* Slogan */}
+            <p style={{ color: "#0B2F64", fontSize: "10px", fontWeight: "900", fontStyle: "italic", textAlign: "center", margin: "1px 0" }}>
+              “ભવિષ્યમાં આપના તરફથી આજ રીતે જીવદયાના કાર્યમાં સહકાર મળતો રહે તેવી અપેક્ષા સહ... આભાર.”
+            </p>
+
+            {/* Jai Jinendra and Contacts section */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "10px", fontWeight: "955", color: "#374151", borderTop: "1px solid rgba(197, 160, 89, 0.2)", paddingTop: "4px", paddingLeft: "4px", paddingRight: "4px" }}>
+              <span style={{ color: "#b91c1c" }}>🙏 જય જિનેન્દ્ર</span>
+              <span>તારીખ: {donation.donationDate}</span>
+              <span style={{ color: "#b91c1c" }}>આભાર સહ ❇️</span>
+            </div>
+
+            {/* Three Contacts Row */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "4px", textAlign: "center", fontSize: "8.5px", fontWeight: "955", color: "#4B5563", marginTop: "2px" }}>
+              <div className="bg-cream-50/50 p-1 border border-cream-100 rounded-lg">
+                <p style={{ margin: 0, color: "#0B2F64" }}>કેતલ વોરા</p>
+                <p style={{ margin: 0, fontFamily: "monospace" }}>9824255909</p>
+              </div>
+              <div className="bg-cream-50/50 p-1 border border-cream-100 rounded-lg">
+                <p style={{ margin: 0, color: "#0B2F64" }}>મયુર શાહ</p>
+                <p style={{ margin: 0, fontFamily: "monospace" }}>9429099906</p>
+              </div>
+              <div className="bg-cream-50/50 p-1 border border-cream-100 rounded-lg">
+                <p style={{ margin: 0, color: "#0B2F64" }}>મલય વસાણી</p>
+                <p style={{ margin: 0, fontFamily: "monospace" }}>9825530444</p>
+              </div>
+            </div>
+
+            {/* Funding and FB badge */}
+            <div 
+              className="w-full text-center" 
+              style={{ 
+                background: 'linear-gradient(to right, #7f1d1d, #b91c1c, #7f1d1d)', 
+                color: 'white', 
+                padding: "3px 0",
+                borderRadius: "8px",
+                fontSize: "8px",
+                fontWeight: "955",
+                display: "flex",
+                justifyContent: "space-around",
                 alignItems: "center"
               }}
             >
-              <div style={{ textAlign: "center", width: "100%" }}>
-                <p style={{ margin: 0, fontSize: "10px", fontWeight: "900", color: "#6B7280" }}>દાન રકમ (Amount)</p>
-                <p style={{ margin: 0, fontSize: "18px", fontWeight: "950", color: "#0B2F64", fontFamily: "monospace" }}>
-                  ₹{donation.amount.toLocaleString("en-IN")}/-
-                </p>
-                <p style={{ margin: "2px 0 0 0", fontSize: "10px", fontWeight: "900", color: "#374151", fontFamily: "monospace" }}>
-                  તારીખ: {donation.donationDate}
-                </p>
-              </div>
-
-              {/* QR code */}
-              {settings?.showQR && settings?.qrImageUrl && settings.qrImageUrl.startsWith("data:") ? (
-                <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "4px", borderTop: "1.5px solid #FAF9F6", paddingTop: "4.5px", marginTop: "4.5px", width: "100%", justifyContent: "center" }}>
-                  <img src={settings.qrImageUrl} alt="Custom QR" className="h-10 w-10 p-0.5 bg-white object-contain" />
-                  <span style={{ fontSize: "7px", fontWeight: "900", color: "#374151", lineHeight: "1.1", width: "45px" }}>UPI દાન સ્કેન કોડ</span>
-                </div>
-              ) : null}
+              <span>💰 ઓનલાઈન ફંડ માટે Mo. 99041 37061</span>
+              <span style={{ opacity: 0.8 }}>f / KARUNA MAITRI GROUP, SURENDRANAGAR</span>
             </div>
 
-          </div>
-
-          {/* 5. Footer quotes and slogans */}
-          <div className="font-sans relative z-10 gray-border" style={{ display: "flex", flexDirection: "column", gap: "6px", borderTop: "1px solid #FAF9F6", paddingTop: "6px" }}>
-            <p style={{ color: "#0B2F64", fontSize: "11px", fontWeight: "900", fontStyle: "italic", textAlign: "center", margin: 0 }}>
-              “ભવિષ્યમાં આપના તરફથી આજ રીતે જીવદયાના પુનિત કાર્યમાં સાથ સહકાર મળતો રહે તેવી અપેક્ષા સહ...આભાર..”
-            </p>
-            
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "11px", fontWeight: "900", color: "#C5A059", padding: "0 12px" }}>
-              <span style={{ color: "#b91c1c" }}>અનુકંપા 🚩</span>
-              <span style={{ color: "#0B2F64" }}>"અમે તો માત્ર નિમિત્ત છીએ"</span>
-              <span style={{ color: "#b91c1c" }}>🚩 જય જિનેન્દ્ર • આભાર</span>
-            </div>
-
-            <div 
-              className="w-full text-center text-[9.5px] font-black tracking-wider gold-border" 
-              style={{ 
-                background: 'linear-gradient(to right, #051A3B, #0B2F64, #051A3B)', 
-                color: '#C5A059', 
-                border: '1px solid rgba(197, 160, 89, 0.2)',
-                padding: "5px",
-                borderRadius: "10px"
-              }}
-            >
-              ← કરુણા થી કૃત્ય સુધી, મૈત્રી થી માનવતા સુધી →
-            </div>
           </div>
 
         </div>
