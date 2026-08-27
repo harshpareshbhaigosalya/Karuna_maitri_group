@@ -75,6 +75,8 @@ export const DonationDetail: React.FC = () => {
   const [bgBase64, setBgBase64] = useState<string>("");
   const [logoBase64, setLogoBase64] = useState<string>("");
   const [donorPhotoBase64, setDonorPhotoBase64] = useState<string>("");
+  const [headerBase64, setHeaderBase64] = useState<string>("");
+  const [footerBase64, setFooterBase64] = useState<string>("");
 
   // Modal View state for mobile-safe downloads
   const [exportedImage, setExportedImage] = useState<string | null>(null);
@@ -141,6 +143,20 @@ export const DonationDetail: React.FC = () => {
           logoReader.onloadend = () => setLogoBase64(logoReader.result as string);
           logoReader.readAsDataURL(logoBlob);
         }
+
+        // Fetch Header Banner
+        const headerRes = await fetch("/header_banner.jpg");
+        const headerBlob = await headerRes.blob();
+        const headerReader = new FileReader();
+        headerReader.onloadend = () => setHeaderBase64(headerReader.result as string);
+        headerReader.readAsDataURL(headerBlob);
+
+        // Fetch Footer Banner
+        const footerRes = await fetch("/footer_banner.jpg");
+        const footerBlob = await footerRes.blob();
+        const footerReader = new FileReader();
+        footerReader.onloadend = () => setFooterBase64(footerReader.result as string);
+        footerReader.readAsDataURL(footerBlob);
       } catch (err) {
         console.error("Error preloading assets:", err);
       }
@@ -1003,7 +1019,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
             borderRight: "2.5px solid #C5A059",
             borderBottom: "2.5px solid #C5A059",
             zIndex: 30,
-            display: "flex",
+            display: headerBase64 ? "none" : "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
@@ -1024,7 +1040,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
             borderLeft: "2.5px solid #C5A059",
             borderBottom: "2.5px solid #C5A059",
             zIndex: 30,
-            display: "flex",
+            display: headerBase64 ? "none" : "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
@@ -1045,7 +1061,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
             borderRight: "2.5px solid #C5A059",
             borderTop: "2.5px solid #C5A059",
             zIndex: 30,
-            display: "flex",
+            display: footerBase64 ? "none" : "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
@@ -1066,7 +1082,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
             borderLeft: "2.5px solid #C5A059",
             borderTop: "2.5px solid #C5A059",
             zIndex: 30,
-            display: "flex",
+            display: footerBase64 ? "none" : "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
@@ -1078,8 +1094,26 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
             <span style={{ fontSize: "11px", fontWeight: "900", color: "#C5A059", lineHeight: "1" }}>જીવદયા</span>
           </div>
 
+          {/* 1. Header Banner Image */}
+          {headerBase64 && (
+            <img 
+              src={headerBase64} 
+              alt="Header" 
+              style={{ 
+                width: "100%", 
+                height: "auto", 
+                borderRadius: "14px", 
+                border: '2.5px solid #C5A059',
+                zIndex: 10,
+                position: "relative",
+                display: "block",
+                marginBottom: "4px"
+              }} 
+            />
+          )}
+
           {/* 1. Header Area */}
-          <div className="relative z-10" style={{ display: "flex", flexDirection: "column", gap: "2px", width: "100%" }}>
+          <div className="relative z-10" style={{ display: headerBase64 ? "none" : "flex", flexDirection: "column", gap: "2px", width: "100%" }}>
             {/* Top Slogans */}
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", margin: "0 0 4px 0" }}>
               <span style={{ color: "#b91c1c", fontSize: "11.5px", fontWeight: "950" }}>॥ શ્રી મહાવીરાય નમઃ ॥</span>
@@ -1219,11 +1253,15 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                 }}
               >
                 {/* Left column: Text details */}
-                <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: hasPhoto ? "flex-start" : "center", textAlign: hasPhoto ? "left" : "center", gap: "3px" }}>
+                <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: "3px" }}>
                   {/* Header badge */}
                   <div style={{ backgroundColor: "#7f1d1d", color: "white", padding: "2px 16px", borderRadius: "9999px", fontSize: "11px", fontWeight: "955", border: "1.5px solid #C5A059", display: "inline-block" }}>
                     {activeSeva?.nameGujarati || donation.sevaNameSnapshot} ના દાતા શ્રી
                   </div>
+
+                  <p style={{ margin: "2px 0 0 0", color: '#0b2f64', fontSize: "11px", fontWeight: "955" }}>
+                    તારીખ: {donation.donationDate ? donation.donationDate.split('-').reverse().join('-') : ""}
+                  </p>
 
                   <h3 style={{ color: '#7f1d1d', fontSize: hasPhoto ? "31px" : "36px", fontWeight: "950", margin: "4px 0 2px 0", lineHeight: "1.2", letterSpacing: "0.2px" }}>
                     {donation.donorNameSnapshot}
@@ -1295,11 +1333,28 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
             );
           })()}
 
+          {/* 4. Footer Banner Image */}
+          {footerBase64 && (
+            <img 
+              src={footerBase64} 
+              alt="Footer" 
+              style={{ 
+                width: "100%", 
+                height: "auto", 
+                borderRadius: "14px", 
+                border: '2.5px solid #C5A059',
+                zIndex: 10,
+                position: "relative",
+                display: "block"
+              }} 
+            />
+          )}
+
           {/* 4. Hospital Activity / QR Code Grid */}
           <div 
             className="relative z-10" 
             style={{ 
-              display: "grid", 
+              display: footerBase64 ? "none" : "grid", 
               gridTemplateColumns: showQrOnCard ? "1.45fr 0.55fr" : "1fr", 
               gap: "10px", 
               alignItems: "stretch",
@@ -1352,7 +1407,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
           </div>
 
           {/* 5. Footer & Contacts */}
-          <div className="font-sans relative z-10" style={{ display: "flex", flexDirection: "column", gap: "4px", width: "100%" }}>
+          <div className="font-sans relative z-10" style={{ display: footerBase64 ? "none" : "flex", flexDirection: "column", gap: "4px", width: "100%" }}>
             
             {/* Dark Green Motto Slogan Bar */}
             <div 
