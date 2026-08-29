@@ -200,7 +200,7 @@ export const Settings: React.FC = () => {
       setArchiving(true);
       
       // Step 1: Export complete Excel backup
-      setArchiveProgressMsg("૧/૪: બધા દાનનો Excel બેકઅપ ડાઉનલોડ થઈ રહ્યો છે...");
+      setArchiveProgressMsg("૧/૫: બધા દાનનો Excel બેકઅપ ડાઉનલોડ થઈ રહ્યો છે...");
       try {
         await exportFullBackupToExcel();
       } catch (e) {
@@ -208,27 +208,46 @@ export const Settings: React.FC = () => {
       }
 
       // Step 2: Batch delete active donations collection
-      setArchiveProgressMsg("૨/૪: દાન એન્ટ્રીઓ સાફ થઈ રહી છે...");
+      setArchiveProgressMsg("૨/૫: દાન એન્ટ્રીઓ સાફ થઈ રહી છે...");
       const donSnap = await getDocs(collection(db, "donations"));
       const donBatch = writeBatch(db);
       donSnap.forEach((d) => donBatch.delete(doc(db, "donations", d.id)));
       await donBatch.commit();
 
       // Step 3: Delete donors
-      setArchiveProgressMsg("૩/૪: દાતાશ્રીઓની પ્રોફાઈલ સાફ થઈ રહી છે...");
+      setArchiveProgressMsg("૩/૫: દાતાશ્રીઓની પ્રોફાઈલ સાફ થઈ રહી છે...");
       const donorSnap = await getDocs(collection(db, "donors"));
       const donorBatch = writeBatch(db);
       donorSnap.forEach((d) => donorBatch.delete(doc(db, "donors", d.id)));
       await donorBatch.commit();
 
       // Step 4: Delete reminders
-      setArchiveProgressMsg("૪/૪: રિમાઇન્ડર સાફ થઈ રહ્યા છે...");
+      setArchiveProgressMsg("૪/૫: રિમાઇન્ડર સાફ થઈ રહ્યા છે...");
       const remSnap = await getDocs(collection(db, "reminders"));
       const remBatch = writeBatch(db);
       remSnap.forEach((d) => remBatch.delete(doc(db, "reminders", d.id)));
       await remBatch.commit();
 
-      setMsg({ text: "માર્કેટ લોન્ચ માટે ડેટાબેઝ સંપૂર્ણપણે ક્લીન અને રીસેટ થઈ ગયો છે!", type: "success" });
+      // Step 5: Reset cumulative archived totals to 0
+      setArchiveProgressMsg("૫/૫: હિસાબી સરવાળો અને આર્કાઇવ ટોટલ રીસેટ (₹ 0) થઈ રહ્યા છે...");
+      const orgDocRef = doc(db, "settings", "org");
+      await updateDoc(orgDocRef, {
+        lifetimeArchivedAmount: 0,
+        lifetimeArchivedCount: 0,
+        yearlyArchives: [],
+        updatedAt: serverTimestamp()
+      });
+
+      if (settings) {
+        setSettings({
+          ...settings,
+          lifetimeArchivedAmount: 0,
+          lifetimeArchivedCount: 0,
+          yearlyArchives: []
+        });
+      }
+
+      setMsg({ text: "માર્કેટ લોન્ચ માટે ડેટાબેઝ અને કુલ હિસાબ (₹ 0) સંપૂર્ણપણે ક્લીન અને રીસેટ થઈ ગયા છે!", type: "success" });
       setIsFullResetModalOpen(false);
       setArchiveConfirmInput("");
     } catch (err) {
@@ -237,6 +256,33 @@ export const Settings: React.FC = () => {
     } finally {
       setArchiving(false);
       setArchiveProgressMsg("");
+    }
+  };
+
+  // Dedicated button to zero out cumulative total counters
+  const handleResetCumulativeTotalOnly = async () => {
+    if (!window.confirm("શું તમે ખરેખર કાયમી જૂની આર્કાઇવ રકમ અને એન્ટ્રી સંખ્યા (₹ 0) રીસેટ કરવા માંગો છો?")) return;
+    try {
+      setLoading(true);
+      await updateDoc(doc(db, "settings", "org"), {
+        lifetimeArchivedAmount: 0,
+        lifetimeArchivedCount: 0,
+        yearlyArchives: [],
+        updatedAt: serverTimestamp()
+      });
+      if (settings) {
+        setSettings({
+          ...settings,
+          lifetimeArchivedAmount: 0,
+          lifetimeArchivedCount: 0,
+          yearlyArchives: []
+        });
+      }
+      setMsg({ text: "કાયમી આર્કાઇવ હિસાબ સફળતાપૂર્વક ₹ 0 રીસેટ થઈ ગયો છે!", type: "success" });
+    } catch (err: any) {
+      alert(`ભૂલ આવી: ${err.message || err}`);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -875,11 +921,18 @@ export const Settings: React.FC = () => {
 
               {/* Archive Stats Overview */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                <div className="bg-cream-50/60 p-3 rounded-xl border border-cream-200 text-center">
+                <div className="bg-cream-50/60 p-3 rounded-xl border border-cream-200 text-center relative group">
                   <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">કાયમી આર્કાઇવ થયેલ રકમ (All-Time Saved ₹)</p>
                   <p className="text-lg font-extrabold text-royal-850 mt-0.5">
                     ₹ {(settings.lifetimeArchivedAmount || 0).toLocaleString("en-IN")}
                   </p>
+                  <button
+                    type="button"
+                    onClick={handleResetCumulativeTotalOnly}
+                    className="mt-1 text-[10px] font-bold text-red-600 hover:text-red-800 underline transition-colors"
+                  >
+                    સરવાળો (₹ 0) રીસેટ કરો
+                  </button>
                 </div>
                 <div className="bg-cream-50/60 p-3 rounded-xl border border-cream-200 text-center">
                   <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">આર્કાઇવ થયેલ દાન સંખ્યા (Archived Entries)</p>

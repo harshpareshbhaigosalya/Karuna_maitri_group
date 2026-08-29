@@ -121,6 +121,9 @@ export const DEFAULT_ORG_SETTINGS: Omit<OrganizationSettings, 'updatedAt'> = {
     { name: "મયુર શાહ", phone: "9429099906", showOnCard: true },
     { name: "મલય વસાણી", phone: "9825530444", showOnCard: true }
   ],
+  lifetimeArchivedAmount: 0,
+  lifetimeArchivedCount: 0,
+  yearlyArchives: [],
 };
 
 /**
