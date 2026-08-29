@@ -978,9 +978,9 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                               <p style={{ margin: "2px 0", color: "#FFFFFF", fontSize: "23px", fontWeight: "955", lineHeight: "1.1", textShadow: "0 2px 4px rgba(0,0,0,0.5)" }}>{activeDetail.highlightVal}</p>
                               <p style={{ margin: 0, color: "#FDE68A", fontSize: "11.5px", fontWeight: "900" }}>{activeDetail.highlightUnit}</p>
                               
-                              <div style={{ backgroundColor: "#7f1d1d", color: "#ffffff", padding: "3.5px 14px", borderRadius: "9999px", fontSize: "12.5px", fontWeight: "955", border: "1.5px solid #C5A059", marginTop: "5px", boxShadow: "0 2px 6px rgba(0,0,0,0.25)" }}>
-                                {activeDetail.boxText}
-                              </div>
+                              <p style={{ margin: "4px 0 0 0", color: "#FDE68A", fontSize: "13.5px", fontWeight: "955", textShadow: "0 1px 2px rgba(0,0,0,0.5)" }}>
+     {activeDetail.boxText}
+   </p>
                               <p style={{ margin: "3.5px 0 0 0", color: "#FFFFFF", fontSize: "9.5px", fontWeight: "900" }}>{activeDetail.verb}</p>
                             </div>
 
@@ -1048,9 +1048,9 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                         >
                           <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: "2px" }}>
                             
-                            <div style={{ backgroundColor: "#7f1d1d", color: "#FFFFFF", padding: "2.5px 18px", borderRadius: "9999px", fontSize: "11px", fontWeight: "955", border: "1.5px solid #C5A059", display: "block" }}>
-                              {activeSeva?.nameGujarati || "જીવદયા"} સેવા ના દાતા શ્રી
-                            </div>
+                            <div style={{ color: "#0B2F64", fontSize: "15px", fontWeight: "955", borderBottom: "2px solid #C5A059", paddingBottom: "2px", display: "inline-block", letterSpacing: "0.3px", margin: 0 }}>
+     ✨ {activeSeva?.nameGujarati || "જીવદયા"} સેવા ના દાતા શ્રી ✨
+   </div>
 
                             <p style={{ margin: "2px 0 0 0", color: '#0b2f64', fontSize: "11px", fontWeight: "955" }}>
                               તારીખ: {donationDate ? donationDate.split('-').reverse().join('-') : ""}
@@ -1077,30 +1077,26 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                                 "{customMessage}"
                               </p>
                             ) : (
-                              <div style={{ backgroundColor: "rgba(11, 47, 100, 0.05)", border: "1px dashed rgba(11, 47, 100, 0.2)", padding: "2px 16px", borderRadius: "9999px", fontSize: "11px", fontWeight: "900", color: "#0B2F64", marginTop: "2px", display: "block" }}>
-                                હસ્તે, {hasteName ? hasteName : (donorName ? `${donorName} સહ પરિવાર` : "દાતાશ્રી સહ પરિવાર")}
-                              </div>
+                              <p style={{ margin: "3px 0 0 0", color: "#0B2F64", fontSize: "13px", fontWeight: "900", fontStyle: "italic" }}>
+     હસ્તે: {hasteName ? hasteName : (donorName ? `${donorName} સહ પરિવાર` : "દાતાશ્રી સહ પરિવાર")}
+   </p>
                             )}
 
-                            <div 
-                              style={{ 
-                                background: "radial-gradient(circle, #7f1d1d 0%, #581c1c 100%)",
-                                border: "3px double #C5A059",
-                                color: "#f59e0b",
-                                fontSize: "23px",
-                                fontWeight: "955",
-                                padding: "3px 28px",
-                                borderRadius: "9999px",
-                                display: "inline-flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                marginTop: "4px",
-                                lineHeight: "1",
-                                boxShadow: "0 3px 6px rgba(0,0,0,0.18)"
-                              }}
-                            >
-                              ₹ {amount ? Number(amount).toLocaleString("en-IN") : "0"} /-
-                            </div>
+                             <div 
+                               style={{ 
+                                 color: "#B45309",
+                                 fontSize: "32px",
+                                 fontWeight: "950",
+                                 marginTop: "6px",
+                                 lineHeight: "1",
+                                 letterSpacing: "0.5px",
+                                 borderBottom: "2px solid #C5A059",
+                                 paddingBottom: "2px",
+                                 display: "inline-block"
+                               }}
+                             >
+                               ₹ {amount ? Number(amount).toLocaleString("en-IN") : "0"} /-
+                             </div>
                           </div>
 
                           {hasPhoto && (
@@ -1268,9 +1264,9 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                               <p style={{ margin: "2px 0", color: "#FFFFFF", fontSize: "23px", fontWeight: "955", lineHeight: "1.1", textShadow: "0 2px 4px rgba(0,0,0,0.5)" }}>{activeDetail.highlightVal}</p>
                               <p style={{ margin: 0, color: "#FDE68A", fontSize: "11.5px", fontWeight: "900" }}>{activeDetail.highlightUnit}</p>
                               
-                              <div style={{ backgroundColor: "#7f1d1d", color: "#ffffff", padding: "3.5px 14px", borderRadius: "9999px", fontSize: "12.5px", fontWeight: "955", border: "1.5px solid #C5A059", marginTop: "5px", boxShadow: "0 2px 6px rgba(0,0,0,0.25)" }}>
-                                {activeDetail.boxText}
-                              </div>
+                              <p style={{ margin: "4px 0 0 0", color: "#FDE68A", fontSize: "13.5px", fontWeight: "955", textShadow: "0 1px 2px rgba(0,0,0,0.5)" }}>
+     {activeDetail.boxText}
+   </p>
                               <p style={{ margin: "3.5px 0 0 0", color: "#FFFFFF", fontSize: "9.5px", fontWeight: "900" }}>{activeDetail.verb}</p>
                             </div>
 
@@ -1338,9 +1334,9 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                         >
                           <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: "2px" }}>
                             
-                            <div style={{ backgroundColor: "#7f1d1d", color: "#FFFFFF", padding: "2.5px 18px", borderRadius: "9999px", fontSize: "11px", fontWeight: "955", border: "1.5px solid #C5A059", display: "block" }}>
-                              {activeSeva?.nameGujarati || "જીવદયા"} સેવા ના દાતા શ્રી
-                            </div>
+                            <div style={{ color: "#0B2F64", fontSize: "15px", fontWeight: "955", borderBottom: "2px solid #C5A059", paddingBottom: "2px", display: "inline-block", letterSpacing: "0.3px", margin: 0 }}>
+     ✨ {activeSeva?.nameGujarati || "જીવદયા"} સેવા ના દાતા શ્રી ✨
+   </div>
 
                             <p style={{ margin: "2px 0 0 0", color: '#0b2f64', fontSize: "11px", fontWeight: "955" }}>
                               તારીખ: {donationDate ? donationDate.split('-').reverse().join('-') : ""}
@@ -1367,30 +1363,26 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                                 "{customMessage}"
                               </p>
                             ) : (
-                              <div style={{ backgroundColor: "rgba(11, 47, 100, 0.05)", border: "1px dashed rgba(11, 47, 100, 0.2)", padding: "2px 16px", borderRadius: "9999px", fontSize: "11px", fontWeight: "900", color: "#0B2F64", marginTop: "2px", display: "block" }}>
-                                હસ્તે, {hasteName ? hasteName : (donorName ? `${donorName} સહ પરિવાર` : "દાતાશ્રી સહ પરિવાર")}
-                              </div>
+                              <p style={{ margin: "3px 0 0 0", color: "#0B2F64", fontSize: "13px", fontWeight: "900", fontStyle: "italic" }}>
+     હસ્તે: {hasteName ? hasteName : (donorName ? `${donorName} સહ પરિવાર` : "દાતાશ્રી સહ પરિવાર")}
+   </p>
                             )}
 
-                            <div 
-                              style={{ 
-                                background: "radial-gradient(circle, #7f1d1d 0%, #581c1c 100%)",
-                                border: "3px double #C5A059",
-                                color: "#f59e0b",
-                                fontSize: "23px",
-                                fontWeight: "955",
-                                padding: "3px 28px",
-                                borderRadius: "9999px",
-                                display: "inline-flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                marginTop: "4px",
-                                lineHeight: "1",
-                                boxShadow: "0 3px 6px rgba(0,0,0,0.18)"
-                              }}
-                            >
-                              ₹ {amount ? Number(amount).toLocaleString("en-IN") : "0"} /-
-                            </div>
+                             <div 
+                               style={{ 
+                                 color: "#B45309",
+                                 fontSize: "32px",
+                                 fontWeight: "950",
+                                 marginTop: "6px",
+                                 lineHeight: "1",
+                                 letterSpacing: "0.5px",
+                                 borderBottom: "2px solid #C5A059",
+                                 paddingBottom: "2px",
+                                 display: "inline-block"
+                               }}
+                             >
+                               ₹ {amount ? Number(amount).toLocaleString("en-IN") : "0"} /-
+                             </div>
                           </div>
 
                           {hasPhoto && (

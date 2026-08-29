@@ -934,7 +934,7 @@ ${dynamicSevaListText}
               }}
             >
               <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "2px" }}>
-                <div style={{ backgroundColor: "#7f1d1d", color: "#FFFFFF", padding: "2px 14px", borderRadius: "9999px", fontSize: "10.5px", fontWeight: "955", border: "1.5px solid #C5A059", display: "inline-block", alignSelf: "flex-start" }}>
+                <div style={{ color: "#0B2F64", fontSize: "12px", fontWeight: "955", borderBottom: "1.5px solid #C5A059", paddingBottom: "2px", display: "inline-block", alignSelf: "flex-start", margin: 0 }}>
                   💳 દાન સહયોગ વિગતો (Bank Details)
                 </div>
                 <div style={{ color: "#1F2937", fontSize: "11px", fontWeight: "900", lineHeight: "1.3", marginTop: "4px", whiteSpace: "pre-line" }}>

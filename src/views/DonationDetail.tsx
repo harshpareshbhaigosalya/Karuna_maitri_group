@@ -504,7 +504,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                     />
                   )}
 
-                  {/* Top Header Banner Image (Full Bleed) */}
+                  {/* Top Header Banner Image */}
                   <img 
                     src={headerBase64 || "/header_banner.jpg"} 
                     alt="Header Banner" 
@@ -562,10 +562,10 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                               <p style={{ margin: "2px 0", color: "#FFFFFF", fontSize: "24px", fontWeight: "955", lineHeight: "1.1", textShadow: "0 2px 4px rgba(0,0,0,0.5)" }}>{activeDetail.highlightVal}</p>
                               <p style={{ margin: 0, color: "#FDE68A", fontSize: "11.5px", fontWeight: "900" }}>{activeDetail.highlightUnit}</p>
                               
-                              <div style={{ backgroundColor: "#7f1d1d", color: "#ffffff", padding: "3.5px 14px", borderRadius: "9999px", fontSize: "12.5px", fontWeight: "955", border: "1.5px solid #C5A059", marginTop: "5px", boxShadow: "0 2px 6px rgba(0,0,0,0.25)" }}>
+                              <p style={{ margin: "4px 0 0 0", color: "#FDE68A", fontSize: "13.5px", fontWeight: "955", textShadow: "0 1px 2px rgba(0,0,0,0.5)" }}>
                                 {activeDetail.boxText}
-                              </div>
-                              <p style={{ margin: "3.5px 0 0 0", color: "#FFFFFF", fontSize: "9.5px", fontWeight: "900" }}>{activeDetail.verb}</p>
+                              </p>
+                              <p style={{ margin: "2px 0 0 0", color: "#FFFFFF", fontSize: "9.5px", fontWeight: "900" }}>{activeDetail.verb}</p>
                             </div>
 
                             <div style={{ backgroundColor: "rgba(0, 0, 0, 0.35)", padding: "4px", borderTop: "1px solid rgba(197, 160, 89, 0.4)" }}>
@@ -609,7 +609,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                       );
                     })()}
 
-                    {/* Donor Certificate Info (Pure Typography - ZERO Background Boxes) */}
+                    {/* Donor Certificate Info (Pure Typography - ZERO Background Boxes / ZERO Capsules) */}
                     {(() => {
                       const hasPhoto = donorPhotoBase64 && donorPhotoBase64.startsWith("data:");
                       const isDeceasedOccasion = donation.occasionType && ["તિથિ", "પુણ્યતિથિ", "સ્મૃતિ દિવસ", "સ્વર્ગવાસી"].includes(donation.occasionType);
@@ -629,7 +629,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                         >
                           <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: "4px" }}>
                             
-                            <div style={{ color: "#0B2F64", fontSize: "15px", fontWeight: "955", borderBottom: "2px solid #C5A059", paddingBottom: "2px", display: "inline-block", letterSpacing: "0.3px" }}>
+                            <div style={{ color: "#0B2F64", fontSize: "15px", fontWeight: "955", borderBottom: "2px solid #C5A059", paddingBottom: "2px", display: "inline-block", letterSpacing: "0.3px", margin: 0 }}>
                               ✨ {activeSeva?.nameGujarati || donation.sevaNameSnapshot} ના દાતા શ્રી ✨
                             </div>
 
@@ -711,7 +711,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
 
                   </div>
 
-                  {/* Bottom Footer Banner Image (Full Bleed) */}
+                  {/* Bottom Footer Banner Image */}
                   <img 
                     src={footerBase64 || "/footer_banner.jpg"} 
                     alt="Footer Banner" 
@@ -789,7 +789,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                     />
                   )}
 
-                  {/* Top Header Banner Image (Full Bleed) */}
+                  {/* Top Header Banner Image */}
                   <img 
                     src={headerBase64 || "/header_banner.jpg"} 
                     alt="Header Banner" 
@@ -847,10 +847,10 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                               <p style={{ margin: "2px 0", color: "#FFFFFF", fontSize: "24px", fontWeight: "955", lineHeight: "1.1", textShadow: "0 2px 4px rgba(0,0,0,0.5)" }}>{activeDetail.highlightVal}</p>
                               <p style={{ margin: 0, color: "#FDE68A", fontSize: "11.5px", fontWeight: "900" }}>{activeDetail.highlightUnit}</p>
                               
-                              <div style={{ backgroundColor: "#7f1d1d", color: "#ffffff", padding: "3.5px 14px", borderRadius: "9999px", fontSize: "12.5px", fontWeight: "955", border: "1.5px solid #C5A059", marginTop: "5px", boxShadow: "0 2px 6px rgba(0,0,0,0.25)" }}>
+                              <p style={{ margin: "4px 0 0 0", color: "#FDE68A", fontSize: "13.5px", fontWeight: "955", textShadow: "0 1px 2px rgba(0,0,0,0.5)" }}>
                                 {activeDetail.boxText}
-                              </div>
-                              <p style={{ margin: "3.5px 0 0 0", color: "#FFFFFF", fontSize: "9.5px", fontWeight: "900" }}>{activeDetail.verb}</p>
+                              </p>
+                              <p style={{ margin: "2px 0 0 0", color: "#FFFFFF", fontSize: "9.5px", fontWeight: "900" }}>{activeDetail.verb}</p>
                             </div>
 
                             <div style={{ backgroundColor: "rgba(0, 0, 0, 0.35)", padding: "4px", borderTop: "1px solid rgba(197, 160, 89, 0.4)" }}>
@@ -894,7 +894,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                       );
                     })()}
 
-                    {/* Donor Certificate Info (Pure Typography - ZERO Background Boxes) */}
+                    {/* Donor Certificate Info (Pure Typography - ZERO Background Boxes / ZERO Capsules) */}
                     {(() => {
                       const hasPhoto = donorPhotoBase64 && donorPhotoBase64.startsWith("data:");
                       const isDeceasedOccasion = donation.occasionType && ["તિથિ", "પુણ્યતિથિ", "સ્મૃતિ દિવસ", "સ્વર્ગવાસી"].includes(donation.occasionType);
@@ -914,7 +914,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                         >
                           <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: "4px" }}>
                             
-                            <div style={{ color: "#0B2F64", fontSize: "15px", fontWeight: "955", borderBottom: "2px solid #C5A059", paddingBottom: "2px", display: "inline-block", letterSpacing: "0.3px" }}>
+                            <div style={{ color: "#0B2F64", fontSize: "15px", fontWeight: "955", borderBottom: "2px solid #C5A059", paddingBottom: "2px", display: "inline-block", letterSpacing: "0.3px", margin: 0 }}>
                               ✨ {activeSeva?.nameGujarati || donation.sevaNameSnapshot} ના દાતા શ્રી ✨
                             </div>
 
@@ -996,7 +996,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
 
                   </div>
 
-                  {/* Bottom Footer Banner Image (Full Bleed) */}
+                  {/* Bottom Footer Banner Image */}
                   <img 
                     src={footerBase64 || "/footer_banner.jpg"} 
                     alt="Footer Banner" 
