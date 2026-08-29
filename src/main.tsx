@@ -16,4 +16,14 @@ createRoot(document.getElementById('root')!).render(
       <App />
     </ErrorBoundary>
   </StrictMode>,
-)
+);
+
+// Smoothly dismiss mobile app splash screen once React completes initial render
+setTimeout(() => {
+  const splash = document.getElementById("pwa-splash");
+  if (splash) {
+    splash.style.opacity = "0";
+    splash.style.visibility = "hidden";
+    setTimeout(() => splash.remove(), 400);
+  }
+}, 300);
