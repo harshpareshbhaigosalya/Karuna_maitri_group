@@ -18,7 +18,7 @@ const SEVA_DETAILS_MAP: Record<string, {
   "dudh-pova": {
     title: "અમારી રોજની પ્રવૃતિ",
     subtitle: "દરરોજ આશરે",
-    highlightVal: "350 થી 400",
+    highlightVal: "400+",
     highlightUnit: "કૂતરાઓને",
     boxText: "દૂધપૌવા",
     verb: "જમાડવામાં આવે છે.",
@@ -458,14 +458,16 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
               <div className="w-[600px] h-[820px] scale-[0.48] sm:scale-[0.72] md:scale-100 origin-top shrink-0 -mb-[420px] sm:-mb-[220px] md:mb-0">
                 
                 {/* Visual preview replica */}
+
                 <div 
+                  
                   className="w-[600px] h-[820px] select-none flex flex-col justify-between relative overflow-hidden safe-card-export"
                   style={{ 
                     fontFamily: "'Noto Sans Gujarati', sans-serif",
-                    border: "8px solid #043e22",
                     background: "#FAF5EC",
                     boxSizing: 'border-box',
-                    padding: "0"
+                    padding: "0",
+                    margin: "0"
                   }}
                 >
                   <style dangerouslySetInnerHTML={{__html: `
@@ -476,11 +478,12 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                       box-shadow: none !important;
                       text-shadow: none !important;
                     }
-                    .safe-card-export .gold-border {
-                      border-color: #C5A059 !important;
-                    }
                     .safe-card-export p, .safe-card-export h1, .safe-card-export h2, .safe-card-export h3, .safe-card-export h4 {
                       margin: 0 !important;
+                      line-height: 1.2 !important;
+                    }
+                    .safe-card-export .gold-border {
+                      border-color: #C5A059 !important;
                     }
                     .safe-card-export .blue-border {
                       border-color: #0B2F64 !important;
@@ -501,11 +504,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                     />
                   )}
 
-                  <div 
-                    className="absolute pointer-events-none z-20 gold-border" 
-                    style={{ inset: "8px", border: "2px solid #C5A059", borderRadius: "12px" }} 
-                  />
-
+                  {/* Top Header Banner Image */}
                   <img 
                     src={headerBase64 || "/header_banner.jpg"} 
                     alt="Header Banner" 
@@ -520,8 +519,10 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                     }} 
                   />
 
+                  {/* Main Middle Container */}
                   <div style={{ flex: 1, padding: "12px 20px", display: "flex", flexDirection: "column", justifyContent: "space-around", gap: "10px", zIndex: 10, position: "relative" }}>
                     
+                    {/* Seva Activity Row */}
                     {(() => {
                       const activeDetail = SEVA_DETAILS_MAP[donation.sevaTypeId] || SEVA_DETAILS_MAP["dudh-pova"];
                       return (
@@ -558,7 +559,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                             
                             <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "4px 8px", textAlign: "center" }}>
                               <p style={{ margin: 0, color: "#FDE68A", fontSize: "11.5px", fontWeight: "900" }}>{activeDetail.subtitle}</p>
-                              <p style={{ margin: "2px 0", color: "#FFFFFF", fontSize: "23px", fontWeight: "955", lineHeight: "1.1", textShadow: "0 2px 4px rgba(0,0,0,0.5)" }}>{activeDetail.highlightVal}</p>
+                              <p style={{ margin: "2px 0", color: "#FFFFFF", fontSize: "24px", fontWeight: "955", lineHeight: "1.1", textShadow: "0 2px 4px rgba(0,0,0,0.5)" }}>{activeDetail.highlightVal}</p>
                               <p style={{ margin: 0, color: "#FDE68A", fontSize: "11.5px", fontWeight: "900" }}>{activeDetail.highlightUnit}</p>
                               
                               <div style={{ backgroundColor: "#7f1d1d", color: "#ffffff", padding: "3.5px 14px", borderRadius: "9999px", fontSize: "12.5px", fontWeight: "955", border: "1.5px solid #C5A059", marginTop: "5px", boxShadow: "0 2px 6px rgba(0,0,0,0.25)" }}>
@@ -608,59 +609,56 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                       );
                     })()}
 
+                    {/* Donor Certificate Info (Directly on canvas - NO background box) */}
                     {(() => {
                       const hasPhoto = donorPhotoBase64 && donorPhotoBase64.startsWith("data:");
                       const isDeceasedOccasion = donation.occasionType && ["તિથિ", "પુણ્યતિથિ", "સ્મૃતિ દિવસ", "સ્વર્ગવાસી"].includes(donation.occasionType);
                       return (
                         <div 
-                          className="relative z-10 gold-border" 
+                          className="relative z-10" 
                           style={{ 
-                            backgroundColor: 'rgba(255, 255, 255, 0.98)', 
-                            border: '2px solid #C5A059',
-                            borderRadius: "20px",
-                            padding: hasPhoto ? "12px 18px" : "12px 16px",
+                            padding: "6px 10px",
                             display: "flex",
                             flexDirection: "row",
                             alignItems: "center",
                             justifyContent: hasPhoto ? "space-between" : "center",
                             gap: "15px",
                             width: "100%",
-                            boxSizing: 'border-box',
-                            boxShadow: "0 4px 12px rgba(11, 47, 100, 0.06)"
+                            boxSizing: 'border-box'
                           }}
                         >
-                          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: "2px" }}>
+                          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: "3px" }}>
                             
-                            <div style={{ backgroundColor: "#7f1d1d", color: "#FFFFFF", padding: "2.5px 18px", borderRadius: "9999px", fontSize: "11px", fontWeight: "955", border: "1.5px solid #C5A059", display: "block" }}>
+                            <div style={{ backgroundColor: "#7f1d1d", color: "#FFFFFF", padding: "2.5px 18px", borderRadius: "9999px", fontSize: "12px", fontWeight: "955", border: "1.5px solid #C5A059", display: "inline-block", margin: 0 }}>
                               {activeSeva?.nameGujarati || donation.sevaNameSnapshot} ના દાતા શ્રી
                             </div>
 
-                            <p style={{ margin: "2px 0 0 0", color: '#0b2f64', fontSize: "11px", fontWeight: "955" }}>
+                            <p style={{ margin: "2px 0 0 0", color: '#0b2f64', fontSize: "12px", fontWeight: "955" }}>
                               તારીખ: {donation.donationDate ? donation.donationDate.split('-').reverse().join('-') : ""}
                             </p>
 
-                            <h3 style={{ color: '#7f1d1d', fontSize: hasPhoto ? "30px" : "35px", fontWeight: "950", margin: "3px 0 1px 0", lineHeight: "1.2", letterSpacing: "0.2px" }}>
+                            <h3 style={{ color: '#7f1d1d', fontSize: hasPhoto ? "32px" : "38px", fontWeight: "950", margin: "3px 0 1px 0", lineHeight: "1.1", letterSpacing: "0.2px" }}>
                               {donation.donorNameSnapshot}
                             </h3>
                             
                             {donation.occasionType && donation.occasionType !== "કોઈ પ્રસંગ નથી" && (
-                              <p style={{ margin: 0, color: '#0b2f64', fontSize: "14.5px", fontWeight: "955" }}>
+                              <p style={{ margin: "1px 0 0 0", color: '#0b2f64', fontSize: "15.5px", fontWeight: "955" }}>
                                 {donation.occasionType} {donation.occasionDate ? `(${donation.occasionDate})` : ""} {donation.occasionType.endsWith("સ્મરણાર્થે") || ["તિથિ", "પુણ્યતિથિ", "સ્મૃતિ દિવસ", "સ્વર્ગવાસી"].includes(donation.occasionType) ? "" : "નિમિત્તે"}
                               </p>
                             )}
 
                             {isDeceasedOccasion && (
-                              <p style={{ margin: "2px 0", color: '#b91c1c', fontSize: "12.5px", fontWeight: "955", fontStyle: "italic" }}>
+                              <p style={{ margin: "2px 0 0 0", color: '#b91c1c', fontSize: "13px", fontWeight: "955", fontStyle: "italic" }}>
                                 🙏 ભગવાન તેમના દિવ્ય આત્માને પરમ શાંતિ અર્પે 🙏
                               </p>
                             )}
 
                             {donation.customMessage ? (
-                              <p style={{ margin: "2px 0", color: '#0B2F64', fontSize: "12px", fontWeight: "900", fontStyle: "italic", lineHeight: "1.3" }}>
+                              <p style={{ margin: "2px 0 0 0", color: '#0B2F64', fontSize: "12.5px", fontWeight: "900", fontStyle: "italic", lineHeight: "1.3" }}>
                                 "{donation.customMessage}"
                               </p>
                             ) : (
-                              <div style={{ backgroundColor: "rgba(11, 47, 100, 0.05)", border: "1px dashed rgba(11, 47, 100, 0.2)", padding: "2px 16px", borderRadius: "9999px", fontSize: "11px", fontWeight: "900", color: "#0B2F64", marginTop: "2px", display: "block" }}>
+                              <div style={{ backgroundColor: "rgba(11, 47, 100, 0.08)", border: "1px dashed rgba(11, 47, 100, 0.3)", padding: "2px 18px", borderRadius: "9999px", fontSize: "11.5px", fontWeight: "900", color: "#0B2F64", marginTop: "3px", display: "inline-block" }}>
                                 હસ્તે, {donation.hasteName ? donation.hasteName : `${donation.donorNameSnapshot} સહ પરિવાર`}
                               </div>
                             )}
@@ -670,14 +668,14 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                                 background: "radial-gradient(circle, #7f1d1d 0%, #581c1c 100%)",
                                 border: "3px double #C5A059",
                                 color: "#f59e0b",
-                                fontSize: "23px",
+                                fontSize: "25px",
                                 fontWeight: "955",
-                                padding: "3px 28px",
+                                padding: "3.5px 30px",
                                 borderRadius: "9999px",
                                 display: "inline-flex",
                                 alignItems: "center",
                                 justifyContent: "center",
-                                marginTop: "4px",
+                                marginTop: "5px",
                                 lineHeight: "1",
                                 boxShadow: "0 3px 6px rgba(0,0,0,0.18)"
                               }}
@@ -690,8 +688,8 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                             <div 
                               className="gold-border shrink-0"
                               style={{ 
-                                width: "120px", 
-                                height: "155px", 
+                                width: "125px", 
+                                height: "160px", 
                                 borderRadius: "16px", 
                                 overflow: "hidden", 
                                 border: '2.5px solid #C5A059', 
@@ -717,6 +715,7 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
 
                   </div>
 
+                  {/* Bottom Footer Banner Image */}
                   <img 
                     src={footerBase64 || "/footer_banner.jpg"} 
                     alt="Footer Banner" 
@@ -731,7 +730,6 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                     }} 
                   />
                 </div>
-
               </div>
             </div>
           </div>
@@ -749,311 +747,309 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
           overflow: "hidden"
         }}
       >
-        <div 
-          ref={cardRef}
-          className="w-[600px] h-[820px] select-none flex flex-col justify-between relative overflow-hidden safe-card-export"
-          style={{ 
-            fontFamily: "'Noto Sans Gujarati', sans-serif",
-            border: "8px solid #043e22",
-            background: "#FAF5EC",
-            boxSizing: 'border-box',
-            padding: "0"
-          }}
-        >
-          <style dangerouslySetInnerHTML={{__html: `
-            .safe-card-export, .safe-card-export * {
-              --border-color: #FAF5EC !important;
-              border-color: #FAF5EC !important;
-              outline-color: transparent !important;
-              box-shadow: none !important;
-              text-shadow: none !important;
-            }
-            .safe-card-export .gold-border {
-              border-color: #C5A059 !important;
-            }
-            .safe-card-export .blue-border {
-              border-color: #0B2F64 !important;
-            }
-          `}} />
 
-          {bgBase64 && (
-            <div 
-              style={{
-                position: "absolute",
-                top: 0, left: 0, right: 0, bottom: 0,
-                backgroundImage: `url(${bgBase64})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                opacity: 0.04,
-                zIndex: 0
-              }}
-            />
-          )}
-
-          <div 
-            className="absolute pointer-events-none z-20 gold-border" 
-            style={{ inset: "8px", border: "2px solid #C5A059", borderRadius: "12px" }} 
-          />
-
-          <img 
-            src={headerBase64 || "/header_banner.jpg"} 
-            alt="Header Banner" 
-            style={{ 
-              width: "100%", 
-              height: "217px", 
-              borderBottom: "2.5px solid #C5A059",
-              zIndex: 10,
-              position: "relative",
-              display: "block",
-              objectFit: "cover"
-            }} 
-          />
-
-          <div style={{ flex: 1, padding: "12px 20px", display: "flex", flexDirection: "column", justifyContent: "space-around", gap: "10px", zIndex: 10, position: "relative" }}>
-            
-            {(() => {
-              const activeDetail = SEVA_DETAILS_MAP[donation.sevaTypeId] || SEVA_DETAILS_MAP["dudh-pova"];
-              return (
                 <div 
-                  className="relative z-10" 
+                  ref={cardRef}
+                  className="w-[600px] h-[820px] select-none flex flex-col justify-between relative overflow-hidden safe-card-export"
                   style={{ 
-                    display: "flex", 
-                    flexDirection: "row", 
-                    gap: "12px", 
-                    width: "100%",
-                    height: "175px",
-                    boxSizing: 'border-box'
-                  }}
-                >
-                  <div 
-                    className="gold-border"
-                    style={{
-                      width: "190px",
-                      height: "175px",
-                      backgroundColor: "#0B2F64",
-                      border: "2.5px solid #C5A059",
-                      borderRadius: "16px",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "space-between",
-                      overflow: "hidden",
-                      flexShrink: 0,
-                      boxShadow: "0 4px 10px rgba(11, 47, 100, 0.18)"
-                    }}
-                  >
-                    <div style={{ backgroundColor: "rgba(197, 160, 89, 0.22)", padding: "5px 4px", textAlign: "center", borderBottom: "1.5px solid #C5A059" }}>
-                      <p style={{ margin: 0, color: "#FFFFFF", fontSize: "11px", fontWeight: "955", textAlign: "center", letterSpacing: "0.2px" }}>🐾 {activeDetail.title} 🐾</p>
-                    </div>
-                    
-                    <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "4px 8px", textAlign: "center" }}>
-                      <p style={{ margin: 0, color: "#FDE68A", fontSize: "11.5px", fontWeight: "900" }}>{activeDetail.subtitle}</p>
-                      <p style={{ margin: "2px 0", color: "#FFFFFF", fontSize: "23px", fontWeight: "955", lineHeight: "1.1", textShadow: "0 2px 4px rgba(0,0,0,0.5)" }}>{activeDetail.highlightVal}</p>
-                      <p style={{ margin: 0, color: "#FDE68A", fontSize: "11.5px", fontWeight: "900" }}>{activeDetail.highlightUnit}</p>
-                      
-                      <div style={{ backgroundColor: "#7f1d1d", color: "#ffffff", padding: "3.5px 14px", borderRadius: "9999px", fontSize: "12.5px", fontWeight: "955", border: "1.5px solid #C5A059", marginTop: "5px", boxShadow: "0 2px 6px rgba(0,0,0,0.25)" }}>
-                        {activeDetail.boxText}
-                      </div>
-                      <p style={{ margin: "3.5px 0 0 0", color: "#FFFFFF", fontSize: "9.5px", fontWeight: "900" }}>{activeDetail.verb}</p>
-                    </div>
-
-                    <div style={{ backgroundColor: "rgba(0, 0, 0, 0.35)", padding: "4px", borderTop: "1px solid rgba(197, 160, 89, 0.4)" }}>
-                      <p style={{ margin: 0, color: "#FDE68A", fontSize: "9px", fontWeight: "955", textAlign: "center", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
-                        {activeDetail.bottomBar}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div 
-                    className="gold-border"
-                    style={{ 
-                      flex: 1,
-                      height: "175px", 
-                      borderRadius: "16px", 
-                      overflow: "hidden", 
-                      border: '2.5px solid #C5A059', 
-                      backgroundColor: '#FAF9F6',
-                      position: "relative",
-                      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.08)"
-                    }}
-                  >
-                    {bgBase64 ? (
-                      <img 
-                        src={bgBase64} 
-                        alt="Seva Collage" 
-                        style={{ 
-                          width: "100%", 
-                          height: "100%", 
-                          objectFit: "cover", 
-                          display: "block" 
-                        }} 
-                      />
-                    ) : (
-                      <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", color: "#9CA3AF" }}>
-                        જીવદયા પ્રવૃત્તિઓ
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })()}
-
-            {(() => {
-              const hasPhoto = donorPhotoBase64 && donorPhotoBase64.startsWith("data:");
-              const isDeceasedOccasion = donation.occasionType && ["તિથિ", "પુણ્યતિથિ", "સ્મૃતિ દિવસ", "સ્વર્ગવાસી"].includes(donation.occasionType);
-              return (
-                <div 
-                  className="relative z-10 gold-border" 
-                  style={{ 
-                    backgroundColor: 'rgba(255, 255, 255, 0.98)', 
-                    border: '2px solid #C5A059',
-                    borderRadius: "20px",
-                    padding: hasPhoto ? "12px 18px" : "12px 16px",
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: hasPhoto ? "space-between" : "center",
-                    gap: "15px",
-                    width: "100%",
+                    fontFamily: "'Noto Sans Gujarati', sans-serif",
+                    background: "#FAF5EC",
                     boxSizing: 'border-box',
-                    boxShadow: "0 4px 12px rgba(11, 47, 100, 0.06)"
+                    padding: "0",
+                    margin: "0"
                   }}
                 >
-                  <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: "2px" }}>
-                    
-                    <div style={{ backgroundColor: "#7f1d1d", color: "#FFFFFF", padding: "2.5px 18px", borderRadius: "9999px", fontSize: "11px", fontWeight: "955", border: "1.5px solid #C5A059", display: "block" }}>
-                      {activeSeva?.nameGujarati || donation.sevaNameSnapshot} ના દાતા શ્રી
-                    </div>
+                  <style dangerouslySetInnerHTML={{__html: `
+                    .safe-card-export, .safe-card-export * {
+                      --border-color: #FAF5EC !important;
+                      border-color: #FAF5EC !important;
+                      outline-color: transparent !important;
+                      box-shadow: none !important;
+                      text-shadow: none !important;
+                    }
+                    .safe-card-export p, .safe-card-export h1, .safe-card-export h2, .safe-card-export h3, .safe-card-export h4 {
+                      margin: 0 !important;
+                      line-height: 1.2 !important;
+                    }
+                    .safe-card-export .gold-border {
+                      border-color: #C5A059 !important;
+                    }
+                    .safe-card-export .blue-border {
+                      border-color: #0B2F64 !important;
+                    }
+                  `}} />
 
-                    <p style={{ margin: "2px 0 0 0", color: '#0b2f64', fontSize: "11px", fontWeight: "955" }}>
-                      તારીખ: {donation.donationDate ? donation.donationDate.split('-').reverse().join('-') : ""}
-                    </p>
-
-                    <h3 style={{ color: '#7f1d1d', fontSize: hasPhoto ? "30px" : "35px", fontWeight: "950", margin: "3px 0 1px 0", lineHeight: "1.2", letterSpacing: "0.2px" }}>
-                      {donation.donorNameSnapshot}
-                    </h3>
-                    
-                    {donation.occasionType && donation.occasionType !== "કોઈ પ્રસંગ નથી" && (
-                      <p style={{ margin: 0, color: '#0b2f64', fontSize: "14.5px", fontWeight: "955" }}>
-                        {donation.occasionType} {donation.occasionDate ? `(${donation.occasionDate})` : ""} {donation.occasionType.endsWith("સ્મરણાર્થે") || ["તિથિ", "પુણ્યતિથિ", "સ્મૃતિ દિવસ", "સ્વર્ગવાસી"].includes(donation.occasionType) ? "" : "નિમિત્તે"}
-                      </p>
-                    )}
-
-                    {isDeceasedOccasion && (
-                      <p style={{ margin: "2px 0", color: '#b91c1c', fontSize: "12.5px", fontWeight: "955", fontStyle: "italic" }}>
-                        🙏 ભગવાન તેમના દિવ્ય આત્માને પરમ શાંતિ અર્પે 🙏
-                      </p>
-                    )}
-
-                    {donation.customMessage ? (
-                      <p style={{ margin: "2px 0", color: '#0B2F64', fontSize: "12px", fontWeight: "900", fontStyle: "italic", lineHeight: "1.3" }}>
-                        "{donation.customMessage}"
-                      </p>
-                    ) : (
-                      <div style={{ backgroundColor: "rgba(11, 47, 100, 0.05)", border: "1px dashed rgba(11, 47, 100, 0.2)", padding: "2px 16px", borderRadius: "9999px", fontSize: "11px", fontWeight: "900", color: "#0B2F64", marginTop: "2px", display: "block" }}>
-                        હસ્તે, {donation.hasteName ? donation.hasteName : `${donation.donorNameSnapshot} સહ પરિવાર`}
-                      </div>
-                    )}
-
+                  {bgBase64 && (
                     <div 
-                      style={{ 
-                        background: "radial-gradient(circle, #7f1d1d 0%, #581c1c 100%)",
-                        border: "3px double #C5A059",
-                        color: "#f59e0b",
-                        fontSize: "23px",
-                        fontWeight: "955",
-                        padding: "3px 28px",
-                        borderRadius: "9999px",
-                        display: "inline-flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        marginTop: "4px",
-                        lineHeight: "1",
-                        boxShadow: "0 3px 6px rgba(0,0,0,0.18)"
+                      style={{
+                        position: "absolute",
+                        top: 0, left: 0, right: 0, bottom: 0,
+                        backgroundImage: `url(${bgBase64})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        opacity: 0.04,
+                        zIndex: 0
                       }}
-                    >
-                      ₹ {donation.amount ? Number(donation.amount).toLocaleString("en-IN") : "0"} /-
-                    </div>
+                    />
+                  )}
+
+                  {/* Top Header Banner Image */}
+                  <img 
+                    src={headerBase64 || "/header_banner.jpg"} 
+                    alt="Header Banner" 
+                    style={{ 
+                      width: "100%", 
+                      height: "217px", 
+                      borderBottom: "2.5px solid #C5A059",
+                      zIndex: 10,
+                      position: "relative",
+                      display: "block",
+                      objectFit: "cover"
+                    }} 
+                  />
+
+                  {/* Main Middle Container */}
+                  <div style={{ flex: 1, padding: "12px 20px", display: "flex", flexDirection: "column", justifyContent: "space-around", gap: "10px", zIndex: 10, position: "relative" }}>
+                    
+                    {/* Seva Activity Row */}
+                    {(() => {
+                      const activeDetail = SEVA_DETAILS_MAP[donation.sevaTypeId] || SEVA_DETAILS_MAP["dudh-pova"];
+                      return (
+                        <div 
+                          className="relative z-10" 
+                          style={{ 
+                            display: "flex", 
+                            flexDirection: "row", 
+                            gap: "12px", 
+                            width: "100%",
+                            height: "175px",
+                            boxSizing: 'border-box'
+                          }}
+                        >
+                          <div 
+                            className="gold-border"
+                            style={{
+                              width: "190px",
+                              height: "175px",
+                              backgroundColor: "#0B2F64",
+                              border: "2.5px solid #C5A059",
+                              borderRadius: "16px",
+                              display: "flex",
+                              flexDirection: "column",
+                              justifyContent: "space-between",
+                              overflow: "hidden",
+                              flexShrink: 0,
+                              boxShadow: "0 4px 10px rgba(11, 47, 100, 0.18)"
+                            }}
+                          >
+                            <div style={{ backgroundColor: "rgba(197, 160, 89, 0.22)", padding: "5px 4px", textAlign: "center", borderBottom: "1.5px solid #C5A059" }}>
+                              <p style={{ margin: 0, color: "#FFFFFF", fontSize: "11px", fontWeight: "955", textAlign: "center", letterSpacing: "0.2px" }}>🐾 {activeDetail.title} 🐾</p>
+                            </div>
+                            
+                            <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "4px 8px", textAlign: "center" }}>
+                              <p style={{ margin: 0, color: "#FDE68A", fontSize: "11.5px", fontWeight: "900" }}>{activeDetail.subtitle}</p>
+                              <p style={{ margin: "2px 0", color: "#FFFFFF", fontSize: "24px", fontWeight: "955", lineHeight: "1.1", textShadow: "0 2px 4px rgba(0,0,0,0.5)" }}>{activeDetail.highlightVal}</p>
+                              <p style={{ margin: 0, color: "#FDE68A", fontSize: "11.5px", fontWeight: "900" }}>{activeDetail.highlightUnit}</p>
+                              
+                              <div style={{ backgroundColor: "#7f1d1d", color: "#ffffff", padding: "3.5px 14px", borderRadius: "9999px", fontSize: "12.5px", fontWeight: "955", border: "1.5px solid #C5A059", marginTop: "5px", boxShadow: "0 2px 6px rgba(0,0,0,0.25)" }}>
+                                {activeDetail.boxText}
+                              </div>
+                              <p style={{ margin: "3.5px 0 0 0", color: "#FFFFFF", fontSize: "9.5px", fontWeight: "900" }}>{activeDetail.verb}</p>
+                            </div>
+
+                            <div style={{ backgroundColor: "rgba(0, 0, 0, 0.35)", padding: "4px", borderTop: "1px solid rgba(197, 160, 89, 0.4)" }}>
+                              <p style={{ margin: 0, color: "#FDE68A", fontSize: "9px", fontWeight: "955", textAlign: "center", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
+                                {activeDetail.bottomBar}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div 
+                            className="gold-border"
+                            style={{ 
+                              flex: 1,
+                              height: "175px", 
+                              borderRadius: "16px", 
+                              overflow: "hidden", 
+                              border: '2.5px solid #C5A059', 
+                              backgroundColor: '#FAF9F6',
+                              position: "relative",
+                              boxShadow: "0 4px 10px rgba(0, 0, 0, 0.08)"
+                            }}
+                          >
+                            {bgBase64 ? (
+                              <img 
+                                src={bgBase64} 
+                                alt="Seva Collage" 
+                                style={{ 
+                                  width: "100%", 
+                                  height: "100%", 
+                                  objectFit: "cover", 
+                                  display: "block" 
+                                }} 
+                              />
+                            ) : (
+                              <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", color: "#9CA3AF" }}>
+                                જીવદયા પ્રવૃત્તિઓ
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })()}
+
+                    {/* Donor Certificate Info (Directly on canvas - NO background box) */}
+                    {(() => {
+                      const hasPhoto = donorPhotoBase64 && donorPhotoBase64.startsWith("data:");
+                      const isDeceasedOccasion = donation.occasionType && ["તિથિ", "પુણ્યતિથિ", "સ્મૃતિ દિવસ", "સ્વર્ગવાસી"].includes(donation.occasionType);
+                      return (
+                        <div 
+                          className="relative z-10" 
+                          style={{ 
+                            padding: "6px 10px",
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: hasPhoto ? "space-between" : "center",
+                            gap: "15px",
+                            width: "100%",
+                            boxSizing: 'border-box'
+                          }}
+                        >
+                          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: "3px" }}>
+                            
+                            <div style={{ backgroundColor: "#7f1d1d", color: "#FFFFFF", padding: "2.5px 18px", borderRadius: "9999px", fontSize: "12px", fontWeight: "955", border: "1.5px solid #C5A059", display: "inline-block", margin: 0 }}>
+                              {activeSeva?.nameGujarati || donation.sevaNameSnapshot} ના દાતા શ્રી
+                            </div>
+
+                            <p style={{ margin: "2px 0 0 0", color: '#0b2f64', fontSize: "12px", fontWeight: "955" }}>
+                              તારીખ: {donation.donationDate ? donation.donationDate.split('-').reverse().join('-') : ""}
+                            </p>
+
+                            <h3 style={{ color: '#7f1d1d', fontSize: hasPhoto ? "32px" : "38px", fontWeight: "950", margin: "3px 0 1px 0", lineHeight: "1.1", letterSpacing: "0.2px" }}>
+                              {donation.donorNameSnapshot}
+                            </h3>
+                            
+                            {donation.occasionType && donation.occasionType !== "કોઈ પ્રસંગ નથી" && (
+                              <p style={{ margin: "1px 0 0 0", color: '#0b2f64', fontSize: "15.5px", fontWeight: "955" }}>
+                                {donation.occasionType} {donation.occasionDate ? `(${donation.occasionDate})` : ""} {donation.occasionType.endsWith("સ્મરણાર્થે") || ["તિથિ", "પુણ્યતિથિ", "સ્મૃતિ દિવસ", "સ્વર્ગવાસી"].includes(donation.occasionType) ? "" : "નિમિત્તે"}
+                              </p>
+                            )}
+
+                            {isDeceasedOccasion && (
+                              <p style={{ margin: "2px 0 0 0", color: '#b91c1c', fontSize: "13px", fontWeight: "955", fontStyle: "italic" }}>
+                                🙏 ભગવાન તેમના દિવ્ય આત્માને પરમ શાંતિ અર્પે 🙏
+                              </p>
+                            )}
+
+                            {donation.customMessage ? (
+                              <p style={{ margin: "2px 0 0 0", color: '#0B2F64', fontSize: "12.5px", fontWeight: "900", fontStyle: "italic", lineHeight: "1.3" }}>
+                                "{donation.customMessage}"
+                              </p>
+                            ) : (
+                              <div style={{ backgroundColor: "rgba(11, 47, 100, 0.08)", border: "1px dashed rgba(11, 47, 100, 0.3)", padding: "2px 18px", borderRadius: "9999px", fontSize: "11.5px", fontWeight: "900", color: "#0B2F64", marginTop: "3px", display: "inline-block" }}>
+                                હસ્તે, {donation.hasteName ? donation.hasteName : `${donation.donorNameSnapshot} સહ પરિવાર`}
+                              </div>
+                            )}
+
+                            <div 
+                              style={{ 
+                                background: "radial-gradient(circle, #7f1d1d 0%, #581c1c 100%)",
+                                border: "3px double #C5A059",
+                                color: "#f59e0b",
+                                fontSize: "25px",
+                                fontWeight: "955",
+                                padding: "3.5px 30px",
+                                borderRadius: "9999px",
+                                display: "inline-flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                marginTop: "5px",
+                                lineHeight: "1",
+                                boxShadow: "0 3px 6px rgba(0,0,0,0.18)"
+                              }}
+                            >
+                              ₹ {donation.amount ? Number(donation.amount).toLocaleString("en-IN") : "0"} /-
+                            </div>
+                          </div>
+
+                          {hasPhoto && (
+                            <div 
+                              className="gold-border shrink-0"
+                              style={{ 
+                                width: "125px", 
+                                height: "160px", 
+                                borderRadius: "16px", 
+                                overflow: "hidden", 
+                                border: '2.5px solid #C5A059', 
+                                backgroundColor: '#ffffff',
+                                boxShadow: "0 3px 8px rgba(0,0,0,0.12)"
+                              }}
+                            >
+                              <img 
+                                src={donorPhotoBase64} 
+                                alt="Donor" 
+                                style={{ 
+                                  width: "100%", 
+                                  height: "100%", 
+                                  objectFit: "cover", 
+                                  display: "block" 
+                                }} 
+                              />
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
+
                   </div>
 
-                  {hasPhoto && (
-                    <div 
-                      className="gold-border shrink-0"
-                      style={{ 
-                        width: "120px", 
-                        height: "155px", 
-                        borderRadius: "16px", 
-                        overflow: "hidden", 
-                        border: '2.5px solid #C5A059', 
-                        backgroundColor: '#ffffff',
-                        boxShadow: "0 3px 8px rgba(0,0,0,0.12)"
-                      }}
-                    >
-                      <img 
-                        src={donorPhotoBase64} 
-                        alt="Donor" 
-                        style={{ 
-                          width: "100%", 
-                          height: "100%", 
-                          objectFit: "cover", 
-                          display: "block" 
-                        }} 
-                      />
-                    </div>
-                  )}
+                  {/* Bottom Footer Banner Image */}
+                  <img 
+                    src={footerBase64 || "/footer_banner.jpg"} 
+                    alt="Footer Banner" 
+                    style={{ 
+                      width: "100%", 
+                      height: "143px", 
+                      borderTop: "2.5px solid #C5A059",
+                      zIndex: 10,
+                      position: "relative",
+                      display: "block",
+                      objectFit: "cover"
+                    }} 
+                  />
                 </div>
-              );
-            })()}
-
-          </div>
-
-          <img 
-            src={footerBase64 || "/footer_banner.jpg"} 
-            alt="Footer Banner" 
-            style={{ 
-              width: "100%", 
-              height: "143px", 
-              borderTop: "2.5px solid #C5A059",
-              zIndex: 10,
-              position: "relative",
-              display: "block",
-              objectFit: "cover"
-            }} 
-          />
-        </div>
       </div>
 
-      {/* Generated image Modal Overlay for 100% reliable mobile long-press downloads */}
+      {/* Generated image Modal Overlay */}
       {exportedImage && (
-        <div className="fixed inset-0 bg-black/85 flex flex-col items-center justify-center p-4 z-55 overflow-y-auto">
-          <div className="bg-white max-w-md w-full p-5 rounded-2xl shadow-2xl border border-cream-200 text-center space-y-4 my-8 relative">
+        <div className="fixed inset-0 bg-black/80 flex flex-col items-center justify-center p-4 z-50 overflow-y-auto font-sans">
+          <div className="bg-white max-w-md w-full p-6 rounded-2xl shadow-2xl border border-cream-200 text-center space-y-4 my-8 relative">
             <button 
               onClick={() => setExportedImage(null)} 
-              className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 font-bold text-lg p-1 bg-cream-50 hover:bg-cream-100 rounded-full h-8 w-8 flex items-center justify-center transition-colors"
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 font-bold text-sm"
             >
               ✕
             </button>
-            <h3 className="text-royal-850 font-extrabold text-base flex items-center gap-1.5 justify-center">
-              <Gift className="h-5 w-5 text-saffron-500 animate-bounce" />
-              પત્રિકા સેવ કરો (Save Certificate)
-            </h3>
+            <h3 className="text-royal-900 font-bold text-lg">સન્માન પત્ર સેવ કરો (Save Certificate)</h3>
             
-            <div className="text-left text-xs text-saffron-800 bg-saffron-500/10 border border-saffron-500/20 p-3 rounded-xl space-y-1 font-sans">
+            <div className="text-left text-xs text-amber-800 bg-amber-50 p-3 rounded-xl space-y-1">
               <p>📱 <strong>મોબાઈલ માટે:</strong> ફોટો પર થોડી સેકન્ડ આંગળી દબાવી રાખો (Long Press) અને <strong>"Save Image" (ફોટો સેવ)</strong> પસંદ કરો.</p>
               <p>💻 <strong>કોમ્પ્યુટર માટે:</strong> ફોટો પર રાઇટ ક્લિક (Right Click) કરી <strong>"Save Image As..."</strong> પસંદ કરો.</p>
             </div>
 
-            <div className="border border-cream-100 rounded-xl overflow-hidden shadow-inner bg-cream-50/20 max-h-[55vh] flex items-center justify-center p-1 bg-white">
+            <div className="border border-cream-100 rounded-xl overflow-hidden shadow-inner bg-cream-50/20 max-h-[60vh] flex items-center justify-center p-2">
               <img 
                 src={exportedImage} 
-                alt="Generated Appreciation Card" 
-                className="max-w-full max-h-[50vh] object-contain rounded"
+                alt="Generated Certificate" 
+                className="max-w-full max-h-[55vh] object-contain rounded"
               />
             </div>
 
-            <div className="flex gap-3 justify-end pt-2 text-xs font-bold font-sans">
+            <div className="flex gap-3 justify-end pt-2">
               <button
                 onClick={() => setExportedImage(null)}
-                className="w-full py-3 bg-royal-800 hover:bg-royal-900 text-cream-50 rounded-xl transition-all shadow-md active:scale-[0.98]"
+                className="w-full py-2.5 bg-royal-800 text-white font-bold rounded-xl hover:bg-royal-900 transition-colors text-sm"
               >
                 પૂર્ણ કરો (Done)
               </button>
@@ -1064,3 +1060,6 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
     </div>
   );
 };
+
+
+      

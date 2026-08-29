@@ -780,7 +780,7 @@ ${dynamicSevaListText}
 
       {/* 
         Hidden rendering card for 100% safe Donation Appeal Flyer downloads (un-scaled, offscreen).
-        Fully styled with edge-to-edge header & footer banners matching the donor appreciation card.
+        Full-bleed header and footer banners with dynamic seva types showcase and bank credentials.
       */}
       <div 
         className="absolute" 
@@ -797,10 +797,10 @@ ${dynamicSevaListText}
           className="w-[600px] h-[820px] select-none flex flex-col justify-between relative overflow-hidden safe-card-export"
           style={{ 
             fontFamily: "'Noto Sans Gujarati', sans-serif",
-            border: "8px solid #043e22",
             background: "#FAF5EC",
             boxSizing: 'border-box',
-            padding: "0"
+            padding: "0",
+            margin: "0"
           }}
         >
           <style dangerouslySetInnerHTML={{__html: `
@@ -813,6 +813,7 @@ ${dynamicSevaListText}
             }
             .safe-card-export p, .safe-card-export h1, .safe-card-export h2, .safe-card-export h3, .safe-card-export h4 {
               margin: 0 !important;
+              line-height: 1.2 !important;
             }
             .safe-card-export .gold-border {
               border-color: #C5A059 !important;
@@ -836,12 +837,7 @@ ${dynamicSevaListText}
             />
           )}
 
-          <div 
-            className="absolute pointer-events-none z-20 gold-border" 
-            style={{ inset: "8px", border: "2px solid #C5A059", borderRadius: "12px" }} 
-          />
-
-          {/* 1. Header Banner Image */}
+          {/* Top Header Banner Image (Full Bleed) */}
           <img 
             src={headerBase64 || "/header_banner.jpg"} 
             alt="Header Banner" 
@@ -856,10 +852,10 @@ ${dynamicSevaListText}
             }} 
           />
 
-          {/* 2. Middle Container */}
+          {/* Middle Content */}
           <div style={{ flex: 1, padding: "12px 20px", display: "flex", flexDirection: "column", justifyContent: "space-around", gap: "10px", zIndex: 10, position: "relative" }}>
             
-            {/* 2A. Dynamic Seva Activities Card */}
+            {/* Dynamic Seva Activities List (Clean Showcase) */}
             <div 
               className="gold-border relative z-10"
               style={{
@@ -868,18 +864,18 @@ ${dynamicSevaListText}
                 borderRadius: "16px",
                 overflow: "hidden",
                 boxShadow: "0 4px 10px rgba(11, 47, 100, 0.18)",
-                padding: "8px 12px"
+                padding: "8px 14px"
               }}
             >
               <div style={{ backgroundColor: "rgba(197, 160, 89, 0.22)", padding: "4px 0", textAlign: "center", borderRadius: "8px", marginBottom: "8px", border: "1.5px solid #C5A059" }}>
                 <p style={{ margin: 0, color: "#FFFFFF", fontSize: "12px", fontWeight: "955", letterSpacing: "0.2px" }}>🐾 અમારી મુખ્ય જીવદયા સેવા પ્રવૃત્તિઓ 🐾</p>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 12px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 14px" }}>
                 {sevaTypes.map((s, idx) => (
                   <div key={idx} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    <span style={{ color: "#FDE68A", fontSize: "11px", fontWeight: "955" }}>•</span>
-                    <span style={{ color: "#FFFFFF", fontSize: "11.5px", fontWeight: "900", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
+                    <span style={{ color: "#FDE68A", fontSize: "12px", fontWeight: "955" }}>•</span>
+                    <span style={{ color: "#FFFFFF", fontSize: "12px", fontWeight: "900", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
                       {s.nameGujarati}
                     </span>
                   </div>
@@ -887,7 +883,7 @@ ${dynamicSevaListText}
               </div>
             </div>
 
-            {/* 2B. Seva Photo Collage Frame */}
+            {/* Seva Photo Collage Frame */}
             <div 
               className="gold-border"
               style={{ 
@@ -919,7 +915,7 @@ ${dynamicSevaListText}
               )}
             </div>
 
-            {/* 2C. Bank Credentials & QR Code Box */}
+            {/* Bank Credentials & QR Scanner Box */}
             <div 
               className="relative z-10 gold-border" 
               style={{ 
@@ -968,7 +964,7 @@ ${dynamicSevaListText}
 
           </div>
 
-          {/* 3. Footer Banner Image */}
+          {/* Bottom Footer Banner Image (Full Bleed) */}
           <img 
             src={footerBase64 || "/footer_banner.jpg"} 
             alt="Footer Banner" 

@@ -33,7 +33,7 @@ const SEVA_DETAILS_MAP: Record<string, {
   "dudh-pova": {
     title: "અમારી રોજની પ્રવૃતિ",
     subtitle: "દરરોજ આશરે",
-    highlightVal: "350 થી 400",
+    highlightVal: "400+",
     highlightUnit: "કૂતરાઓને",
     boxText: "દૂધપૌવા",
     verb: "જમાડવામાં આવે છે.",
