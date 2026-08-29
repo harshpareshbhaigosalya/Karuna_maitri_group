@@ -903,6 +903,9 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                     .safe-card-export .gold-border {
                       border-color: #C5A059 !important;
                     }
+                    .safe-card-export p, .safe-card-export h1, .safe-card-export h2, .safe-card-export h3, .safe-card-export h4 {
+                      margin: 0 !important;
+                    }
                     .safe-card-export .blue-border {
                       border-color: #0B2F64 !important;
                     }
@@ -1189,6 +1192,9 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                     }
                     .safe-card-export .gold-border {
                       border-color: #C5A059 !important;
+                    }
+                    .safe-card-export p, .safe-card-export h1, .safe-card-export h2, .safe-card-export h3, .safe-card-export h4 {
+                      margin: 0 !important;
                     }
                     .safe-card-export .blue-border {
                       border-color: #0B2F64 !important;

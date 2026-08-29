@@ -16,6 +16,8 @@ export const Home: React.FC = () => {
   // Preloaded Base64 assets for canvas rendering
   const [bgBase64, setBgBase64] = useState<string>("");
   const [logoBase64, setLogoBase64] = useState<string>("");
+  const [headerBase64, setHeaderBase64] = useState<string>("");
+  const [footerBase64, setFooterBase64] = useState<string>("");
 
   // Export states for the Appeal Flyer
   const [exportingAppeal, setExportingAppeal] = useState(false);
@@ -157,6 +159,18 @@ export const Home: React.FC = () => {
           logoReader.onloadend = () => setLogoBase64(logoReader.result as string);
           logoReader.readAsDataURL(logoBlob);
         }
+
+        const headerRes = await fetch("/header_banner.jpg");
+        const headerBlob = await headerRes.blob();
+        const headerReader = new FileReader();
+        headerReader.onloadend = () => setHeaderBase64(headerReader.result as string);
+        headerReader.readAsDataURL(headerBlob);
+
+        const footerRes = await fetch("/footer_banner.jpg");
+        const footerBlob = await footerRes.blob();
+        const footerReader = new FileReader();
+        footerReader.onloadend = () => setFooterBase64(footerReader.result as string);
+        footerReader.readAsDataURL(footerBlob);
       } catch (err) {
         console.error("Error preloading public assets:", err);
       }
@@ -184,6 +198,10 @@ export const Home: React.FC = () => {
 
     const elements = clonedDoc.querySelectorAll("*");
     elements.forEach((el: any) => {
+      if (["P", "H1", "H2", "H3", "H4", "H5", "H6"].includes(el.tagName)) {
+        el.style.marginTop = "0px";
+        el.style.marginBottom = "0px";
+      }
       if (el.classList.contains("gold-border")) {
         el.style.borderColor = "#C5A059";
       } else if (el.classList.contains("blue-border")) {
@@ -258,20 +276,18 @@ export const Home: React.FC = () => {
       });
       const imgData = canvas.toDataURL("image/png");
 
+      const dynamicSevaListText = sevaTypes.length > 0 
+        ? sevaTypes.map((s, idx) => `${idx + 1}. ${s.nameGujarati}`).join("\n")
+        : "૧. કૂતરાઓ માટે દૂધપૌવા\n૨. પંખીના માળા-કુંડાનું વિતરણ\n૩. પાંજરાપોળ ગાયો માટે ઘાસચારો\n૪. બીમાર પશુ-પક્ષીઓની સારવાર\n૫. બર્ડ કેમ્પમાં સેવા";
+
       const shareText = `જય જિનેન્દ્ર,
 
 અબોલ જીવોની સેવા એ જ સાચી માનવતા છે.
 
 કરુણા-મૈત્રી જીવદયા ગ્રુપ (સુરેન્દ્રનગર) દ્વારા ચાલતી જીવદયા પ્રવૃત્તિઓમાં આપ યથાશક્તિ દાન આપી સહભાગી બની શકો છો.
 
-અમારી મુખ્ય સેવાઓ:
-૧. કૂતરાઓ માટે દૂધપૌવા
-૨. પંખીના માળા-કુંડાનું વિતરણ
-૩. પાંજરાપોળમાં મુલાકાત અને સેવા
-૪. બીમાર પશુ-પક્ષીઓની સારવાર
-૫. બર્ડ કેમ્પમાં સેવા (JCT અમદાવાદ)
-
-આપનો આભાર સહયોગ મોકલવા માટે નીચેની વિગતો તપાસો અથવા અપીલ પત્રિકા ડાઉનલોડ કરો.
+*અમારી મુખ્ય સેવાઓ:*
+${dynamicSevaListText}
 
 *કરુણા-મૈત્રી ગ્રુપ, સુરેન્દ્રનગર*`;
 
@@ -764,8 +780,7 @@ export const Home: React.FC = () => {
 
       {/* 
         Hidden rendering card for 100% safe Donation Appeal Flyer downloads (un-scaled, offscreen).
-        Completely styled with inline style colors, border sizes, and fixed sizes to ensure pixel-perfect rendering.
-        Absolutely zero Tailwind classes for colors, borders, shadows, or text-colors are used here to prevent oklch crashes!
+        Fully styled with edge-to-edge header & footer banners matching the donor appreciation card.
       */}
       <div 
         className="absolute" 
@@ -773,32 +788,31 @@ export const Home: React.FC = () => {
           left: "-9999px", 
           top: "0",
           width: "600px",
-          height: "780px",
+          height: "820px",
           overflow: "hidden"
         }}
       >
         <div 
           ref={appealCardRef}
-          className="w-[600px] h-[780px] select-none flex flex-col justify-between relative overflow-hidden safe-card-export"
+          className="w-[600px] h-[820px] select-none flex flex-col justify-between relative overflow-hidden safe-card-export"
           style={{ 
             fontFamily: "'Noto Sans Gujarati', sans-serif",
-            border: "6px solid #C5A059", // Solid Gold border
-            background: "linear-gradient(180deg, #FAF9F6 0%, #FFFDF9 100%)",
+            border: "8px solid #043e22",
+            background: "#FAF5EC",
             boxSizing: 'border-box',
-            padding: "20px"
+            padding: "0"
           }}
         >
-          {/* 
-            Inject the style overrides INSIDE the cloned node itself so they are copied into the html2canvas iframe sandbox.
-            This completely eliminates oklch variables and sets border variables to safe values inside the sandbox.
-          */}
           <style dangerouslySetInnerHTML={{__html: `
             .safe-card-export, .safe-card-export * {
-              --border-color: #FAF9F6 !important;
-              border-color: #FAF9F6 !important;
+              --border-color: #FAF5EC !important;
+              border-color: #FAF5EC !important;
               outline-color: transparent !important;
               box-shadow: none !important;
               text-shadow: none !important;
+            }
+            .safe-card-export p, .safe-card-export h1, .safe-card-export h2, .safe-card-export h3, .safe-card-export h4 {
+              margin: 0 !important;
             }
             .safe-card-export .gold-border {
               border-color: #C5A059 !important;
@@ -806,203 +820,168 @@ export const Home: React.FC = () => {
             .safe-card-export .blue-border {
               border-color: #0B2F64 !important;
             }
-            .safe-card-export .gray-border {
-              border-color: #E5E7EB !important;
-            }
           `}} />
 
-          {/* Inner gold border */}
+          {bgBase64 && (
+            <div 
+              style={{
+                position: "absolute",
+                top: 0, left: 0, right: 0, bottom: 0,
+                backgroundImage: `url(${bgBase64})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                opacity: 0.04,
+                zIndex: 0
+              }}
+            />
+          )}
+
           <div 
             className="absolute pointer-events-none z-20 gold-border" 
+            style={{ inset: "8px", border: "2px solid #C5A059", borderRadius: "12px" }} 
+          />
+
+          {/* 1. Header Banner Image */}
+          <img 
+            src={headerBase64 || "/header_banner.jpg"} 
+            alt="Header Banner" 
             style={{ 
-              inset: "8px", 
-              border: "2px solid #C5A059", 
-              borderRadius: "12px" 
+              width: "100%", 
+              height: "217px", 
+              borderBottom: "2.5px solid #C5A059",
+              zIndex: 10,
+              position: "relative",
+              display: "block",
+              objectFit: "cover"
             }} 
           />
 
-          {/* Ornament Leaf details */}
-          <div className="absolute w-2 h-2 z-30" style={{ top: "12px", left: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
-          <div className="absolute w-2 h-2 z-30" style={{ top: "12px", right: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
-          <div className="absolute w-2 h-2 z-30" style={{ bottom: "12px", left: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
-          <div className="absolute w-2 h-2 z-30" style={{ bottom: "12px", right: "12px", backgroundColor: "#C5A059", borderRadius: "9999px" }} />
-
-          {/* 1. Header (Reference Inspired): Slogan Top Row, Logo left, Contacts right */}
-          <div className="relative z-10" style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+          {/* 2. Middle Container */}
+          <div style={{ flex: 1, padding: "12px 20px", display: "flex", flexDirection: "column", justifyContent: "space-around", gap: "10px", zIndex: 10, position: "relative" }}>
             
-            {/* Top Slogan Bar */}
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", padding: "0 10px" }}>
-              <span style={{ color: "#b91c1c", fontSize: "14px", fontWeight: "900", transform: "rotate(-4deg)" }}>🚩 જીવદયા</span>
-              <span style={{ color: "#0B2F64", fontSize: "20px", fontWeight: "900", letterSpacing: "1.5px" }}>અહિંસા પરમો ધર્મઃ</span>
-              <span style={{ color: "#b91c1c", fontSize: "14px", fontWeight: "900", transform: "rotate(4deg)" }}>કરુણા 🚩</span>
+            {/* 2A. Dynamic Seva Activities Card */}
+            <div 
+              className="gold-border relative z-10"
+              style={{
+                backgroundColor: "#0B2F64",
+                border: "2.5px solid #C5A059",
+                borderRadius: "16px",
+                overflow: "hidden",
+                boxShadow: "0 4px 10px rgba(11, 47, 100, 0.18)",
+                padding: "8px 12px"
+              }}
+            >
+              <div style={{ backgroundColor: "rgba(197, 160, 89, 0.22)", padding: "4px 0", textAlign: "center", borderRadius: "8px", marginBottom: "8px", border: "1.5px solid #C5A059" }}>
+                <p style={{ margin: 0, color: "#FFFFFF", fontSize: "12px", fontWeight: "955", letterSpacing: "0.2px" }}>🐾 અમારી મુખ્ય જીવદયા સેવા પ્રવૃત્તિઓ 🐾</p>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 12px" }}>
+                {sevaTypes.map((s, idx) => (
+                  <div key={idx} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                    <span style={{ color: "#FDE68A", fontSize: "11px", fontWeight: "955" }}>•</span>
+                    <span style={{ color: "#FFFFFF", fontSize: "11.5px", fontWeight: "900", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
+                      {s.nameGujarati}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            {/* Logo and Contact Info Side-By-Side */}
-            <div className="blue-border" style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid #0B2F64", borderBottom: "1px solid #0B2F64", padding: "6px 10px", marginTop: "2px" }}>
-              <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px" }}>
-                {logoBase64 && logoBase64.startsWith("data:") ? (
-                  <img 
-                    src={logoBase64} 
-                    alt="Logo" 
-                    className="h-14 w-14 rounded-full object-contain bg-white gold-border" 
-                    style={{ border: "2px solid #C5A059" }}
-                  />
-                ) : (
-                  <div className="h-14 w-14 rounded-full flex items-center justify-center text-white font-bold text-[8px] p-1 text-center leading-none gold-border" style={{ border: '2px solid #C5A059', backgroundColor: '#0B2F64' }}>કરુણા મૈત્રી</div>
-                )}
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-                  <h2 style={{ color: '#0B2F64', fontSize: "17px", fontWeight: "900", margin: 0, lineHeight: "1.1" }}>{settings?.orgNameGujarati || "કરુણા-મૈત્રી ગ્રુપ"}</h2>
-                  <span style={{ color: '#C5A059', fontSize: "10.5px", fontWeight: "900", margin: 0 }}>📍 {settings?.location || "સુરેન્દ્રનગર"}</span>
+            {/* 2B. Seva Photo Collage Frame */}
+            <div 
+              className="gold-border"
+              style={{ 
+                borderRadius: "16px", 
+                overflow: "hidden", 
+                height: "160px", 
+                width: "100%", 
+                border: '2.5px solid #C5A059', 
+                backgroundColor: '#FAF9F6',
+                position: "relative",
+                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.08)"
+              }}
+            >
+              {bgBase64 ? (
+                <img 
+                  src={bgBase64} 
+                  alt="Seva Collage" 
+                  style={{ 
+                    width: "100%", 
+                    height: "100%", 
+                    objectFit: "cover", 
+                    display: "block" 
+                  }} 
+                />
+              ) : (
+                <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", color: "#9CA3AF" }}>
+                  જીવદયા પ્રવૃત્તિઓ
+                </div>
+              )}
+            </div>
+
+            {/* 2C. Bank Credentials & QR Code Box */}
+            <div 
+              className="relative z-10 gold-border" 
+              style={{ 
+                backgroundColor: 'rgba(255, 255, 255, 0.98)', 
+                border: '2px solid #C5A059',
+                borderRadius: "18px",
+                padding: "10px 16px",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: "12px",
+                width: "100%",
+                boxSizing: 'border-box',
+                boxShadow: "0 4px 12px rgba(11, 47, 100, 0.06)"
+              }}
+            >
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "2px" }}>
+                <div style={{ backgroundColor: "#7f1d1d", color: "#FFFFFF", padding: "2px 14px", borderRadius: "9999px", fontSize: "10.5px", fontWeight: "955", border: "1.5px solid #C5A059", display: "inline-block", alignSelf: "flex-start" }}>
+                  💳 દાન સહયોગ વિગતો (Bank Details)
+                </div>
+                <div style={{ color: "#1F2937", fontSize: "11px", fontWeight: "900", lineHeight: "1.3", marginTop: "4px", whiteSpace: "pre-line" }}>
+                  {settings?.donationMethods || "બેંક વિગતો મેળવવા સંપર્ક કરો."}
                 </div>
               </div>
 
-              {/* Right side contact details list formatted compactly */}
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", fontSize: "9.5px", fontWeight: "900", color: "#374151", lineHeight: "1.3" }}>
-                {displayMembers.slice(0, 3).map((m, idx) => (
-                  <p key={idx} style={{ margin: 0 }}>{m.name}: <span style={{ color: '#0B2F64', fontFamily: "monospace" }}>{m.phone}</span></p>
-                ))}
-                {displayMembers.length === 0 && (
-                  <>
-                    <p style={{ margin: 0 }}>કેતલ વોરા: <span style={{ color: '#0B2F64', fontFamily: "monospace" }}>98242 55909</span></p>
-                    <p style={{ margin: 0 }}>મયુર શાહ: <span style={{ color: '#0B2F64', fontFamily: "monospace" }}>94290 99906</span></p>
-                  </>
-                )}
-              </div>
+              {settings?.showQR && settings?.qrImageUrl && settings.qrImageUrl.startsWith("data:") && (
+                <div 
+                  className="gold-border shrink-0"
+                  style={{
+                    backgroundColor: '#ffffff',
+                    border: '1.5px solid #C5A059',
+                    borderRadius: "12px",
+                    padding: "4px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "2px"
+                  }}
+                >
+                  <img src={settings.qrImageUrl} alt="QR Code" style={{ width: "60px", height: "60px", objectFit: "contain" }} />
+                  <span style={{ fontSize: "7px", fontWeight: "955", color: "#0B2F64" }}>UPI SCAN & PAY</span>
+                </div>
+              )}
             </div>
 
           </div>
 
-          {/* 2. Main Appeal Text Details Box (Redesigned with large fonts) */}
-          <div 
-            className="text-xs relative z-10 gold-border"
+          {/* 3. Footer Banner Image */}
+          <img 
+            src={footerBase64 || "/footer_banner.jpg"} 
+            alt="Footer Banner" 
             style={{ 
-              border: "2px solid #C5A059", 
-              backgroundColor: 'rgba(255, 255, 255, 0.98)', 
-              color: '#111827',
-              borderRadius: "16px",
-              padding: "16px",
-              boxSizing: 'border-box',
-              marginTop: "4px"
-            }}
-          >
-            <h3 className="text-center font-black pb-1.5 mb-2.5 blue-border" style={{ color: '#0B2F64', borderBottom: '1px solid #FAF9F6', fontSize: '15px' }}>
-              🐾 જીવદયા સેવા સહયોગ અપીલ (Bank Details) 🐾
-            </h3>
-            <div className="whitespace-pre-line text-[12px] leading-relaxed font-black text-center" style={{ color: '#1F2937' }}>
-              {settings?.donationMethods || "બેંક વિગતો મેળવવા સંપર્ક કરો."}
-            </div>
-          </div>
-
-          {/* 3. Seva types list (Expanded font sizes, bold list) */}
-          <div 
-            className="text-center relative z-10 gold-border" 
-            style={{ 
-              backgroundColor: 'rgba(197, 160, 89, 0.04)', 
-              border: '1px solid rgba(197, 160, 89, 0.15)',
-              borderRadius: "12px",
-              padding: "12px",
-              display: "flex",
-              flexDirection: "column",
-              gap: "6px"
-            }}
-          >
-            <p className="text-[11px] font-black tracking-wider uppercase pb-0.5 inline-block gold-border" style={{ color: '#0B2F64', borderBottom: '1px solid rgba(197, 160, 89, 0.1)', alignSelf: "center", margin: 0 }}>
-              અમારા મુખ્ય સેવા કાર્યો
-            </p>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-[11px] font-black text-left pl-4" style={{ color: '#374151', display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-              {sevaTypes.slice(0, 6).map((s, idx) => (
-                <p key={idx} style={{ margin: 0, whiteSpace: "normal" }}>
-                  <span style={{ color: '#b91c1c' }}>{idx + 1})</span> {s.nameGujarati}
-                </p>
-              ))}
-            </div>
-          </div>
-
-          {/* 4. Large collage image cover (Takes up full width, height 180px, covers fully without clipping) */}
-          <div 
-            className="gold-border"
-            style={{ 
-              borderRadius: "14px",
-              overflow: "hidden",
-              height: "180px",
-              width: "100%",
-              position: "relative",
+              width: "100%", 
+              height: "143px", 
+              borderTop: "2.5px solid #C5A059",
               zIndex: 10,
-              border: '2.5px solid #C5A059', 
-              backgroundColor: '#FAF9F6',
-              backgroundImage: bgBase64 ? `url(${bgBase64})` : "none",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat"
-            }}
-          >
-            {!bgBase64 && (
-              <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", color: "#9CA3AF" }}>
-                જીવદયા પ્રવૃત્તિઓ
-              </div>
-            )}
-          </div>
-
-          {/* 5. UPI QR Code Box */}
-          <div 
-            className="relative z-10 gold-border" 
-            style={{ 
-              backgroundColor: 'rgba(255, 255, 255, 0.95)',
-              border: '1.5px solid #C5A059',
-              borderRadius: "14px",
-              padding: "8px 16px",
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-              boxSizing: 'border-box'
-            }}
-          >
-            <div style={{ display: "flex", flexDirection: "column", gap: "2px", maxWidth: "70%" }}>
-              <p style={{ color: '#0B2F64', fontSize: "12px", fontWeight: "900", margin: 0 }}>📲 સ્કેન કરી મદદ કરો (Scan & Pay)</p>
-              <p style={{ color: '#4B5563', fontSize: "9.5px", fontWeight: "900", margin: 0 }}>
-                {settings?.qrLabel || "તમારા ફોનની કોઈ પણ યુપીઆઈ એપ વડે સ્કેન કરી સીધો સેવા સહયોગ મોકલી શકો છો."}
-              </p>
-            </div>
-            
-            {settings?.showQR && settings?.qrImageUrl && settings.qrImageUrl.startsWith("data:") ? (
-              <img 
-                src={settings.qrImageUrl} 
-                alt="Custom QR" 
-                className="h-16 w-16 p-0.5 bg-white object-contain gold-border" 
-                style={{ border: '1px solid #C5A059', borderRadius: "6px" }} 
-              />
-            ) : (
-              <div className="h-16 w-16 bg-white flex items-center justify-center text-[8px] font-bold font-sans gray-border" style={{ border: '1px dashed #FAF9F6', color: '#9CA3AF', borderRadius: "6px" }}>QR કોડ</div>
-            )}
-          </div>
-
-          {/* 6. Footer (Quotes & Slogans) */}
-          <div className="font-sans relative z-10 gray-border" style={{ display: "flex", flexDirection: "column", gap: "6px", borderTop: "1px solid #FAF9F6", paddingTop: "6px" }}>
-            <p style={{ color: "#0B2F64", fontSize: "11px", fontWeight: "900", fontStyle: "italic", textAlign: "center", margin: 0 }}>
-              “ભવિષ્યમાં આપના તરફથી આજ રીતે જીવદયાના પુનિત કાર્યમાં સાથ સહકાર મળતો રહે તેવી અપેક્ષા સહ...આભાર..”
-            </p>
-            
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "11px", fontWeight: "900", color: "#C5A059", padding: "0 12px" }}>
-              <span style={{ color: "#b91c1c" }}>અનુકંપા 🚩</span>
-              <span style={{ color: "#0B2F64" }}>"અમે તો માત્ર નિમિત્ત છીએ"</span>
-              <span style={{ color: "#b91c1c" }}>🚩 જય જિનેન્દ્ર • આભાર</span>
-            </div>
-
-            <div 
-              className="w-full text-center text-[9.5px] font-black tracking-wider gold-border" 
-              style={{ 
-                background: 'linear-gradient(to right, #051A3B, #0B2F64, #051A3B)', 
-                color: '#C5A059', 
-                border: '1px solid rgba(197, 160, 89, 0.2)',
-                padding: "5px",
-                borderRadius: "10px"
-              }}
-            >
-              ← કરુણા થી કૃત્ય સુધી, મૈત્રી થી માનવતા સુધી →
-            </div>
-          </div>
-
+              position: "relative",
+              display: "block",
+              objectFit: "cover"
+            }} 
+          />
         </div>
       </div>
 

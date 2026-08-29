@@ -205,6 +205,10 @@ export const DonationDetail: React.FC = () => {
 
     const elements = clonedDoc.querySelectorAll("*");
     elements.forEach((el: any) => {
+      if (["P", "H1", "H2", "H3", "H4", "H5", "H6"].includes(el.tagName)) {
+        el.style.marginTop = "0px";
+        el.style.marginBottom = "0px";
+      }
       if (el.classList.contains("gold-border")) {
         el.style.borderColor = "#C5A059";
       } else if (el.classList.contains("blue-border")) {
@@ -474,6 +478,9 @@ ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસં�
                     }
                     .safe-card-export .gold-border {
                       border-color: #C5A059 !important;
+                    }
+                    .safe-card-export p, .safe-card-export h1, .safe-card-export h2, .safe-card-export h3, .safe-card-export h4 {
+                      margin: 0 !important;
                     }
                     .safe-card-export .blue-border {
                       border-color: #0B2F64 !important;
