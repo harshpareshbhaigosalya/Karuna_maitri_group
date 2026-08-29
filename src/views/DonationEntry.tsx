@@ -701,27 +701,20 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                 </div>
               </div>
 
-              {/* Seva Selector */}
+              {/* Seva Selector Dropdown (Gujarati Only) */}
               <div>
-                <label className="block text-xs font-bold text-royal-800 uppercase tracking-wider mb-2.5">સેવા પ્રકાર પસંદ કરો *</label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <label className="block text-xs font-extrabold text-royal-800 uppercase tracking-wider mb-2">સેવા પ્રકાર પસંદ કરો *</label>
+                <select
+                  value={selectedSevaId}
+                  onChange={(e) => setSelectedSevaId(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border border-cream-200 text-base font-extrabold text-royal-900 bg-white focus:outline-none focus:ring-2 focus:ring-royal-800 transition-all cursor-pointer shadow-sm"
+                >
                   {sevaTypes.map((seva) => (
-                    <div
-                      key={seva.id}
-                      onClick={() => setSelectedSevaId(seva.id)}
-                      className={`p-3 rounded-xl border-2 cursor-pointer transition-all flex flex-col justify-between h-20 ${
-                        selectedSevaId === seva.id
-                          ? "border-royal-800 bg-royal-800/5 shadow-sm font-bold"
-                          : "border-cream-200 hover:border-cream-300 hover:bg-cream-50/20"
-                      }`}
-                    >
-                      <h4 className="font-extrabold text-xs text-royal-800 leading-tight">{seva.nameGujarati}</h4>
-                      <span className="text-[9px] font-extrabold tracking-wider self-end" style={{ color: seva.accentColor }}>
-                        {seva.nameEnglish}
-                      </span>
-                    </div>
+                    <option key={seva.id} value={seva.id}>
+                      {seva.nameGujarati}
+                    </option>
                   ))}
-                </div>
+                </select>
               </div>
 
               {/* Amount & Date */}
