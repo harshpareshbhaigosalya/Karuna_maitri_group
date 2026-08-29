@@ -35,8 +35,9 @@ export const Settings: React.FC = () => {
   const [sevaSortOrder, setSevaSortOrder] = useState("1");
   const [sevaHeroImageBase64, setSevaHeroImageBase64] = useState("");
 
-  // Archive Modal and state
+  // Archive & Full Reset Modal state
   const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
+  const [isFullResetModalOpen, setIsFullResetModalOpen] = useState(false);
   const [archiveConfirmInput, setArchiveConfirmInput] = useState("");
   const [archiving, setArchiving] = useState(false);
   const [archiveProgressMsg, setArchiveProgressMsg] = useState("");
@@ -182,6 +183,57 @@ export const Settings: React.FC = () => {
     } catch (err) {
       console.error("Archive failed:", err);
       alert("ડેટાબેઝ આર્કાઇવ કરવામાં ખામી સર્જાઈ.");
+    } finally {
+      setArchiving(false);
+      setArchiveProgressMsg("");
+    }
+  };
+
+  // Full Market Reset (Purge all test donations, test donors, and test reminders)
+  const handleFullMarketReset = async () => {
+    if (archiveConfirmInput.trim().toUpperCase() !== "RESET") {
+      alert("કૃપા કરીને ખાતરી કરવા માટે 'RESET' ટાઇપ કરો.");
+      return;
+    }
+
+    try {
+      setArchiving(true);
+      
+      // Step 1: Export complete Excel backup
+      setArchiveProgressMsg("૧/૪: બધા દાનનો Excel બેકઅપ ડાઉનલોડ થઈ રહ્યો છે...");
+      try {
+        await exportFullBackupToExcel();
+      } catch (e) {
+        console.log("No donations to backup.");
+      }
+
+      // Step 2: Batch delete active donations collection
+      setArchiveProgressMsg("૨/૪: દાન એન્ટ્રીઓ સાફ થઈ રહી છે...");
+      const donSnap = await getDocs(collection(db, "donations"));
+      const donBatch = writeBatch(db);
+      donSnap.forEach((d) => donBatch.delete(doc(db, "donations", d.id)));
+      await donBatch.commit();
+
+      // Step 3: Delete donors
+      setArchiveProgressMsg("૩/૪: દાતાશ્રીઓની પ્રોફાઈલ સાફ થઈ રહી છે...");
+      const donorSnap = await getDocs(collection(db, "donors"));
+      const donorBatch = writeBatch(db);
+      donorSnap.forEach((d) => donorBatch.delete(doc(db, "donors", d.id)));
+      await donorBatch.commit();
+
+      // Step 4: Delete reminders
+      setArchiveProgressMsg("૪/૪: રિમાઇન્ડર સાફ થઈ રહ્યા છે...");
+      const remSnap = await getDocs(collection(db, "reminders"));
+      const remBatch = writeBatch(db);
+      remSnap.forEach((d) => remBatch.delete(doc(db, "reminders", d.id)));
+      await remBatch.commit();
+
+      setMsg({ text: "માર્કેટ લોન્ચ માટે ડેટાબેઝ સંપૂર્ણપણે ક્લીન અને રીસેટ થઈ ગયો છે!", type: "success" });
+      setIsFullResetModalOpen(false);
+      setArchiveConfirmInput("");
+    } catch (err) {
+      console.error("Full reset failed:", err);
+      alert("ડેટાબેઝ રીસેટ કરવામાં ખામી સર્જાઈ.");
     } finally {
       setArchiving(false);
       setArchiveProgressMsg("");
@@ -856,7 +908,18 @@ export const Settings: React.FC = () => {
                   className="flex-1 flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-4 rounded-xl shadow-sm text-xs transition-all active:scale-[0.98]"
                 >
                   <Archive className="h-4 w-4" />
-                  <span>આર્કાઇવ અને ડેટાબેઝ રીસેટ કરો</span>
+                  <span>આર્કાઇવ રીસેટ (વર્ષના અંતે)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsFullResetModalOpen(true);
+                    setArchiveConfirmInput("");
+                  }}
+                  className="flex-1 flex items-center justify-center gap-2 bg-red-700 hover:bg-red-800 text-white font-bold py-3 px-4 rounded-xl shadow-sm text-xs transition-all active:scale-[0.98]"
+                >
+                  <Trash2 className="h-4 w-4" />
+                  <span>સંપૂર્ણ માર્કેટ ક્લીન રીસેટ</span>
                 </button>
               </div>
             </div>
@@ -1143,6 +1206,76 @@ export const Settings: React.FC = () => {
                     className="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     હા, આર્કાઇવ કરો
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+      {/* Full Market Reset Modal */}
+      {isFullResetModalOpen && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white max-w-md w-full rounded-3xl p-6 shadow-2xl space-y-4 border border-red-200">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-red-100 rounded-2xl">
+                <ShieldAlert className="h-6 w-6 text-red-600" />
+              </div>
+              <div>
+                <h3 className="text-base font-extrabold text-red-950">🚨 સંપૂર્ણ માર્કેટ રીસેટ (Full Reset)</h3>
+                <p className="text-[11px] font-bold text-red-700">તમામ ટેસ્ટ ડેટા કાયમી ધોરણે સાફ કરો</p>
+              </div>
+            </div>
+
+            <div className="space-y-3 text-xs text-gray-700 leading-relaxed bg-red-50/50 p-4 rounded-2xl border border-red-100">
+              <p className="font-bold text-red-950">પ્રક્રિયા દરમિયાન શું થશે?</p>
+              <ol className="list-decimal list-inside space-y-1.5 text-gray-800 font-medium">
+                <li>સૌપ્રથમ <strong>બધા દાનનો પૂરતો Excel બેકઅપ ફાઈલ (.csv)</strong> આપોઆપ ડાઉનલોડ થઈ જશે.</li>
+                <li>તમામ ટેસ્ટ દાન એન્ટ્રીઓ (Donations) સાફ થશે.</li>
+                <li>તમામ ટેસ્ટ દાતાશ્રીઓની પ્રોફાઈલ (Donors Directory) સાફ થશે.</li>
+                <li>તમામ ટેસ્ટ રિમાઇન્ડર સાફ થશે (સંસ્થા સેટિંગ્સ સુરક્ષિત રહેશે).</li>
+              </ol>
+            </div>
+
+            {archiving ? (
+              <div className="p-4 bg-red-50 rounded-2xl border border-red-200 text-center space-y-2">
+                <div className="inline-block animate-spin rounded-full h-6 w-6 border-2 border-red-600 border-t-transparent"></div>
+                <p className="text-xs font-bold text-red-900">{archiveProgressMsg}</p>
+                <p className="text-[10px] text-red-700 font-medium">કૃપા કરીને પૃષ્ઠ બંધ કરશો નહીં...</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">
+                    ખાતરી કરવા માટે નીચેના બોક્સમાં <span className="text-red-600 font-mono font-extrabold">RESET</span> લખો:
+                  </label>
+                  <input
+                    type="text"
+                    value={archiveConfirmInput}
+                    onChange={(e) => setArchiveConfirmInput(e.target.value)}
+                    placeholder="RESET"
+                    className="w-full px-3.5 py-2.5 border-2 border-red-200 focus:border-red-500 rounded-xl text-sm font-mono font-bold uppercase tracking-wider outline-none transition-all"
+                  />
+                </div>
+
+                <div className="flex gap-3 pt-2 text-xs font-bold">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsFullResetModalOpen(false);
+                      setArchiveConfirmInput("");
+                    }}
+                    className="flex-1 py-3 border border-gray-300 rounded-xl text-gray-600 hover:bg-gray-50 transition-colors"
+                  >
+                    રદ કરો (Cancel)
+                  </button>
+                  <button
+                    type="button"
+                    disabled={archiveConfirmInput.trim().toUpperCase() !== "RESET"}
+                    onClick={handleFullMarketReset}
+                    className="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    હા, ૧૦૦% રીસેટ કરો
                   </button>
                 </div>
               </div>
