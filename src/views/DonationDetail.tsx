@@ -293,7 +293,7 @@ export const DonationDetail: React.FC = () => {
 *તારીખ:* ${donation.donationDate}
 ${donation.occasionType && donation.occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસંગ:* ${donation.occasionType}` : ""}
 
-તમારું દાન આ નિરીહ પ્રાણીઓ માટે જીવનદાન છે. આપનો હૃદયપૂર્વક આભાર.
+તમારું દાન આ અબોલ પશુ-પક્ષીઓ માટે જીવનદાન છે. આપનો હૃદયપૂર્વક આભાર.
 
 *કરુણા-મૈત્રી ગ્રુપ, સુરેન્દ્રનગર*`;
 
