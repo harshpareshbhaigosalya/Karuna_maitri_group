@@ -1,32 +1,170 @@
-# React + TypeScript + Vite
+# 🐾 Karuna-Maitri Group - NGO Donation Management Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+<div align="center">
 
-Currently, two official plugins are available:
+![React](https://img.shields.io/badge/React_18-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+**A production-ready Progressive Web App for managing animal welfare NGO donations — live & in daily use.**
 
-## React Compiler
+[🌐 Live Demo](https://karuna-maitri-group.vercel.app) • [📋 Features](#-features) • [🛠️ Tech Stack](#️-tech-stack) • [🚀 Getting Started](#-getting-started)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+</div>
 
-## Expanding the Oxlint configuration
+---
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## 📖 About
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+**Karuna-Maitri Group** is a Surendranagar-based animal welfare NGO running daily services like milk-pova (dog feeding), bird care, and cattle welfare.
+
+This platform was built to replace manual record-keeping with a fast, mobile-first PWA that allows NGO volunteers to:
+- Record and manage donor entries in real time
+- Instantly generate branded Gujarati donation certificates
+- Send personalized WhatsApp thank-you messages
+- Export full donor data to Excel for record-keeping
+
+> 🚀 **Deployed & actively used in production by real NGO volunteers daily.**
+
+---
+
+## 🎥 Project Demo
+
+<div align="center">
+
+### ▶️ [WATCH KARUNA_MAITRI_GROUP — FULL PROJECT DEMONSTRATION](https://drive.google.com/file/d/1niXEJ0JUTj2EvOqOPBC1OWpMKdOEmsD5/view?usp=sharing)
+
+**🎬 Click here to watch the complete project demonstration**
+
+</div>
+
+---
+
+## ✨ Features
+
+### 🎴 Donation Certificate Generator
+- Pixel-perfect Gujarati certificate & appeal flyer generation using **html2canvas**
+- Full-bleed branded header/footer banners with custom NGO logo
+- One-tap **PNG download** and **WhatsApp sharing**
+
+### 📊 Real-Time Donor Management
+- Firestore-backed donor database with live donation tracking
+- Interactive donation calendar with month-wise overview
+- Analytics dashboard with seva-wise breakdown
+
+### 📱 Progressive Web App (PWA)
+- Installable as a native app on Android & iOS
+- Custom branded splash screen on launch
+- Mobile-first responsive design with Gujarati localization
+
+### 🔔 Smart Reminder System
+- Auto-generate annual donor reminders based on occasion type
+- WhatsApp reminder message generation with dynamic content
+
+### 🗄️ Data Lifecycle Management
+- **UTF-8 BOM Excel CSV export** (Gujarati text renders perfectly in Excel)
+- Year-end archive system with cumulative donation total tracking
+- Secure 2-step database reset with automatic backup before purge
+
+### ⚙️ Admin Settings Panel
+- Manage NGO branding, staff contacts, UPI QR code, and seva types
+- Dynamic donation type management (add/edit/remove seva categories)
+- Role-based settings with Firestore persistence
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **Frontend** | React 18, TypeScript, Vite |
+| **Styling** | Tailwind CSS, Custom Design System |
+| **Backend / Database** | Firebase Firestore (NoSQL), Firebase Auth |
+| **Image Export** | html2canvas |
+| **Deployment** | Vercel (CI/CD via GitHub) |
+| **Integrations** | WhatsApp Web Share API, Web Share API |
+| **Data Export** | Excel CSV with UTF-8 BOM encoding |
+| **PWA** | Web App Manifest, Custom Splash Screen |
+| **Fonts & Icons** | Noto Sans Gujarati (Google Fonts), Lucide React |
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+
+- Firebase project with Firestore and Authentication enabled
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/harshpareshbhaigosalya/Karuna_maitri_group.git
+cd Karuna_maitri_group
+
+# Install dependencies
+npm install
+
+### Environment Setup
+
+Create a `.env` file in the root directory:
+
+```env
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+### Run Locally
+
+```bash
+npm run dev
+```
+
+### Build for Production
+
+```bash
+npm run build
+```
+
+---
+
+## 📁 Project Structure
+
+```
+src/
+├── components/        # Reusable UI components
+├── views/             # Page-level views (Home, Dashboard, Settings...)
+├── lib/               # Firebase config, DB seed utilities
+├── types/             # TypeScript type definitions
+├── utils/             # Image compression, helper utilities
+└── main.tsx           # App entry point with PWA splash
+```
+
+---
+
+## 🌐 Deployment
+
+This project is deployed on **Vercel** with automatic deployments triggered on every push to `main`.
+
+Configured with strict `no-cache` HTTP headers to ensure volunteers always receive the latest version instantly.
+
+---
+
+## 👨‍💻 Developer
+
+**Harsh Gosaliya**
+
+> *"Built with purpose — for the voiceless animals of Surendranagar."*
+
+---
+
+## 📄 License
+
+This project is private and built for **Karuna-Maitri Group, Surendranagar**. All rights reserved.
