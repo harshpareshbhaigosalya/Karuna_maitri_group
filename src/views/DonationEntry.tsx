@@ -14,7 +14,21 @@ import {
   Download, 
   Check, 
   AlertCircle,
-  User
+  User,
+  BookUser,
+  Smartphone,
+  Users,
+  Edit3,
+  Palette,
+  Sparkles,
+  Type,
+  ImagePlus,
+  RotateCcw,
+  Plus,
+  Trash2,
+  X,
+  Sliders,
+  CheckCircle2
 } from "lucide-react";
 import { Donor, SevaType, OrganizationSettings } from "../types";
 import { DEFAULT_SEVA_TYPES } from "../lib/dbSeed";
@@ -59,12 +73,30 @@ const SEVA_DETAILS_MAP: Record<string, {
   },
   "sick-animal": {
     title: "અમારી રોજની પ્રવૃતિ",
-    subtitle: "બીમાર જીવોની",
-    highlightVal: "તાત્કાલિક સારવાર",
-    highlightUnit: "પશુ-પક્ષીઓની",
-    boxText: "દવા-સારવાર",
-    verb: "સેવા પૂરી પાડીએ છીએ.",
-    bottomBar: "સારવાર પૂરી પાડવામાં આવે છે."
+    subtitle: "દરરોજ બીમાર",
+    highlightVal: "અબોલ પશુ-પક્ષીઓ",
+    highlightUnit: "માટે સ્થળ પર",
+    boxText: "સારવાર-પાટાપીંડી",
+    verb: "કરી સેવા આપીએ છીએ.",
+    bottomBar: "ઓન-ધ-સ્પોટ સારવાર સેવા."
+  },
+  "water-pot": {
+    title: "અમારી રોજની પ્રવૃતિ",
+    subtitle: "ઉનાળામાં પક્ષીઓ",
+    highlightVal: "હજારો અબોલ",
+    highlightUnit: "જીવો માટે ઠંડુ",
+    boxText: "પાણીના કુંડા",
+    verb: "મુક્ત વિતરણ કરીએ છીએ.",
+    bottomBar: "પાણીના કુંડા સેવા ઉપલબ્ધ."
+  },
+  "dog-shelter": {
+    title: "અમારી રોજની પ્રવૃતિ",
+    subtitle: "નિરાધાર શ્વાન",
+    highlightVal: "શેલ્ટર હાઉસ",
+    highlightUnit: "માં આશરો આપી",
+    boxText: "રક્ષણ-ખોરાક",
+    verb: "પૂરો પાડીએ છીએ.",
+    bottomBar: "શેલ્ટર અને આજીવન આશરો."
   },
   "bird-camp": {
     title: "અમારી રોજની પ્રવૃતિ",
@@ -76,6 +108,116 @@ const SEVA_DETAILS_MAP: Record<string, {
     bottomBar: "પક્ષીઓનો જીવ બચાવીએ છીએ."
   }
 };
+
+type CardThemeId = "royal-cream" | "golden-divine" | "majestic-navy" | "sacred-green" | "canva-custom";
+
+interface ThemeConfig {
+  name: string;
+  icon: string;
+  desc: string;
+  bg: string;
+  outerBorder: string;
+  innerBorder: string;
+  sevaBoxBg: string;
+  sevaBoxBorder: string;
+  donorBoxBg: string;
+  donorBoxBorder: string;
+  donorColor: string;
+  amountColor: string;
+  accentColor: string;
+}
+
+const THEMES: Record<CardThemeId, ThemeConfig> = {
+  "royal-cream": {
+    name: "રોયલ હેરિટેજ",
+    icon: "👑",
+    desc: "પરંપરાગત ગોલ્ડ & ક્રીમ",
+    bg: "#FAF5EC",
+    outerBorder: "#043e22",
+    innerBorder: "#C5A059",
+    sevaBoxBg: "#0B2F64",
+    sevaBoxBorder: "#C5A059",
+    donorBoxBg: "rgba(255, 255, 255, 0.98)",
+    donorBoxBorder: "#C5A059",
+    donorColor: "#7f1d1d",
+    amountColor: "#B45309",
+    accentColor: "#0B2F64",
+  },
+  "golden-divine": {
+    name: "ગોલ્ડન પ્રીમિયમ",
+    icon: "🌟",
+    desc: "દિવ્ય સોનેરી આભા",
+    bg: "#FFFDF5",
+    outerBorder: "#92400E",
+    innerBorder: "#D97706",
+    sevaBoxBg: "#78350F",
+    sevaBoxBorder: "#F59E0B",
+    donorBoxBg: "rgba(255, 255, 255, 0.98)",
+    donorBoxBorder: "#F59E0B",
+    donorColor: "#991B1B",
+    amountColor: "#B45309",
+    accentColor: "#78350F",
+  },
+  "majestic-navy": {
+    name: "શાહી બ્લુ",
+    icon: "🌊",
+    desc: "શાહી નેવી અને ગોલ્ડ",
+    bg: "#F8FAFC",
+    outerBorder: "#0F172A",
+    innerBorder: "#38BDF8",
+    sevaBoxBg: "#0A2540",
+    sevaBoxBorder: "#60A5FA",
+    donorBoxBg: "rgba(255, 255, 255, 0.98)",
+    donorBoxBorder: "#3B82F6",
+    donorColor: "#0B2F64",
+    amountColor: "#0284C7",
+    accentColor: "#1E3A8A",
+  },
+  "sacred-green": {
+    name: "પવિત્ર જીવદયા",
+    icon: "🌿",
+    desc: "પ્રકૃતિ અને કરુણા ગ્રીન",
+    bg: "#F0FDF4",
+    outerBorder: "#14532D",
+    innerBorder: "#22C55E",
+    sevaBoxBg: "#064E3B",
+    sevaBoxBorder: "#10B981",
+    donorBoxBg: "rgba(255, 255, 255, 0.98)",
+    donorBoxBorder: "#10B981",
+    donorColor: "#15803D",
+    amountColor: "#B45309",
+    accentColor: "#065F46",
+  },
+  "canva-custom": {
+    name: "કેનવા કસ્ટમ",
+    icon: "🎨",
+    desc: "મનપસંદ રંગ & વિગતો",
+    bg: "#FAF5EC",
+    outerBorder: "#043e22",
+    innerBorder: "#C5A059",
+    sevaBoxBg: "#0B2F64",
+    sevaBoxBorder: "#C5A059",
+    donorBoxBg: "rgba(255, 255, 255, 0.98)",
+    donorBoxBorder: "#C5A059",
+    donorColor: "#7f1d1d",
+    amountColor: "#B45309",
+    accentColor: "#0B2F64",
+  }
+};
+
+interface CustomTextBox {
+  id: string;
+  text: string;
+  fontSize: number;
+  color: string;
+  bold: boolean;
+}
+
+interface CustomSticker {
+  id: string;
+  imgUrl: string;
+  width: number;
+}
 
 export const DonationEntry: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -98,8 +240,10 @@ export const DonationEntry: React.FC = () => {
   const [phone, setPhone] = useState("");
   const [amount, setAmount] = useState("");
   const [selectedSevaId, setSelectedSevaId] = useState("");
+  const [customSevaName, setCustomSevaName] = useState("");
   const [donationDate, setDonationDate] = useState(format(new Date(), "yyyy-MM-dd"));
   const [occasionType, setOccasionType] = useState("કોઈ પ્રસંગ નથી");
+  const [customOccasion, setCustomOccasion] = useState("");
   const [occasionDate, setOccasionDate] = useState(format(new Date(), "yyyy-MM-dd"));
   const [customMessage, setCustomMessage] = useState("");
   const [hasteName, setHasteName] = useState("");
@@ -118,6 +262,24 @@ export const DonationEntry: React.FC = () => {
 
   // Modal View state for mobile-safe downloads
   const [exportedImage, setExportedImage] = useState<string | null>(null);
+
+  // Contact Picker Modal state
+  const [showContactPickerModal, setShowContactPickerModal] = useState(false);
+  const [contactSearchQuery, setContactSearchQuery] = useState("");
+
+  // Canva Customizer & Design Card Theme States
+  const [cardTheme, setCardTheme] = useState<CardThemeId>("royal-cream");
+  const [isCanvaMode, setIsCanvaMode] = useState(false);
+  const [cardBgColor, setCardBgColor] = useState("#FAF5EC");
+  const [cardOuterBorder, setCardOuterBorder] = useState("#043e22");
+  const [cardInnerBorder, setCardInnerBorder] = useState("#C5A059");
+  const [donorFontSize, setDonorFontSize] = useState<number>(32);
+  const [donorFontColor, setDonorFontColor] = useState<string>("#7f1d1d");
+  const [amountFontSize, setAmountFontSize] = useState<number>(32);
+  const [amountFontColor, setAmountFontColor] = useState<string>("#B45309");
+  const [customTextBoxes, setCustomTextBoxes] = useState<CustomTextBox[]>([]);
+  const [customStickers, setCustomStickers] = useState<CustomSticker[]>([]);
+  const [newTextContent, setNewTextContent] = useState("");
 
   // Submission/Export States
   const [saving, setSaving] = useState(false);
@@ -146,7 +308,6 @@ export const DonationEntry: React.FC = () => {
         });
 
         if (sevaItems.length > 0) {
-          sevaItems.sort((a, b) => a.sortOrder - b.sortOrder);
           setSevaTypes(sevaItems);
           setSelectedSevaId(sevaItems[0].id);
         } else {
@@ -154,46 +315,46 @@ export const DonationEntry: React.FC = () => {
           setSelectedSevaId(DEFAULT_SEVA_TYPES[0].id);
         }
 
-        const donorSnap = await getDocs(collection(db, "donors"));
-        const donorItems: Donor[] = [];
-        donorSnap.forEach((doc) => {
-          donorItems.push({ id: doc.id, ...doc.data() } as Donor);
+        const donorsSnap = await getDocs(collection(db, "donors"));
+        const donorList: Donor[] = [];
+        donorsSnap.forEach((doc) => {
+          donorList.push({ id: doc.id, ...doc.data() } as Donor);
         });
-        setDonors(donorItems);
+        setDonors(donorList);
 
         if (donorIdParam) {
-          const match = donorItems.find((d) => d.id === donorIdParam);
+          const match = donorList.find((d) => d.id === donorIdParam);
           if (match) {
             handleSelectDonor(match);
           }
         }
       } catch (err) {
-        console.error("Error loading setup data:", err);
+        console.error("Error loading donation entry data:", err);
         setSevaTypes(DEFAULT_SEVA_TYPES as any);
-        setSelectedSevaId(DEFAULT_SEVA_TYPES[0].id);
+        if (DEFAULT_SEVA_TYPES.length > 0) {
+          setSelectedSevaId(DEFAULT_SEVA_TYPES[0].id);
+        }
       }
     };
 
     loadInitialData();
   }, [donorIdParam]);
 
-  // Load local images as Base64 to bypass CORS check in canvas downloads
+  // Pre-load local images and convert to Base64 to bypass CORS in html2canvas
   useEffect(() => {
     const loadAssetsAsBase64 = async () => {
       try {
         // Fetch Background
-        const bgRes = await fetch("/card_background.jpg");
+        const bgRes = await fetch("/card_bg.jpg");
         const bgBlob = await bgRes.blob();
         const bgReader = new FileReader();
         bgReader.onloadend = () => setBgBase64(bgReader.result as string);
         bgReader.readAsDataURL(bgBlob);
 
-        // Fetch Logo (Only fetch if it's not already a base64 data string)
+        // Fetch Logo
         const logoUrl = settings?.logoUrl || "/logo.jpg";
-        if (logoUrl.startsWith("data:")) {
-          setLogoBase64(logoUrl);
-        } else {
-          const logoRes = await fetch(logoUrl);
+        const logoRes = await fetch(logoUrl);
+        if (logoRes.ok) {
           const logoBlob = await logoRes.blob();
           const logoReader = new FileReader();
           logoReader.onloadend = () => setLogoBase64(logoReader.result as string);
@@ -238,6 +399,7 @@ export const DonationEntry: React.FC = () => {
     setDonorSearch(`${donor.fullName} (${donor.phone})`);
     setIsNewDonor(false);
     setShowAutocomplete(false);
+    setShowContactPickerModal(false);
   };
 
   const handleCreateNewDonor = () => {
@@ -261,7 +423,101 @@ export const DonationEntry: React.FC = () => {
     }
   };
 
+  // Web Contact Picker API Handler for Mobile Browsers
+  const handlePickPhoneContact = async () => {
+    try {
+      if ("contacts" in navigator && "ContactsManager" in window) {
+        const props = ["name", "tel"];
+        const opts = { multiple: false };
+        const contacts = await (navigator as any).contacts.select(props, opts);
+        if (contacts && contacts.length > 0) {
+          const c = contacts[0];
+          if (c.name && c.name.length > 0 && c.name[0]) {
+            setDonorName(c.name[0]);
+            setDonorSearch(c.name[0]);
+          }
+          if (c.tel && c.tel.length > 0 && c.tel[0]) {
+            const clean = c.tel[0].replace(/\D/g, "").slice(-10);
+            setPhone(clean || c.tel[0]);
+          }
+          setShowContactPickerModal(false);
+        }
+      } else {
+        alert(
+          "આ બ્રાઉઝરમાં સીધો ફોનબુક એક્સેસ સપોર્ટ નથી. (Chrome Mobile / Android PWA માં આ ફીચર કામ કરે છે).\n\nતમે નીચે આપેલા 'એપમાં સેવ થયેલા દાતાઓ'માંથી પસંદ કરી શકો છો અથવા જાતે નંબર દાખલ કરી શકો છો."
+        );
+      }
+    } catch (err: any) {
+      console.log("Contact pick cancelled or error:", err);
+    }
+  };
+
+  // Theme selection handler
+  const handleSelectTheme = (themeKey: CardThemeId) => {
+    setCardTheme(themeKey);
+    const t = THEMES[themeKey];
+    if (t) {
+      setCardBgColor(t.bg);
+      setCardOuterBorder(t.outerBorder);
+      setCardInnerBorder(t.innerBorder);
+      setDonorFontColor(t.donorColor);
+      setAmountFontColor(t.amountColor);
+    }
+    if (themeKey === "canva-custom") {
+      setIsCanvaMode(true);
+    }
+  };
+
+  // Add custom sticker
+  const handleAddSticker = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64 = reader.result as string;
+      const newSticker: CustomSticker = {
+        id: "stk-" + Date.now(),
+        imgUrl: base64,
+        width: 70
+      };
+      setCustomStickers((prev) => [...prev, newSticker]);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Add custom text box
+  const handleAddCustomText = () => {
+    if (!newTextContent.trim()) return;
+    const newBox: CustomTextBox = {
+      id: "tb-" + Date.now(),
+      text: newTextContent.trim(),
+      fontSize: 14,
+      color: "#0B2F64",
+      bold: true
+    };
+    setCustomTextBoxes((prev) => [...prev, newBox]);
+    setNewTextContent("");
+  };
+
+  const handleResetCanvaDesign = () => {
+    handleSelectTheme("royal-cream");
+    setDonorFontSize(32);
+    setAmountFontSize(32);
+    setCustomTextBoxes([]);
+    setCustomStickers([]);
+    setIsCanvaMode(false);
+  };
+
   const activeSeva = sevaTypes.find((s) => s.id === selectedSevaId);
+
+  // Compute final display values
+  const displaySevaName = selectedSevaId === "other"
+    ? (customSevaName.trim() || "અન્ય સેવા")
+    : (activeSeva?.nameGujarati || "જીવદયા સેવા");
+
+  const displayOccasionName = occasionType === "અન્ય"
+    ? (customOccasion.trim() || "અન્ય પ્રસંગ")
+    : occasionType;
 
   const normalizePhoneNumber = (num: string): string => {
     const cleaned = num.replace(/\D/g, "");
@@ -270,7 +526,6 @@ export const DonationEntry: React.FC = () => {
 
   // Strips all oklch, oklab, shadows, and outline properties from cloned DOM before html2canvas converts it.
   const cleanCanvasOklch = (clonedDoc: Document) => {
-    // 1. Clean the HTML root element
     if (clonedDoc.documentElement) {
       clonedDoc.documentElement.style.borderColor = "transparent";
       clonedDoc.documentElement.style.color = "#111827";
@@ -279,7 +534,6 @@ export const DonationEntry: React.FC = () => {
       clonedDoc.documentElement.style.outlineColor = "transparent";
     }
 
-    // 2. Clean the Body root element
     if (clonedDoc.body) {
       clonedDoc.body.style.borderColor = "transparent";
       clonedDoc.body.style.color = "#111827";
@@ -288,12 +542,10 @@ export const DonationEntry: React.FC = () => {
       clonedDoc.body.style.outlineColor = "transparent";
     }
 
-    // 3. Clean every element inside the document
     const elements = clonedDoc.querySelectorAll("*");
     elements.forEach((el: any) => {
-      // Clear borders unless marked gold/blue/gray explicitly
       if (el.classList.contains("gold-border")) {
-        el.style.borderColor = "#C5A059";
+        el.style.borderColor = cardInnerBorder;
       } else if (el.classList.contains("blue-border")) {
         el.style.borderColor = "#0B2F64";
       } else if (el.classList.contains("gray-border")) {
@@ -305,7 +557,6 @@ export const DonationEntry: React.FC = () => {
       el.style.boxShadow = "none";
       el.style.textShadow = "none";
 
-      // Override computed text and background colors if they contain oklch
       const computed = window.getComputedStyle(el);
       if (computed.color && computed.color.includes("oklch")) {
         el.style.color = "#111827";
@@ -331,6 +582,14 @@ export const DonationEntry: React.FC = () => {
     }
     if (!selectedSevaId) {
       setErrorMsg("સેવા પ્રકાર પસંદ કરો.");
+      return;
+    }
+    if (selectedSevaId === "other" && !customSevaName.trim()) {
+      setErrorMsg("કૃપા કરીને સેવા પ્રવૃત્તિનું નામ જાતે દાખલ કરો.");
+      return;
+    }
+    if (occasionType === "અન્ય" && !customOccasion.trim()) {
+      setErrorMsg("કૃપા કરીને પ્રસંગનું નામ જાતે દાખલ કરો.");
       return;
     }
 
@@ -374,10 +633,10 @@ export const DonationEntry: React.FC = () => {
         donorNameSnapshot: donorName.trim(),
         phoneSnapshot: phone.trim(),
         sevaTypeId: selectedSevaId,
-        sevaNameSnapshot: activeSeva?.nameGujarati || "",
+        sevaNameSnapshot: displaySevaName,
         amount: Number(amount),
         donationDate: donationDate,
-        occasionType: occasionType,
+        occasionType: displayOccasionName,
         occasionDate: occasionType !== "કોઈ પ્રસંગ નથી" ? finalOccasionDate : null,
         customMessage: customMessage.trim() || null,
         donorPhotoUrl: donorPhotoUrl || "",
@@ -396,7 +655,7 @@ export const DonationEntry: React.FC = () => {
           const remQuery = query(
             collection(db, "reminders"),
             where("donorId", "==", finalDonorId),
-            where("occasionType", "==", occasionType),
+            where("occasionType", "==", displayOccasionName),
             where("targetYear", "==", currentYear),
             where("status", "in", ["upcoming", "due", "overdue", "snoozed"])
           );
@@ -421,11 +680,11 @@ export const DonationEntry: React.FC = () => {
         const reminderData = {
           donorId: finalDonorId,
           sourceDonationId: donRef.id,
-          occasionType: occasionType,
+          occasionType: displayOccasionName,
           occasionDate: finalOccasionDate,
           targetYear: targetYear,
           previousAmount: Number(amount),
-          previousSeva: activeSeva?.nameGujarati || "",
+          previousSeva: displaySevaName,
           status: "upcoming",
           reminderDate: nextYearStr,
           createdAt: serverTimestamp(),
@@ -450,10 +709,10 @@ export const DonationEntry: React.FC = () => {
       setErrorMsg("");
 
       const canvas = await html2canvas(cardRef.current, {
-        scale: 2.0, // Safe scaling resolution
+        scale: 2.0,
         useCORS: true,
         allowTaint: false,
-        backgroundColor: "#FAF9F6",
+        backgroundColor: cardBgColor,
         logging: false,
         onclone: (clonedDoc) => {
           cleanCanvasOklch(clonedDoc);
@@ -462,7 +721,6 @@ export const DonationEntry: React.FC = () => {
       const imgData = canvas.toDataURL("image/png");
       setExportedImage(imgData);
 
-      // Trigger automatic file download attempt for desktop/PC
       try {
         const link = document.createElement("a");
         const cleanName = donorName.replace(/\s+/g, "-");
@@ -470,7 +728,7 @@ export const DonationEntry: React.FC = () => {
         link.href = imgData;
         link.click();
       } catch (clickErr) {
-        console.warn("Auto download triggered download pop-up blocker, opening modal fallback:", clickErr);
+        console.warn("Auto download triggered popup blocker, opening modal fallback:", clickErr);
       }
     } catch (err: any) {
       console.error("Export card failed:", err);
@@ -480,7 +738,6 @@ export const DonationEntry: React.FC = () => {
     }
   };
 
-  // Upgraded smart WhatsApp & File Web Share API Integration
   const handleShareCard = async () => {
     if (!cardRef.current) return;
     try {
@@ -491,7 +748,7 @@ export const DonationEntry: React.FC = () => {
         scale: 2.0,
         useCORS: true,
         allowTaint: false,
-        backgroundColor: "#FAF9F6",
+        backgroundColor: cardBgColor,
         logging: false,
         onclone: (clonedDoc) => {
           cleanCanvasOklch(clonedDoc);
@@ -505,10 +762,10 @@ export const DonationEntry: React.FC = () => {
 કરુણા-મૈત્રી ગ્રુપ તરફથી આપના દાન બદલ હૃદયપૂર્વક આભાર.
 
 *દાતાનું નામ:* ${donorName || "દાતાશ્રી"}
-*સેવા પ્રકાર:* ${activeSeva?.nameGujarati || "જીવદયા સેવા"}
+*સેવા પ્રકાર:* ${displaySevaName}
 *દાનની રકમ:* ₹${amount ? Number(amount).toLocaleString("en-IN") : "0"}/-
 *તારીખ:* ${donationDate}
-${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસંગ:* ${occasionType}` : ""}
+${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસંગ:* ${displayOccasionName}` : ""}
 
 તમારું દાન આ અબોલ પશુ-પક્ષીઓ માટે જીવનદાન છે. આપનો હૃદયપૂર્વક આભાર.
 
@@ -531,13 +788,11 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
         console.warn("Native file sharing not supported or cancelled:", shareErr);
       }
 
-      // Fallback: Open WhatsApp and display long-press save modal
       setExportedImage(imgData);
       const cleanPhone = phone.replace(/\D/g, "");
       const whatsappPhone = cleanPhone.startsWith("91") ? cleanPhone : "91" + cleanPhone;
       const url = `https://api.whatsapp.com/send?phone=${whatsappPhone}&text=${encodeURIComponent(shareText)}`;
       window.open(url, "_blank");
-
     } catch (err: any) {
       console.error("Export and share failed:", err);
       alert(`કાર્ડ શેર કરવામાં ભૂલ આવી: ${err.message || String(err)}`);
@@ -551,14 +806,345 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
     return d.fullName.toLowerCase().includes(q) || d.phone.includes(q);
   });
 
-  const displayMembers = settings?.members?.filter(m => m.showOnCard) || [];
+  const filteredModalDonors = donors.filter((d) => {
+    const q = contactSearchQuery.toLowerCase();
+    return d.fullName.toLowerCase().includes(q) || d.phone.includes(q);
+  });
+
+  // Reusable helper to get seva details
+  const getActiveSevaDetails = () => {
+    if (selectedSevaId !== "other" && SEVA_DETAILS_MAP[selectedSevaId]) {
+      return SEVA_DETAILS_MAP[selectedSevaId];
+    }
+    return {
+      title: "અમારી રોજની પ્રવૃતિ",
+      subtitle: "અબોલ પશુ-પક્ષીઓ કાજે",
+      highlightVal: "જીવદયા",
+      highlightUnit: "સેવા અર્થે",
+      boxText: displaySevaName,
+      verb: "સમર્પિત કરવામાં આવે છે.",
+      bottomBar: `${displaySevaName} કરવામાં આવે છે.`
+    };
+  };
+
+  // Reusable Certificate Card Renderer used for both on-screen preview and high-res export
+  const renderCertificateCard = (isExport: boolean) => {
+    const activeDetail = getActiveSevaDetails();
+    const hasPhoto = donorPhotoUrl && donorPhotoUrl.startsWith("data:");
+    const isDeceasedOccasion = ["તિથિ", "પુણ્યતિથિ", "સ્મૃતિ દિવસ", "સ્વર્ગવાસી"].includes(displayOccasionName);
+    const activeTheme = THEMES[cardTheme] || THEMES["royal-cream"];
+
+    return (
+      <div 
+        ref={isExport ? cardRef : undefined}
+        className="w-[600px] h-[820px] select-none flex flex-col justify-between relative overflow-hidden safe-card-export"
+        style={{ 
+          fontFamily: "'Noto Sans Gujarati', sans-serif",
+          border: `8px solid ${cardOuterBorder}`,
+          background: cardBgColor,
+          boxSizing: 'border-box',
+          padding: "0"
+        }}
+      >
+        <style dangerouslySetInnerHTML={{__html: `
+          .safe-card-export, .safe-card-export * {
+            --border-color: ${cardBgColor} !important;
+            border-color: ${cardBgColor} !important;
+            outline-color: transparent !important;
+            box-shadow: none !important;
+            text-shadow: none !important;
+          }
+          .safe-card-export .gold-border {
+            border-color: ${cardInnerBorder} !important;
+          }
+          .safe-card-export p, .safe-card-export h1, .safe-card-export h2, .safe-card-export h3, .safe-card-export h4 {
+            margin: 0 !important;
+          }
+          .safe-card-export .blue-border {
+            border-color: #0B2F64 !important;
+          }
+        `}} />
+
+        {bgBase64 && (
+          <div 
+            style={{
+              position: "absolute",
+              top: 0, left: 0, right: 0, bottom: 0,
+              backgroundImage: `url(${bgBase64})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              opacity: 0.04,
+              zIndex: 0
+            }}
+          />
+        )}
+
+        {/* Decorative Inner Border */}
+        <div 
+          className="absolute pointer-events-none z-20 gold-border" 
+          style={{ inset: "8px", border: `2px solid ${cardInnerBorder}`, borderRadius: "12px" }} 
+        />
+
+        {/* Top Header Banner */}
+        <img 
+          src={headerBase64 || "/header_banner.jpg"} 
+          alt="Header Banner" 
+          style={{ 
+            width: "100%", 
+            height: "217px", 
+            borderBottom: `2.5px solid ${cardInnerBorder}`,
+            zIndex: 10,
+            position: "relative",
+            display: "block",
+            objectFit: "cover"
+          }} 
+        />
+
+        {/* Middle Content Section */}
+        <div style={{ flex: 1, padding: "10px 18px", display: "flex", flexDirection: "column", justifyContent: "space-around", gap: "8px", zIndex: 10, position: "relative" }}>
+          
+          {/* Seva Showcase Box */}
+          <div 
+            className="relative z-10" 
+            style={{ 
+              display: "flex", 
+              flexDirection: "row", 
+              gap: "12px", 
+              width: "100%",
+              height: "172px",
+              boxSizing: 'border-box'
+            }}
+          >
+            <div 
+              className="gold-border"
+              style={{
+                width: "190px",
+                height: "172px",
+                backgroundColor: activeTheme.sevaBoxBg,
+                border: `2.5px solid ${cardInnerBorder}`,
+                borderRadius: "16px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                overflow: "hidden",
+                flexShrink: 0,
+                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.16)"
+              }}
+            >
+              <div style={{ backgroundColor: "rgba(197, 160, 89, 0.22)", padding: "5px 4px", textAlign: "center", borderBottom: `1.5px solid ${cardInnerBorder}` }}>
+                <p style={{ margin: 0, color: "#FFFFFF", fontSize: "11px", fontWeight: "955", textAlign: "center", letterSpacing: "0.2px" }}>🐾 {activeDetail.title} 🐾</p>
+              </div>
+              
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "4px 8px", textAlign: "center" }}>
+                <p style={{ margin: 0, color: "#FDE68A", fontSize: "11px", fontWeight: "900" }}>{activeDetail.subtitle}</p>
+                <p style={{ margin: "2px 0", color: "#FFFFFF", fontSize: "22px", fontWeight: "955", lineHeight: "1.1", textShadow: "0 2px 4px rgba(0,0,0,0.5)" }}>{activeDetail.highlightVal}</p>
+                <p style={{ margin: 0, color: "#FDE68A", fontSize: "11px", fontWeight: "900" }}>{activeDetail.highlightUnit}</p>
+                <p style={{ margin: "3px 0 0 0", color: "#FDE68A", fontSize: "13px", fontWeight: "955", textShadow: "0 1px 2px rgba(0,0,0,0.5)" }}>
+                  {activeDetail.boxText}
+                </p>
+                <p style={{ margin: "3px 0 0 0", color: "#FFFFFF", fontSize: "9px", fontWeight: "900" }}>{activeDetail.verb}</p>
+              </div>
+
+              <div style={{ backgroundColor: "rgba(0, 0, 0, 0.35)", padding: "4px", borderTop: `1px solid ${cardInnerBorder}` }}>
+                <p style={{ margin: 0, color: "#FDE68A", fontSize: "9px", fontWeight: "955", textAlign: "center", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
+                  {activeDetail.bottomBar}
+                </p>
+              </div>
+            </div>
+
+            <div 
+              className="gold-border"
+              style={{ 
+                flex: 1,
+                height: "172px", 
+                borderRadius: "16px", 
+                overflow: "hidden", 
+                border: `2.5px solid ${cardInnerBorder}`, 
+                backgroundColor: '#FAF9F6',
+                position: "relative",
+                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.08)"
+              }}
+            >
+              {bgBase64 ? (
+                <img 
+                  src={bgBase64} 
+                  alt="Seva Collage" 
+                  style={{ 
+                    width: "100%", 
+                    height: "100%", 
+                    objectFit: "cover", 
+                    display: "block" 
+                  }} 
+                />
+              ) : (
+                <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", color: "#9CA3AF" }}>
+                  જીવદયા પ્રવૃત્તિઓ
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Donor Felicitation Main Box */}
+          <div 
+            className="relative z-10 gold-border" 
+            style={{ 
+              backgroundColor: activeTheme.donorBoxBg, 
+              border: `2px solid ${cardInnerBorder}`,
+              borderRadius: "20px",
+              padding: hasPhoto ? "10px 16px" : "10px 14px",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: hasPhoto ? "space-between" : "center",
+              gap: "12px",
+              width: "100%",
+              boxSizing: 'border-box',
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.06)"
+            }}
+          >
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: "2px" }}>
+              
+              <div style={{ color: activeTheme.accentColor, fontSize: "14.5px", fontWeight: "955", borderBottom: `2px solid ${cardInnerBorder}`, paddingBottom: "2px", display: "inline-block", letterSpacing: "0.3px", margin: 0 }}>
+                ✨ {displaySevaName} ના દાતા શ્રી ✨
+              </div>
+
+              <p style={{ margin: "2px 0 0 0", color: activeTheme.accentColor, fontSize: "11px", fontWeight: "955" }}>
+                તારીખ: {donationDate ? donationDate.split('-').reverse().join('-') : ""}
+              </p>
+
+              <h3 style={{ 
+                color: donorFontColor, 
+                fontSize: `${donorFontSize}px`, 
+                fontWeight: "950", 
+                margin: "2px 0 1px 0", 
+                lineHeight: "1.2", 
+                letterSpacing: "0.2px" 
+              }}>
+                {donorName || "દાતાશ્રી..."}
+              </h3>
+              
+              {occasionType !== "કોઈ પ્રસંગ નથી" && (
+                <p style={{ margin: 0, color: activeTheme.accentColor, fontSize: "14px", fontWeight: "955" }}>
+                  {displayOccasionName} {displayOccasionName.endsWith("સ્મરણાર્થે") || isDeceasedOccasion ? "" : "નિમિત્તે"}
+                </p>
+              )}
+
+              {isDeceasedOccasion && (
+                <p style={{ margin: "2px 0", color: '#b91c1c', fontSize: "12px", fontWeight: "955", fontStyle: "italic" }}>
+                  🙏 ભગવાન તેમના દિવ્ય આત્માને પરમ શાંતિ અર્પે 🙏
+                </p>
+              )}
+
+              {customMessage ? (
+                <p style={{ margin: "2px 0", color: activeTheme.accentColor, fontSize: "11.5px", fontWeight: "900", fontStyle: "italic", lineHeight: "1.3" }}>
+                  "{customMessage}"
+                </p>
+              ) : (
+                <p style={{ margin: "2px 0 0 0", color: activeTheme.accentColor, fontSize: "12.5px", fontWeight: "900", fontStyle: "italic" }}>
+                  હસ્તે: {hasteName ? hasteName : (donorName ? `${donorName} સહ પરિવાર` : "દાતાશ્રી સહ પરિવાર")}
+                </p>
+              )}
+
+              {/* Amount Presentation */}
+              <div 
+                style={{ 
+                  color: amountFontColor,
+                  fontSize: `${amountFontSize}px`,
+                  fontWeight: "950",
+                  marginTop: "4px",
+                  lineHeight: "1",
+                  letterSpacing: "0.5px",
+                  borderBottom: `2px solid ${cardInnerBorder}`,
+                  paddingBottom: "2px",
+                  display: "inline-block"
+                }}
+              >
+                ₹ {amount ? Number(amount).toLocaleString("en-IN") : "0"} /-
+              </div>
+
+              {/* Custom User Added Text Boxes */}
+              {customTextBoxes.map((tb) => (
+                <div 
+                  key={tb.id} 
+                  style={{ 
+                    marginTop: "3px", 
+                    color: tb.color, 
+                    fontSize: `${tb.fontSize}px`, 
+                    fontWeight: tb.bold ? "950" : "700",
+                    lineHeight: "1.2"
+                  }}
+                >
+                  {tb.text}
+                </div>
+              ))}
+
+              {/* Custom Stickers / Logos */}
+              {customStickers.length > 0 && (
+                <div style={{ display: "flex", gap: "8px", justifyContent: "center", alignItems: "center", marginTop: "4px" }}>
+                  {customStickers.map((stk) => (
+                    <img 
+                      key={stk.id}
+                      src={stk.imgUrl} 
+                      alt="Custom Sticker" 
+                      style={{ width: `${stk.width}px`, height: "auto", maxHeight: "60px", objectFit: "contain", borderRadius: "6px" }}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {hasPhoto && (
+              <div 
+                className="gold-border shrink-0"
+                style={{ 
+                  width: "115px", 
+                  height: "148px", 
+                  borderRadius: "16px", 
+                  overflow: "hidden", 
+                  border: `2.5px solid ${cardInnerBorder}`, 
+                  backgroundColor: '#ffffff',
+                  boxShadow: "0 3px 8px rgba(0,0,0,0.12)"
+                }}
+              >
+                <img 
+                  src={donorPhotoUrl} 
+                  alt="Donor" 
+                  style={{ 
+                    width: "100%", 
+                    height: "100%", 
+                    objectFit: "cover", 
+                    display: "block" 
+                  }} 
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Bottom Footer Banner */}
+        <img 
+          src={footerBase64 || "/footer_banner.jpg"} 
+          alt="Footer Banner" 
+          style={{ 
+            width: "100%", 
+            height: "143px", 
+            borderTop: `2.5px solid ${cardInnerBorder}`,
+            zIndex: 10,
+            position: "relative",
+            display: "block",
+            objectFit: "cover"
+          }} 
+        />
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-6 pb-12">
       {/* Title */}
       <div>
         <h1 className="text-3xl font-extrabold text-royal-800 tracking-tight">દાન પત્રિકા સન્માન પત્ર</h1>
-        <p className="text-gray-500 mt-1">દાનની વિગત ભરો અને બાજુમાં લાઈવ સન્માન પત્ર જુઓ.</p>
+        <p className="text-gray-500 mt-1">દાનની વિગત ભરો, મનપસંદ ડિઝાઇન પસંદ કરો અને સન્માન પત્ર તૈયાર કરો.</p>
       </div>
 
       {success ? (
@@ -574,7 +1160,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
           <div className="border border-cream-100 p-4 rounded-xl bg-cream-50 text-left text-sm space-y-2">
             <p><strong>દાતા:</strong> {donorName}</p>
             <p><strong>રકમ:</strong> ₹{Number(amount).toLocaleString("en-IN")}/-</p>
-            <p><strong>સેવા:</strong> {activeSeva?.nameGujarati}</p>
+            <p><strong>સેવા:</strong> {displaySevaName}</p>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -604,11 +1190,13 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                 setPhone("");
                 setAmount("");
                 setOccasionType("કોઈ પ્રસંગ નથી");
+                setCustomOccasion("");
                 setOccasionDate(format(new Date(), "yyyy-MM-dd"));
                 setCustomMessage("");
                 setHasteName("");
                 setDonorPhotoUrl("");
                 setShowDonorPhoto(true);
+                handleResetCanvaDesign();
               }}
               className="text-royal-800 hover:text-saffron-600 font-bold text-sm font-sans"
             >
@@ -678,19 +1266,34 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                 )}
               </div>
 
-              {/* Name & Phone */}
+              {/* Name & Phone with Contact Picker Button */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-royal-800 uppercase tracking-wider mb-2">દાતાનું નામ</label>
+                  <label className="block text-xs font-bold text-royal-800 uppercase tracking-wider mb-2">દાતાનું નામ *</label>
                   <input
                     type="text"
                     value={donorName}
                     onChange={(e) => setDonorName(e.target.value)}
+                    placeholder="દા.ત. મહેશભાઈ શાહ"
                     className="w-full px-4 py-2.5 rounded-xl border border-cream-200 text-sm"
                   />
                 </div>
+
                 <div>
-                  <label className="block text-xs font-bold text-royal-800 uppercase tracking-wider mb-2">ફોન નંબર *</label>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-xs font-bold text-royal-800 uppercase tracking-wider">ફોન નંબર *</label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowContactPickerModal(true);
+                        setContactSearchQuery("");
+                      }}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 bg-royal-50 hover:bg-royal-100 text-royal-800 rounded-lg text-[11px] font-bold border border-royal-200 transition-colors shadow-2xs active:scale-95"
+                    >
+                      <BookUser className="h-3.5 w-3.5 text-royal-700" />
+                      <span>+ સંપર્ક પસંદ કરો</span>
+                    </button>
+                  </div>
                   <input
                     type="tel"
                     value={phone}
@@ -701,7 +1304,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                 </div>
               </div>
 
-              {/* Seva Selector Dropdown (Gujarati Only) */}
+              {/* Seva Selector Dropdown + Manual Fill Option */}
               <div>
                 <label className="block text-xs font-extrabold text-royal-800 uppercase tracking-wider mb-2">સેવા પ્રકાર પસંદ કરો *</label>
                 <select
@@ -714,7 +1317,23 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                       {seva.nameGujarati}
                     </option>
                   ))}
+                  <option value="other">અન્ય સેવા (જાતે લખો / Fill Manually)</option>
                 </select>
+
+                {selectedSevaId === "other" && (
+                  <div className="mt-2.5 p-3 bg-amber-50/60 rounded-xl border border-amber-200">
+                    <label className="block text-[11px] font-bold text-amber-950 uppercase tracking-wider mb-1">
+                      સેવા પ્રવૃત્તિનું નામ જાતે લખો (Fill Manually) *
+                    </label>
+                    <input
+                      type="text"
+                      value={customSevaName}
+                      onChange={(e) => setCustomSevaName(e.target.value)}
+                      placeholder="દા.ત. ગાયો માટે લીલો ઘાસચારો, ઘાયલ પક્ષી સારવાર..."
+                      className="w-full px-3.5 py-2 rounded-xl border border-amber-300 focus:border-amber-600 bg-white text-sm font-bold text-royal-900 outline-none"
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Amount & Date */}
@@ -725,6 +1344,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                     type="text"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
+                    placeholder="દા.ત. 1100"
                     className="w-full px-4 py-2.5 rounded-xl border border-cream-200 text-sm font-mono font-bold text-royal-850"
                   />
                 </div>
@@ -739,34 +1359,51 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                 </div>
               </div>
 
-              {/* Occasion & Calendar Date Picker */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-royal-800 uppercase tracking-wider mb-2">દાનનો પ્રસંગ</label>
-                  <select
-                    value={occasionType}
-                    onChange={(e) => setOccasionType(e.target.value)}
-                    className="w-full px-3 py-2.5 rounded-xl border border-cream-200 text-sm"
-                  >
-                    <option value="કોઈ પ્રસંગ નથી">કોઈ પ્રસંગ નથી</option>
-                    <option value="જન્મદિવસ">જન્મદિવસ</option>
-                    <option value="તિથિ">તિથિ</option>
-                    <option value="લગ્ન વર્ષગાંઠ">લગ્ન વર્ષગાંઠ</option>
-                    <option value="પુણ્યતિથિ">પુણ્યતિથિ</option>
-                    <option value="સ્મૃતિ દિવસ">સ્મૃતિ દિવસ</option>
-                    <option value="સ્વર્ગવાસી">સ્વર્ગવાસી</option>
-                    <option value="વર્ષગાંઠ">વર્ષગાંઠ</option>
-                    <option value="અન્ય">અન્ય</option>
-                  </select>
-                </div>
-                {occasionType !== "કોઈ પ્રસંગ નથી" && (
+              {/* Occasion & Calendar Date Picker + Manual Fill Option */}
+              <div className="space-y-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold text-royal-800 uppercase tracking-wider mb-2">પ્રસંગ તારીખ (કૅલેન્ડર પસંદગી) *</label>
+                    <label className="block text-xs font-bold text-royal-800 uppercase tracking-wider mb-2">દાનનો પ્રસંગ</label>
+                    <select
+                      value={occasionType}
+                      onChange={(e) => setOccasionType(e.target.value)}
+                      className="w-full px-3 py-2.5 rounded-xl border border-cream-200 text-sm"
+                    >
+                      <option value="કોઈ પ્રસંગ નથી">કોઈ પ્રસંગ નથી</option>
+                      <option value="જન્મદિવસ">જન્મદિવસ</option>
+                      <option value="તિથિ">તિથિ</option>
+                      <option value="લગ્ન વર્ષગાંઠ">લગ્ન વર્ષગાંઠ</option>
+                      <option value="પુણ્યતિથિ">પુણ્યતિથિ</option>
+                      <option value="સ્મૃતિ દિવસ">સ્મૃતિ દિવસ</option>
+                      <option value="સ્વર્ગવાસી">સ્વર્ગવાસી</option>
+                      <option value="વર્ષગાંઠ">વર્ષગાંઠ</option>
+                      <option value="અન્ય">અન્ય (જાતે લખો / Fill Manually)</option>
+                    </select>
+                  </div>
+                  {occasionType !== "કોઈ પ્રસંગ નથી" && (
+                    <div>
+                      <label className="block text-xs font-bold text-royal-800 uppercase tracking-wider mb-2">પ્રસંગ તારીખ (કૅલેન્ડર પસંદગી) *</label>
+                      <input
+                        type="date"
+                        value={occasionDate}
+                        onChange={(e) => setOccasionDate(e.target.value)}
+                        className="w-full px-4 py-2.5 rounded-xl border border-cream-200 text-sm font-mono"
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {occasionType === "અન્ય" && (
+                  <div className="p-3 bg-amber-50/60 rounded-xl border border-amber-200">
+                    <label className="block text-[11px] font-bold text-amber-950 uppercase tracking-wider mb-1">
+                      પ્રસંગનું નામ જાતે લખો (Fill Manually) *
+                    </label>
                     <input
-                      type="date"
-                      value={occasionDate}
-                      onChange={(e) => setOccasionDate(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-cream-200 text-sm font-mono"
+                      type="text"
+                      value={customOccasion}
+                      onChange={(e) => setCustomOccasion(e.target.value)}
+                      placeholder="દા.ત. નવું મકાન વાસ્તુ, નિવૃત્તિ સન્માન, પરીક્ષા સફળતા..."
+                      className="w-full px-3.5 py-2 rounded-xl border border-amber-300 focus:border-amber-600 bg-white text-sm font-bold text-royal-900 outline-none"
                     />
                   </div>
                 )}
@@ -846,11 +1483,11 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
             </div>
           </div>
 
-          {/* Card Preview Column */}
+          {/* Card Preview & Canva Editor Column */}
           <div className="lg:col-span-7 flex flex-col items-center gap-4 w-full">
             
-            {/* Download/Share Actions */}
-            <div className="flex items-center gap-3 w-full max-w-[400px]">
+            {/* Top Download/Share Actions */}
+            <div className="flex items-center gap-3 w-full max-w-[500px]">
               <button
                 onClick={handleExportPng}
                 disabled={saving}
@@ -869,289 +1506,254 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
               </button>
             </div>
 
+            {/* Design Themes Selection Carousel */}
+            <div className="w-full max-w-[600px] bg-white p-3.5 rounded-2xl border border-cream-200 shadow-xs space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-extrabold text-royal-900 flex items-center gap-1.5">
+                  <Sparkles className="h-4 w-4 text-amber-500" />
+                  <span>પત્રિકા ડિઝાઇન પસંદ કરો (Design Themes)</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setIsCanvaMode(!isCanvaMode)}
+                  className="text-[11px] font-bold text-royal-800 hover:text-royal-950 flex items-center gap-1 bg-cream-100/70 hover:bg-cream-200/70 px-2.5 py-1 rounded-lg transition-colors"
+                >
+                  <Sliders className="h-3.5 w-3.5" />
+                  <span>{isCanvaMode ? "સામાન્ય મોડ" : "🎨 કેનવા એડિટર"}</span>
+                </button>
+              </div>
+
+              {/* Theme Pill Cards */}
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                {(Object.keys(THEMES) as CardThemeId[]).map((themeKey) => {
+                  const t = THEMES[themeKey];
+                  const isSelected = cardTheme === themeKey;
+                  return (
+                    <button
+                      key={themeKey}
+                      type="button"
+                      onClick={() => handleSelectTheme(themeKey)}
+                      className={`p-2 rounded-xl border text-center transition-all flex flex-col items-center justify-center gap-1 ${
+                        isSelected
+                          ? "border-royal-800 bg-royal-50/80 shadow-xs ring-2 ring-royal-700/20"
+                          : "border-cream-200 bg-cream-50/30 hover:bg-cream-100/50"
+                      }`}
+                    >
+                      <span className="text-base">{t.icon}</span>
+                      <span className="text-[11px] font-bold text-royal-900 leading-tight">{t.name}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Canva Editor Controls Drawer */}
+              {isCanvaMode && (
+                <div className="pt-3 border-t border-cream-100 space-y-3.5 animate-in fade-in duration-150">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-extrabold text-royal-800 uppercase tracking-wider">કેનવા કસ્ટમાઇઝેશન ટૂલ</span>
+                    <button
+                      type="button"
+                      onClick={handleResetCanvaDesign}
+                      className="text-[10px] font-bold text-red-600 hover:text-red-800 flex items-center gap-1"
+                    >
+                      <RotateCcw className="h-3 w-3" />
+                      <span>મૂળ ડિઝાઇન લાવો</span>
+                    </button>
+                  </div>
+
+                  {/* Background Color Swatches */}
+                  <div>
+                    <label className="block text-[11px] font-bold text-gray-600 mb-1.5">બેકગ્રાઉન્ડ રંગ:</label>
+                    <div className="flex flex-wrap gap-2">
+                      {[
+                        { label: "ક્રીમ", hex: "#FAF5EC" },
+                        { label: "સફેદ", hex: "#FFFFFF" },
+                        { label: "આઇવરી", hex: "#FFFDF5" },
+                        { label: "લાઈટ ગ્રીન", hex: "#F0FDF4" },
+                        { label: "સોફ્ટ બ્લુ", hex: "#F8FAFC" },
+                        { label: "ગુલાબી આભા", hex: "#FFF1F2" }
+                      ].map((c) => (
+                        <button
+                          key={c.hex}
+                          type="button"
+                          onClick={() => setCardBgColor(c.hex)}
+                          className={`px-2 py-1 rounded-lg text-[10px] font-bold border transition-all flex items-center gap-1.5 ${
+                            cardBgColor === c.hex ? "ring-2 ring-royal-800 border-transparent shadow-xs" : "border-cream-300"
+                          }`}
+                          style={{ backgroundColor: c.hex }}
+                        >
+                          <span className="h-2.5 w-2.5 rounded-full border border-gray-400" style={{ backgroundColor: c.hex }} />
+                          <span className="text-gray-800">{c.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Border Color Swatches */}
+                  <div>
+                    <label className="block text-[11px] font-bold text-gray-600 mb-1.5">બોર્ડર રંગ:</label>
+                    <div className="flex flex-wrap gap-2">
+                      {[
+                        { label: "ડાર્ક ગ્રીન", hex: "#043e22" },
+                        { label: "ગોલ્ડ", hex: "#C5A059" },
+                        { label: "રોયલ બ્લુ", hex: "#0B2F64" },
+                        { label: "મેરૂન", hex: "#7f1d1d" },
+                        { label: "બ્લેક", hex: "#1F2937" }
+                      ].map((b) => (
+                        <button
+                          key={b.hex}
+                          type="button"
+                          onClick={() => {
+                            setCardOuterBorder(b.hex);
+                            if (b.hex === "#C5A059") {
+                              setCardInnerBorder("#B45309");
+                            }
+                          }}
+                          className={`px-2 py-1 rounded-lg text-[10px] font-bold border text-white transition-all ${
+                            cardOuterBorder === b.hex ? "ring-2 ring-amber-500 scale-105" : "border-transparent opacity-90"
+                          }`}
+                          style={{ backgroundColor: b.hex }}
+                        >
+                          {b.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Quick Element Font Sizing & Colors */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-cream-50/50 p-2.5 rounded-xl border border-cream-200">
+                    {/* Donor Name Font Controls */}
+                    <div className="space-y-1">
+                      <span className="text-[11px] font-bold text-royal-800">દાતા નામ સાઇઝ ({donorFontSize}px):</span>
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => setDonorFontSize((p) => Math.max(20, p - 2))}
+                          className="px-2 py-0.5 bg-white border border-cream-300 rounded text-xs font-bold"
+                        >
+                          A-
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setDonorFontSize((p) => Math.min(46, p + 2))}
+                          className="px-2 py-0.5 bg-white border border-cream-300 rounded text-xs font-bold"
+                        >
+                          A+
+                        </button>
+                        <div className="flex gap-1 ml-1">
+                          {["#7f1d1d", "#0B2F64", "#B45309", "#15803D", "#111827"].map((col) => (
+                            <button
+                              key={col}
+                              type="button"
+                              onClick={() => setDonorFontColor(col)}
+                              className="w-4 h-4 rounded-full border border-gray-300"
+                              style={{ backgroundColor: col }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Amount Font Controls */}
+                    <div className="space-y-1">
+                      <span className="text-[11px] font-bold text-royal-800">રકમ સાઇઝ ({amountFontSize}px):</span>
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => setAmountFontSize((p) => Math.max(22, p - 2))}
+                          className="px-2 py-0.5 bg-white border border-cream-300 rounded text-xs font-bold"
+                        >
+                          A-
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setAmountFontSize((p) => Math.min(46, p + 2))}
+                          className="px-2 py-0.5 bg-white border border-cream-300 rounded text-xs font-bold"
+                        >
+                          A+
+                        </button>
+                        <div className="flex gap-1 ml-1">
+                          {["#B45309", "#0B2F64", "#7f1d1d", "#0284C7", "#15803D"].map((col) => (
+                            <button
+                              key={col}
+                              type="button"
+                              onClick={() => setAmountFontColor(col)}
+                              className="w-4 h-4 rounded-full border border-gray-300"
+                              style={{ backgroundColor: col }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Add Custom Text Box & Add Sticker Buttons */}
+                  <div className="space-y-2">
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={newTextContent}
+                        onChange={(e) => setNewTextContent(e.target.value)}
+                        placeholder="નવું લખાણ ઉમેરો (દા.ત. જય જિનેન્દ્ર, ગુરુકૃપા)..."
+                        className="flex-1 px-3 py-1.5 text-xs border border-cream-300 rounded-xl"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleAddCustomText}
+                        className="px-3 py-1.5 bg-royal-800 hover:bg-royal-900 text-white rounded-xl text-xs font-bold shrink-0"
+                      >
+                        + લખાણ
+                      </button>
+                      <label className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shrink-0 cursor-pointer flex items-center gap-1">
+                        <ImagePlus className="h-3.5 w-3.5" />
+                        <span>+ સ્ટીકર</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleAddSticker}
+                          className="hidden"
+                        />
+                      </label>
+                    </div>
+
+                    {/* Active custom text items list */}
+                    {customTextBoxes.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 pt-1">
+                        {customTextBoxes.map((tb) => (
+                          <span
+                            key={tb.id}
+                            className="inline-flex items-center gap-1 bg-white border border-cream-300 px-2 py-0.5 rounded-lg text-[11px] font-bold text-royal-800"
+                          >
+                            <span>{tb.text}</span>
+                            <button
+                              type="button"
+                              onClick={() => setCustomTextBoxes((prev) => prev.filter((x) => x.id !== tb.id))}
+                              className="text-red-500 hover:text-red-700 ml-1"
+                            >
+                              ✕
+                            </button>
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+
             {/* Scale container to display on screen */}
             <div className="w-full flex justify-center overflow-hidden py-4 border border-cream-100 rounded-2xl bg-cream-50/20">
               <div className="w-[600px] h-[820px] scale-[0.48] sm:scale-[0.72] md:scale-100 origin-top shrink-0 -mb-[420px] sm:-mb-[220px] md:mb-0">
-                
-                {/* Visual design replica only */}
-                <div 
-                  
-                  className="w-[600px] h-[820px] select-none flex flex-col justify-between relative overflow-hidden safe-card-export"
-                  style={{ 
-                    fontFamily: "'Noto Sans Gujarati', sans-serif",
-                    border: "8px solid #043e22",
-                    background: "#FAF5EC",
-                    boxSizing: 'border-box',
-                    padding: "0"
-                  }}
-                >
-                  <style dangerouslySetInnerHTML={{__html: `
-                    .safe-card-export, .safe-card-export * {
-                      --border-color: #FAF5EC !important;
-                      border-color: #FAF5EC !important;
-                      outline-color: transparent !important;
-                      box-shadow: none !important;
-                      text-shadow: none !important;
-                    }
-                    .safe-card-export .gold-border {
-                      border-color: #C5A059 !important;
-                    }
-                    .safe-card-export p, .safe-card-export h1, .safe-card-export h2, .safe-card-export h3, .safe-card-export h4 {
-                      margin: 0 !important;
-                    }
-                    .safe-card-export .blue-border {
-                      border-color: #0B2F64 !important;
-                    }
-                  `}} />
-
-                  {bgBase64 && (
-                    <div 
-                      style={{
-                        position: "absolute",
-                        top: 0, left: 0, right: 0, bottom: 0,
-                        backgroundImage: `url(${bgBase64})`,
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                        opacity: 0.04,
-                        zIndex: 0
-                      }}
-                    />
-                  )}
-
-                  <div 
-                    className="absolute pointer-events-none z-20 gold-border" 
-                    style={{ inset: "8px", border: "2px solid #C5A059", borderRadius: "12px" }} 
-                  />
-
-                  <img 
-                    src={headerBase64 || "/header_banner.jpg"} 
-                    alt="Header Banner" 
-                    style={{ 
-                      width: "100%", 
-                      height: "217px", 
-                      borderBottom: "2.5px solid #C5A059",
-                      zIndex: 10,
-                      position: "relative",
-                      display: "block",
-                      objectFit: "cover"
-                    }} 
-                  />
-
-                  <div style={{ flex: 1, padding: "12px 20px", display: "flex", flexDirection: "column", justifyContent: "space-around", gap: "10px", zIndex: 10, position: "relative" }}>
-                    
-                    {(() => {
-                      const activeDetail = SEVA_DETAILS_MAP[selectedSevaId] || SEVA_DETAILS_MAP["dudh-pova"];
-                      return (
-                        <div 
-                          className="relative z-10" 
-                          style={{ 
-                            display: "flex", 
-                            flexDirection: "row", 
-                            gap: "12px", 
-                            width: "100%",
-                            height: "175px",
-                            boxSizing: 'border-box'
-                          }}
-                        >
-                          <div 
-                            className="gold-border"
-                            style={{
-                              width: "190px",
-                              height: "175px",
-                              backgroundColor: "#0B2F64",
-                              border: "2.5px solid #C5A059",
-                              borderRadius: "16px",
-                              display: "flex",
-                              flexDirection: "column",
-                              justifyContent: "space-between",
-                              overflow: "hidden",
-                              flexShrink: 0,
-                              boxShadow: "0 4px 10px rgba(11, 47, 100, 0.18)"
-                            }}
-                          >
-                            <div style={{ backgroundColor: "rgba(197, 160, 89, 0.22)", padding: "5px 4px", textAlign: "center", borderBottom: "1.5px solid #C5A059" }}>
-                              <p style={{ margin: 0, color: "#FFFFFF", fontSize: "11px", fontWeight: "955", textAlign: "center", letterSpacing: "0.2px" }}>🐾 {activeDetail.title} 🐾</p>
-                            </div>
-                            
-                            <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "4px 8px", textAlign: "center" }}>
-                              <p style={{ margin: 0, color: "#FDE68A", fontSize: "11.5px", fontWeight: "900" }}>{activeDetail.subtitle}</p>
-                              <p style={{ margin: "2px 0", color: "#FFFFFF", fontSize: "23px", fontWeight: "955", lineHeight: "1.1", textShadow: "0 2px 4px rgba(0,0,0,0.5)" }}>{activeDetail.highlightVal}</p>
-                              <p style={{ margin: 0, color: "#FDE68A", fontSize: "11.5px", fontWeight: "900" }}>{activeDetail.highlightUnit}</p>
-                              
-                              <p style={{ margin: "4px 0 0 0", color: "#FDE68A", fontSize: "13.5px", fontWeight: "955", textShadow: "0 1px 2px rgba(0,0,0,0.5)" }}>
-     {activeDetail.boxText}
-   </p>
-                              <p style={{ margin: "3.5px 0 0 0", color: "#FFFFFF", fontSize: "9.5px", fontWeight: "900" }}>{activeDetail.verb}</p>
-                            </div>
-
-                            <div style={{ backgroundColor: "rgba(0, 0, 0, 0.35)", padding: "4px", borderTop: "1px solid rgba(197, 160, 89, 0.4)" }}>
-                              <p style={{ margin: 0, color: "#FDE68A", fontSize: "9px", fontWeight: "955", textAlign: "center", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
-                                {activeDetail.bottomBar}
-                              </p>
-                            </div>
-                          </div>
-
-                          <div 
-                            className="gold-border"
-                            style={{ 
-                              flex: 1,
-                              height: "175px", 
-                              borderRadius: "16px", 
-                              overflow: "hidden", 
-                              border: '2.5px solid #C5A059', 
-                              backgroundColor: '#FAF9F6',
-                              position: "relative",
-                              boxShadow: "0 4px 10px rgba(0, 0, 0, 0.08)"
-                            }}
-                          >
-                            {bgBase64 ? (
-                              <img 
-                                src={bgBase64} 
-                                alt="Seva Collage" 
-                                style={{ 
-                                  width: "100%", 
-                                  height: "100%", 
-                                  objectFit: "cover", 
-                                  display: "block" 
-                                }} 
-                              />
-                            ) : (
-                              <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", color: "#9CA3AF" }}>
-                                જીવદયા પ્રવૃત્તિઓ
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })()}
-
-                    {(() => {
-                      const hasPhoto = donorPhotoUrl && donorPhotoUrl.startsWith("data:");
-                      const isDeceasedOccasion = ["તિથિ", "પુણ્યતિથિ", "સ્મૃતિ દિવસ", "સ્વર્ગવાસી"].includes(occasionType);
-                      return (
-                        <div 
-                          className="relative z-10 gold-border" 
-                          style={{ 
-                            backgroundColor: 'rgba(255, 255, 255, 0.98)', 
-                            border: '2px solid #C5A059',
-                            borderRadius: "20px",
-                            padding: hasPhoto ? "12px 18px" : "12px 16px",
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: hasPhoto ? "space-between" : "center",
-                            gap: "15px",
-                            width: "100%",
-                            boxSizing: 'border-box',
-                            boxShadow: "0 4px 12px rgba(11, 47, 100, 0.06)"
-                          }}
-                        >
-                          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: "2px" }}>
-                            
-                            <div style={{ color: "#0B2F64", fontSize: "15px", fontWeight: "955", borderBottom: "2px solid #C5A059", paddingBottom: "2px", display: "inline-block", letterSpacing: "0.3px", margin: 0 }}>
-     ✨ {activeSeva?.nameGujarati || "જીવદયા"} સેવા ના દાતા શ્રી ✨
-   </div>
-
-                            <p style={{ margin: "2px 0 0 0", color: '#0b2f64', fontSize: "11px", fontWeight: "955" }}>
-                              તારીખ: {donationDate ? donationDate.split('-').reverse().join('-') : ""}
-                            </p>
-
-                            <h3 style={{ color: '#7f1d1d', fontSize: hasPhoto ? "30px" : "35px", fontWeight: "950", margin: "3px 0 1px 0", lineHeight: "1.2", letterSpacing: "0.2px" }}>
-                              {donorName || "દાતાશ્રી..."}
-                            </h3>
-                            
-                            {occasionType !== "કોઈ પ્રસંગ નથી" && (
-                              <p style={{ margin: 0, color: '#0b2f64', fontSize: "14.5px", fontWeight: "955" }}>
-                                {occasionType} {occasionType.endsWith("સ્મરણાર્થે") || ["તિથિ", "પુણ્યતિથિ", "સ્મૃતિ દિવસ", "સ્વર્ગવાસી"].includes(occasionType) ? "" : "નિમિત્તે"}
-                              </p>
-                            )}
-
-                            {isDeceasedOccasion && (
-                              <p style={{ margin: "2px 0", color: '#b91c1c', fontSize: "12.5px", fontWeight: "955", fontStyle: "italic" }}>
-                                🙏 ભગવાન તેમના દિવ્ય આત્માને પરમ શાંતિ અર્પે 🙏
-                              </p>
-                            )}
-
-                            {customMessage ? (
-                              <p style={{ margin: "2px 0", color: '#0B2F64', fontSize: "12px", fontWeight: "900", fontStyle: "italic", lineHeight: "1.3" }}>
-                                "{customMessage}"
-                              </p>
-                            ) : (
-                              <p style={{ margin: "3px 0 0 0", color: "#0B2F64", fontSize: "13px", fontWeight: "900", fontStyle: "italic" }}>
-     હસ્તે: {hasteName ? hasteName : (donorName ? `${donorName} સહ પરિવાર` : "દાતાશ્રી સહ પરિવાર")}
-   </p>
-                            )}
-
-                             <div 
-                               style={{ 
-                                 color: "#B45309",
-                                 fontSize: "32px",
-                                 fontWeight: "950",
-                                 marginTop: "6px",
-                                 lineHeight: "1",
-                                 letterSpacing: "0.5px",
-                                 borderBottom: "2px solid #C5A059",
-                                 paddingBottom: "2px",
-                                 display: "inline-block"
-                               }}
-                             >
-                               ₹ {amount ? Number(amount).toLocaleString("en-IN") : "0"} /-
-                             </div>
-                          </div>
-
-                          {hasPhoto && (
-                            <div 
-                              className="gold-border shrink-0"
-                              style={{ 
-                                width: "120px", 
-                                height: "155px", 
-                                borderRadius: "16px", 
-                                overflow: "hidden", 
-                                border: '2.5px solid #C5A059', 
-                                backgroundColor: '#ffffff',
-                                boxShadow: "0 3px 8px rgba(0,0,0,0.12)"
-                              }}
-                            >
-                              <img 
-                                src={donorPhotoUrl} 
-                                alt="Donor" 
-                                style={{ 
-                                  width: "100%", 
-                                  height: "100%", 
-                                  objectFit: "cover", 
-                                  display: "block" 
-                                }} 
-                              />
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })()}
-
-                  </div>
-
-                  <img 
-                    src={footerBase64 || "/footer_banner.jpg"} 
-                    alt="Footer Banner" 
-                    style={{ 
-                      width: "100%", 
-                      height: "143px", 
-                      borderTop: "2.5px solid #C5A059",
-                      zIndex: 10,
-                      position: "relative",
-                      display: "block",
-                      objectFit: "cover"
-                    }} 
-                  />
-                </div>
+                {renderCertificateCard(false)}
               </div>
             </div>
           </div>
         </div>
       )}
 
+      {/* Off-screen DOM used strictly for html2canvas export */}
       <div 
-              className="absolute" 
+        className="absolute" 
         style={{ 
           left: "-9999px", 
           top: "0",
@@ -1160,277 +1762,95 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
           overflow: "hidden"
         }}
       >
-                <div 
-                  ref={cardRef}
-                  className="w-[600px] h-[820px] select-none flex flex-col justify-between relative overflow-hidden safe-card-export"
-                  style={{ 
-                    fontFamily: "'Noto Sans Gujarati', sans-serif",
-                    border: "8px solid #043e22",
-                    background: "#FAF5EC",
-                    boxSizing: 'border-box',
-                    padding: "0"
-                  }}
-                >
-                  <style dangerouslySetInnerHTML={{__html: `
-                    .safe-card-export, .safe-card-export * {
-                      --border-color: #FAF5EC !important;
-                      border-color: #FAF5EC !important;
-                      outline-color: transparent !important;
-                      box-shadow: none !important;
-                      text-shadow: none !important;
-                    }
-                    .safe-card-export .gold-border {
-                      border-color: #C5A059 !important;
-                    }
-                    .safe-card-export p, .safe-card-export h1, .safe-card-export h2, .safe-card-export h3, .safe-card-export h4 {
-                      margin: 0 !important;
-                    }
-                    .safe-card-export .blue-border {
-                      border-color: #0B2F64 !important;
-                    }
-                  `}} />
-
-                  {bgBase64 && (
-                    <div 
-                      style={{
-                        position: "absolute",
-                        top: 0, left: 0, right: 0, bottom: 0,
-                        backgroundImage: `url(${bgBase64})`,
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                        opacity: 0.04,
-                        zIndex: 0
-                      }}
-                    />
-                  )}
-
-                  <div 
-                    className="absolute pointer-events-none z-20 gold-border" 
-                    style={{ inset: "8px", border: "2px solid #C5A059", borderRadius: "12px" }} 
-                  />
-
-                  <img 
-                    src={headerBase64 || "/header_banner.jpg"} 
-                    alt="Header Banner" 
-                    style={{ 
-                      width: "100%", 
-                      height: "217px", 
-                      borderBottom: "2.5px solid #C5A059",
-                      zIndex: 10,
-                      position: "relative",
-                      display: "block",
-                      objectFit: "cover"
-                    }} 
-                  />
-
-                  <div style={{ flex: 1, padding: "12px 20px", display: "flex", flexDirection: "column", justifyContent: "space-around", gap: "10px", zIndex: 10, position: "relative" }}>
-                    
-                    {(() => {
-                      const activeDetail = SEVA_DETAILS_MAP[selectedSevaId] || SEVA_DETAILS_MAP["dudh-pova"];
-                      return (
-                        <div 
-                          className="relative z-10" 
-                          style={{ 
-                            display: "flex", 
-                            flexDirection: "row", 
-                            gap: "12px", 
-                            width: "100%",
-                            height: "175px",
-                            boxSizing: 'border-box'
-                          }}
-                        >
-                          <div 
-                            className="gold-border"
-                            style={{
-                              width: "190px",
-                              height: "175px",
-                              backgroundColor: "#0B2F64",
-                              border: "2.5px solid #C5A059",
-                              borderRadius: "16px",
-                              display: "flex",
-                              flexDirection: "column",
-                              justifyContent: "space-between",
-                              overflow: "hidden",
-                              flexShrink: 0,
-                              boxShadow: "0 4px 10px rgba(11, 47, 100, 0.18)"
-                            }}
-                          >
-                            <div style={{ backgroundColor: "rgba(197, 160, 89, 0.22)", padding: "5px 4px", textAlign: "center", borderBottom: "1.5px solid #C5A059" }}>
-                              <p style={{ margin: 0, color: "#FFFFFF", fontSize: "11px", fontWeight: "955", textAlign: "center", letterSpacing: "0.2px" }}>🐾 {activeDetail.title} 🐾</p>
-                            </div>
-                            
-                            <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "4px 8px", textAlign: "center" }}>
-                              <p style={{ margin: 0, color: "#FDE68A", fontSize: "11.5px", fontWeight: "900" }}>{activeDetail.subtitle}</p>
-                              <p style={{ margin: "2px 0", color: "#FFFFFF", fontSize: "23px", fontWeight: "955", lineHeight: "1.1", textShadow: "0 2px 4px rgba(0,0,0,0.5)" }}>{activeDetail.highlightVal}</p>
-                              <p style={{ margin: 0, color: "#FDE68A", fontSize: "11.5px", fontWeight: "900" }}>{activeDetail.highlightUnit}</p>
-                              
-                              <p style={{ margin: "4px 0 0 0", color: "#FDE68A", fontSize: "13.5px", fontWeight: "955", textShadow: "0 1px 2px rgba(0,0,0,0.5)" }}>
-     {activeDetail.boxText}
-   </p>
-                              <p style={{ margin: "3.5px 0 0 0", color: "#FFFFFF", fontSize: "9.5px", fontWeight: "900" }}>{activeDetail.verb}</p>
-                            </div>
-
-                            <div style={{ backgroundColor: "rgba(0, 0, 0, 0.35)", padding: "4px", borderTop: "1px solid rgba(197, 160, 89, 0.4)" }}>
-                              <p style={{ margin: 0, color: "#FDE68A", fontSize: "9px", fontWeight: "955", textAlign: "center", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
-                                {activeDetail.bottomBar}
-                              </p>
-                            </div>
-                          </div>
-
-                          <div 
-                            className="gold-border"
-                            style={{ 
-                              flex: 1,
-                              height: "175px", 
-                              borderRadius: "16px", 
-                              overflow: "hidden", 
-                              border: '2.5px solid #C5A059', 
-                              backgroundColor: '#FAF9F6',
-                              position: "relative",
-                              boxShadow: "0 4px 10px rgba(0, 0, 0, 0.08)"
-                            }}
-                          >
-                            {bgBase64 ? (
-                              <img 
-                                src={bgBase64} 
-                                alt="Seva Collage" 
-                                style={{ 
-                                  width: "100%", 
-                                  height: "100%", 
-                                  objectFit: "cover", 
-                                  display: "block" 
-                                }} 
-                              />
-                            ) : (
-                              <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", color: "#9CA3AF" }}>
-                                જીવદયા પ્રવૃત્તિઓ
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })()}
-
-                    {(() => {
-                      const hasPhoto = donorPhotoUrl && donorPhotoUrl.startsWith("data:");
-                      const isDeceasedOccasion = ["તિથિ", "પુણ્યતિથિ", "સ્મૃતિ દિવસ", "સ્વર્ગવાસી"].includes(occasionType);
-                      return (
-                        <div 
-                          className="relative z-10 gold-border" 
-                          style={{ 
-                            backgroundColor: 'rgba(255, 255, 255, 0.98)', 
-                            border: '2px solid #C5A059',
-                            borderRadius: "20px",
-                            padding: hasPhoto ? "12px 18px" : "12px 16px",
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: hasPhoto ? "space-between" : "center",
-                            gap: "15px",
-                            width: "100%",
-                            boxSizing: 'border-box',
-                            boxShadow: "0 4px 12px rgba(11, 47, 100, 0.06)"
-                          }}
-                        >
-                          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: "2px" }}>
-                            
-                            <div style={{ color: "#0B2F64", fontSize: "15px", fontWeight: "955", borderBottom: "2px solid #C5A059", paddingBottom: "2px", display: "inline-block", letterSpacing: "0.3px", margin: 0 }}>
-     ✨ {activeSeva?.nameGujarati || "જીવદયા"} સેવા ના દાતા શ્રી ✨
-   </div>
-
-                            <p style={{ margin: "2px 0 0 0", color: '#0b2f64', fontSize: "11px", fontWeight: "955" }}>
-                              તારીખ: {donationDate ? donationDate.split('-').reverse().join('-') : ""}
-                            </p>
-
-                            <h3 style={{ color: '#7f1d1d', fontSize: hasPhoto ? "30px" : "35px", fontWeight: "950", margin: "3px 0 1px 0", lineHeight: "1.2", letterSpacing: "0.2px" }}>
-                              {donorName || "દાતાશ્રી..."}
-                            </h3>
-                            
-                            {occasionType !== "કોઈ પ્રસંગ નથી" && (
-                              <p style={{ margin: 0, color: '#0b2f64', fontSize: "14.5px", fontWeight: "955" }}>
-                                {occasionType} {occasionType.endsWith("સ્મરણાર્થે") || ["તિથિ", "પુણ્યતિથિ", "સ્મૃતિ દિવસ", "સ્વર્ગવાસી"].includes(occasionType) ? "" : "નિમિત્તે"}
-                              </p>
-                            )}
-
-                            {isDeceasedOccasion && (
-                              <p style={{ margin: "2px 0", color: '#b91c1c', fontSize: "12.5px", fontWeight: "955", fontStyle: "italic" }}>
-                                🙏 ભગવાન તેમના દિવ્ય આત્માને પરમ શાંતિ અર્પે 🙏
-                              </p>
-                            )}
-
-                            {customMessage ? (
-                              <p style={{ margin: "2px 0", color: '#0B2F64', fontSize: "12px", fontWeight: "900", fontStyle: "italic", lineHeight: "1.3" }}>
-                                "{customMessage}"
-                              </p>
-                            ) : (
-                              <p style={{ margin: "3px 0 0 0", color: "#0B2F64", fontSize: "13px", fontWeight: "900", fontStyle: "italic" }}>
-     હસ્તે: {hasteName ? hasteName : (donorName ? `${donorName} સહ પરિવાર` : "દાતાશ્રી સહ પરિવાર")}
-   </p>
-                            )}
-
-                             <div 
-                               style={{ 
-                                 color: "#B45309",
-                                 fontSize: "32px",
-                                 fontWeight: "950",
-                                 marginTop: "6px",
-                                 lineHeight: "1",
-                                 letterSpacing: "0.5px",
-                                 borderBottom: "2px solid #C5A059",
-                                 paddingBottom: "2px",
-                                 display: "inline-block"
-                               }}
-                             >
-                               ₹ {amount ? Number(amount).toLocaleString("en-IN") : "0"} /-
-                             </div>
-                          </div>
-
-                          {hasPhoto && (
-                            <div 
-                              className="gold-border shrink-0"
-                              style={{ 
-                                width: "120px", 
-                                height: "155px", 
-                                borderRadius: "16px", 
-                                overflow: "hidden", 
-                                border: '2.5px solid #C5A059', 
-                                backgroundColor: '#ffffff',
-                                boxShadow: "0 3px 8px rgba(0,0,0,0.12)"
-                              }}
-                            >
-                              <img 
-                                src={donorPhotoUrl} 
-                                alt="Donor" 
-                                style={{ 
-                                  width: "100%", 
-                                  height: "100%", 
-                                  objectFit: "cover", 
-                                  display: "block" 
-                                }} 
-                              />
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })()}
-
-                  </div>
-
-                  <img 
-                    src={footerBase64 || "/footer_banner.jpg"} 
-                    alt="Footer Banner" 
-                    style={{ 
-                      width: "100%", 
-                      height: "143px", 
-                      borderTop: "2.5px solid #C5A059",
-                      zIndex: 10,
-                      position: "relative",
-                      display: "block",
-                      objectFit: "cover"
-                    }} 
-                  />
-                </div>
+        {renderCertificateCard(true)}
       </div>
+
+      {/* Contact Picker Modal */}
+      {showContactPickerModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-cream-200 space-y-4 animate-in fade-in zoom-in duration-200">
+            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+              <div className="flex items-center gap-2.5 text-royal-900">
+                <BookUser className="h-5 w-5 text-royal-700" />
+                <h3 className="text-base font-extrabold">દાતાનો સંપર્ક પસંદ કરો</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowContactPickerModal(false)}
+                className="p-1.5 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Option 1: Mobile Phone Contacts */}
+            <button
+              type="button"
+              onClick={handlePickPhoneContact}
+              className="w-full flex items-center gap-3 p-3.5 bg-royal-50 hover:bg-royal-100/80 border border-royal-200 rounded-2xl transition-all text-left group"
+            >
+              <div className="p-2.5 bg-royal-700 text-white rounded-xl group-hover:scale-105 transition-transform">
+                <Smartphone className="h-5 w-5" />
+              </div>
+              <div className="flex-1">
+                <p className="text-xs font-extrabold text-royal-950">મોબાઈલ ફોનબુકમાંથી પસંદ કરો</p>
+                <p className="text-[11px] text-gray-500">ફોનમાં સેવ થયેલા સંપર્કમાંથી સીધો નંબર મેળવો</p>
+              </div>
+            </button>
+
+            {/* Option 2: Saved App Donors */}
+            <div className="space-y-2 pt-1">
+              <div className="flex items-center gap-2 text-xs font-bold text-royal-900">
+                <Users className="h-4 w-4 text-emerald-600" />
+                <span>એપમાં સેવ થયેલા દાતાઓ ({donors.length})</span>
+              </div>
+              
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <input
+                  type="text"
+                  value={contactSearchQuery}
+                  onChange={(e) => setContactSearchQuery(e.target.value)}
+                  placeholder="નામ અથવા ફોન નંબરથી શોધો..."
+                  className="w-full pl-9 pr-3 py-2 text-xs border border-cream-200 rounded-xl"
+                />
+              </div>
+
+              <div className="max-h-48 overflow-y-auto divide-y divide-cream-100 border border-cream-100 rounded-xl bg-cream-50/20">
+                {filteredModalDonors.slice(0, 15).map((d) => (
+                  <div
+                    key={d.id}
+                    onClick={() => handleSelectDonor(d)}
+                    className="p-2.5 hover:bg-royal-50/60 cursor-pointer flex items-center justify-between transition-colors"
+                  >
+                    <div>
+                      <p className="text-xs font-bold text-royal-900">{d.fullName}</p>
+                      <p className="text-[11px] text-gray-500">{d.phone}</p>
+                    </div>
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                  </div>
+                ))}
+                {filteredModalDonors.length === 0 && (
+                  <p className="text-center py-4 text-xs text-gray-400">કોઈ દાતા મળ્યા નથી.</p>
+                )}
+              </div>
+            </div>
+
+            {/* Option 3: Manual Entry */}
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowContactPickerModal(false);
+                }}
+                className="w-full py-2.5 text-center text-xs font-bold text-gray-600 hover:text-royal-800 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors"
+              >
+                ✍️ જાતે મેન્યુઅલ નંબર ટાઇપ કરો
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Generated image Modal Overlay for 100% reliable mobile long-press downloads */}
       {exportedImage && (

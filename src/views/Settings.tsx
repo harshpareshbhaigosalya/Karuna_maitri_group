@@ -3,7 +3,7 @@ import { db } from "../lib/firebase";
 import { doc, getDoc, setDoc, updateDoc, collection, getDocs, serverTimestamp, deleteDoc, writeBatch } from "firebase/firestore";
 import { seedDatabase, DEFAULT_ORG_SETTINGS, DEFAULT_SEVA_TYPES } from "../lib/dbSeed";
 import { compressImageToBase64 } from "../utils/image";
-import { Heart, Building, Phone, QrCode, Bell, Plus, Edit, Upload, Sparkles, CreditCard, Trash2, UserPlus, CheckCircle, FileSpreadsheet, Archive, AlertTriangle, Database, ShieldAlert, Download } from "lucide-react";
+import { Heart, Building, Phone, QrCode, Bell, Plus, Edit, Upload, Sparkles, CreditCard, Trash2, UserPlus, CheckCircle, FileSpreadsheet, Archive, AlertTriangle, Database, ShieldAlert, Download, Calendar, Filter, X } from "lucide-react";
 import { OrganizationSettings, SevaType, Donation } from "../types";
 
 export const Settings: React.FC = () => {
@@ -42,12 +42,37 @@ export const Settings: React.FC = () => {
   const [archiving, setArchiving] = useState(false);
   const [archiveProgressMsg, setArchiveProgressMsg] = useState("");
 
-  // Function to export all donation entries to a UTF-8 BOM CSV/Excel file
-  const exportFullBackupToExcel = async () => {
+  // Excel Export Date Range & Modal States
+  const [isExcelModalOpen, setIsExcelModalOpen] = useState(false);
+  const [excelExportMode, setExcelExportMode] = useState<"full" | "range">("full");
+  const [excelStartDate, setExcelStartDate] = useState(
+    new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split("T")[0]
+  );
+  const [excelEndDate, setExcelEndDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
+  const [exportingExcel, setExportingExcel] = useState(false);
+
+  // Function to export donation entries to a UTF-8 BOM CSV/Excel file (supports full backup or date-range filter)
+  const exportFullBackupToExcel = async (startDate?: string, endDate?: string) => {
     try {
+      setExportingExcel(true);
       const donSnap = await getDocs(collection(db, "donations"));
-      const docsList: Donation[] = [];
+      let docsList: Donation[] = [];
       donSnap.forEach((d) => docsList.push({ id: d.id, ...d.data() } as Donation));
+
+      // Filter by date range if provided
+      if (startDate) {
+        docsList = docsList.filter((d) => !d.donationDate || d.donationDate >= startDate);
+      }
+      if (endDate) {
+        docsList = docsList.filter((d) => !d.donationDate || d.donationDate <= endDate);
+      }
+
+      if (docsList.length === 0 && (startDate || endDate)) {
+        alert("પસંદ કરેલ તારીખ ગાળામાં કોઈ દાન એન્ટ્રી મળી નથી.");
+        return [];
+      }
 
       // Sort by date descending
       docsList.sort((a, b) => (b.donationDate || "").localeCompare(a.donationDate || ""));
@@ -92,7 +117,10 @@ export const Settings: React.FC = () => {
       const link = document.createElement("a");
       const todayStr = new Date().toISOString().split("T")[0];
       link.setAttribute("href", url);
-      link.setAttribute("download", `Karuna_Maitri_Full_Donation_Backup_${todayStr}.csv`);
+      const downloadFileName = (startDate || endDate)
+        ? `Karuna_Maitri_Donations_${startDate || "Start"}_to_${endDate || "Today"}.csv`
+        : `Karuna_Maitri_Full_Donation_Backup_${todayStr}.csv`;
+      link.setAttribute("download", downloadFileName);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -102,6 +130,8 @@ export const Settings: React.FC = () => {
       console.error("Backup export failed:", err);
       alert("Excel બેકઅપ ફાઈલ બનાવવામાં ખામી સર્જાઈ.");
       throw err;
+    } finally {
+      setExportingExcel(false);
     }
   };
 
@@ -946,11 +976,11 @@ export const Settings: React.FC = () => {
               <div className="flex flex-col sm:flex-row gap-3 pt-2">
                 <button
                   type="button"
-                  onClick={() => exportFullBackupToExcel()}
+                  onClick={() => setIsExcelModalOpen(true)}
                   className="flex-1 flex items-center justify-center gap-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 px-4 rounded-xl shadow-sm text-xs transition-all active:scale-[0.98]"
                 >
                   <FileSpreadsheet className="h-4 w-4" />
-                  <span>ડાઉનલોડ કરો Excel બેકઅપ (.csv)</span>
+                  <span>ડાઉનલોડ કરો Excel બેકઅપ / તારીખ મુજબ રિપોર્ટ</span>
                 </button>
                 <button
                   type="button"
@@ -1196,6 +1226,164 @@ export const Settings: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Excel Export Selection Modal (Full Database or Date-Range Filter) */}
+      {isExcelModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-emerald-100 space-y-5 animate-in fade-in zoom-in duration-200">
+            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+              <div className="flex items-center gap-3 text-emerald-800">
+                <div className="p-2.5 bg-emerald-100 rounded-2xl">
+                  <FileSpreadsheet className="h-6 w-6 text-emerald-700" />
+                </div>
+                <div>
+                  <h3 className="text-base font-extrabold text-royal-950">Excel રિપોર્ટ અને બેકઅપ ડાઉનલોડ</h3>
+                  <p className="text-[11px] font-bold text-gray-500">સંપૂર્ણ ડેટાબેઝ અથવા તારીખ પસંદ કરીને મેળવો</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsExcelModalOpen(false)}
+                className="p-2 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-xl transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Selection Tabs */}
+            <div className="grid grid-cols-2 gap-2 bg-cream-50 p-1.5 rounded-2xl border border-cream-200">
+              <button
+                type="button"
+                onClick={() => setExcelExportMode("full")}
+                className={`py-2.5 px-3 rounded-xl text-xs font-bold transition-all ${
+                  excelExportMode === "full"
+                    ? "bg-emerald-700 text-white shadow-sm"
+                    : "text-gray-600 hover:text-royal-800"
+                }`}
+              >
+                📁 સંપૂર્ણ ડેટાબેઝ
+              </button>
+              <button
+                type="button"
+                onClick={() => setExcelExportMode("range")}
+                className={`py-2.5 px-3 rounded-xl text-xs font-bold transition-all ${
+                  excelExportMode === "range"
+                    ? "bg-emerald-700 text-white shadow-sm"
+                    : "text-gray-600 hover:text-royal-800"
+                }`}
+              >
+                📅 તારીખ પસંદગી (Date Range)
+              </button>
+            </div>
+
+            {excelExportMode === "full" ? (
+              <div className="bg-emerald-50/60 p-4 rounded-2xl border border-emerald-100 space-y-2 text-xs text-emerald-950">
+                <p className="font-bold">સંપૂર્ણ ડેટાબેઝ એક્સપોર્ટ:</p>
+                <p className="text-gray-700 leading-relaxed">
+                  શરૂઆતથી અત્યાર સુધીની તમામ દાન એન્ટ્રીઓ (દાતાનું નામ, ફોન, રકમ, સેવા, તારીખ, સંદેશ) સંપૂર્ણ ગુજરાતી UTF-8 BOM સપોર્ટ સાથે ડાઉનલોડ થશે.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-royal-800 uppercase tracking-wider mb-1.5">
+                      તારીખથી (From Date) *
+                    </label>
+                    <input
+                      type="date"
+                      value={excelStartDate}
+                      onChange={(e) => setExcelStartDate(e.target.value)}
+                      className="w-full px-3 py-2.5 rounded-xl border border-cream-200 text-sm font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-royal-800 uppercase tracking-wider mb-1.5">
+                      તારીખ સુધી (To Date) *
+                    </label>
+                    <input
+                      type="date"
+                      value={excelEndDate}
+                      onChange={(e) => setExcelEndDate(e.target.value)}
+                      className="w-full px-3 py-2.5 rounded-xl border border-cream-200 text-sm font-mono"
+                    />
+                  </div>
+                </div>
+
+                {/* Quick Date Presets */}
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  <span className="text-[11px] font-bold text-gray-500 self-center mr-1">ઝડપી પસંદગી:</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const now = new Date();
+                      const first = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split("T")[0];
+                      const today = now.toISOString().split("T")[0];
+                      setExcelStartDate(first);
+                      setExcelEndDate(today);
+                    }}
+                    className="text-[11px] bg-white border border-cream-300 hover:border-emerald-600 px-2.5 py-1 rounded-lg font-bold text-royal-800 transition-colors"
+                  >
+                    આ મહિનો
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const now = new Date();
+                      const firstPrev = new Date(now.getFullYear(), now.getMonth() - 1, 1).toISOString().split("T")[0];
+                      const lastPrev = new Date(now.getFullYear(), now.getMonth(), 0).toISOString().split("T")[0];
+                      setExcelStartDate(firstPrev);
+                      setExcelEndDate(lastPrev);
+                    }}
+                    className="text-[11px] bg-white border border-cream-300 hover:border-emerald-600 px-2.5 py-1 rounded-lg font-bold text-royal-800 transition-colors"
+                  >
+                    ગત મહિનો
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const now = new Date();
+                      const curYear = now.getMonth() >= 3 ? now.getFullYear() : now.getFullYear() - 1;
+                      setExcelStartDate(`${curYear}-04-01`);
+                      setExcelEndDate(now.toISOString().split("T")[0]);
+                    }}
+                    className="text-[11px] bg-white border border-cream-300 hover:border-emerald-600 px-2.5 py-1 rounded-lg font-bold text-royal-800 transition-colors"
+                  >
+                    ચાલુ નાણાકીય વર્ષ (FY)
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <div className="flex gap-3 pt-2 text-xs font-bold">
+              <button
+                type="button"
+                onClick={() => setIsExcelModalOpen(false)}
+                className="flex-1 py-3 border border-gray-300 rounded-xl text-gray-600 hover:bg-gray-50 transition-colors"
+              >
+                બંધ કરો (Close)
+              </button>
+              <button
+                type="button"
+                disabled={exportingExcel}
+                onClick={async () => {
+                  if (excelExportMode === "full") {
+                    await exportFullBackupToExcel();
+                  } else {
+                    await exportFullBackupToExcel(excelStartDate, excelEndDate);
+                  }
+                  setIsExcelModalOpen(false);
+                }}
+                className="flex-1 py-3 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl shadow-md transition-all flex items-center justify-center gap-2 active:scale-[0.98]"
+              >
+                <Download className="h-4 w-4" />
+                <span>{exportingExcel ? "ડાઉનલોડ થઈ રહ્યું છે..." : "Excel (.csv) ડાઉનલોડ કરો"}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Archive & Reset Safety Confirmation Modal */}
       {isArchiveModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">

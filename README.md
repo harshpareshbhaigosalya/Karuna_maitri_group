@@ -1,8 +1,8 @@
-# 🐾 Karuna-Maitri Group - NGO Donation Management Platform
+# 🐾 Karuna-Maitri Group — NGO Donation Management Platform
 
 <div align="center">
 
-![React](https://img.shields.io/badge/React_18-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![React](https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 ![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
@@ -19,13 +19,13 @@
 
 ## 📖 About
 
-**Karuna-Maitri Group** is a Surendranagar-based animal welfare NGO running daily services like milk-pova (dog feeding), bird care, and cattle welfare.
+**Karuna-Maitri Group** is a Surendranagar-based animal welfare NGO running daily humanitarian services like milk-pova (stray dog feeding), bird care, and cattle welfare.
 
 This platform was built to replace manual record-keeping with a fast, mobile-first PWA that allows NGO volunteers to:
 - Record and manage donor entries in real time
-- Instantly generate branded Gujarati donation certificates
-- Send personalized WhatsApp thank-you messages
-- Export full donor data to Excel for record-keeping
+- Instantly generate branded Gujarati donation certificates & flyers
+- Send personalized WhatsApp thank-you messages with high-resolution certificates
+- Export full donor data to Excel for official accounting and tax records
 
 > 🚀 **Deployed & actively used in production by real NGO volunteers daily.**
 
@@ -45,10 +45,17 @@ This platform was built to replace manual record-keeping with a fast, mobile-fir
 
 ## ✨ Features
 
-### 🎴 Donation Certificate Generator
+### 🎴 Canva-Style Certificate & Flyer Customizer
 - Pixel-perfect Gujarati certificate & appeal flyer generation using **html2canvas**
+- Multiple pre-designed themes (Royal Heritage Cream, Golden Elegance, Majestic Navy, Sacred Emerald)
+- In-place Canva-style customization: adjust font sizes, change text colors, add custom text boxes and logos/stickers
 - Full-bleed branded header/footer banners with custom NGO logo
 - One-tap **PNG download** and **WhatsApp sharing**
+
+### 📱 Mobile-First Native Contact Picker & Autocomplete
+- Native mobile Contact Picker API integration (`navigator.contacts.select`) to instantly select donor contacts from phone
+- Smart autocomplete against existing donor directory with deduplication
+- Manual input option for all dropdowns (custom occasion and custom seva types)
 
 ### 📊 Real-Time Donor Management
 - Firestore-backed donor database with live donation tracking
@@ -58,14 +65,15 @@ This platform was built to replace manual record-keeping with a fast, mobile-fir
 ### 📱 Progressive Web App (PWA)
 - Installable as a native app on Android & iOS
 - Custom branded splash screen on launch
-- Mobile-first responsive design with Gujarati localization
+- Mobile-first responsive design with 100% Gujarati localization
 
 ### 🔔 Smart Reminder System
 - Auto-generate annual donor reminders based on occasion type
 - WhatsApp reminder message generation with dynamic content
 
-### 🗄️ Data Lifecycle Management
+### 🗄️ Data Lifecycle & Filtered Excel Export
 - **UTF-8 BOM Excel CSV export** (Gujarati text renders perfectly in Excel)
+- Date-range filtering (From Date to To Date) or Full Database Export
 - Year-end archive system with cumulative donation total tracking
 - Secure 2-step database reset with automatic backup before purge
 
@@ -80,12 +88,12 @@ This platform was built to replace manual record-keeping with a fast, mobile-fir
 
 | Layer | Technology |
 |---|---|
-| **Frontend** | React 18, TypeScript, Vite |
+| **Frontend** | React 19, TypeScript, Vite |
 | **Styling** | Tailwind CSS, Custom Design System |
 | **Backend / Database** | Firebase Firestore (NoSQL), Firebase Auth |
 | **Image Export** | html2canvas |
 | **Deployment** | Vercel (CI/CD via GitHub) |
-| **Integrations** | WhatsApp Web Share API, Web Share API |
+| **Integrations** | Web Contact Picker API, WhatsApp Web Share API, Web Share API |
 | **Data Export** | Excel CSV with UTF-8 BOM encoding |
 | **PWA** | Web App Manifest, Custom Splash Screen |
 | **Fonts & Icons** | Noto Sans Gujarati (Google Fonts), Lucide React |
@@ -107,6 +115,7 @@ cd Karuna_maitri_group
 
 # Install dependencies
 npm install
+```
 
 ### Environment Setup
 
@@ -140,7 +149,7 @@ npm run build
 ```
 src/
 ├── components/        # Reusable UI components
-├── views/             # Page-level views (Home, Dashboard, Settings...)
+├── views/             # Page-level views (Home, Dashboard, Settings, DonationEntry...)
 ├── lib/               # Firebase config, DB seed utilities
 ├── types/             # TypeScript type definitions
 ├── utils/             # Image compression, helper utilities
