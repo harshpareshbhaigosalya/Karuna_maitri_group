@@ -44,33 +44,68 @@ export const Settings: React.FC = () => {
 
   // Excel Export Date Range & Modal States
   const [isExcelModalOpen, setIsExcelModalOpen] = useState(false);
-  const [excelExportMode, setExcelExportMode] = useState<"full" | "range">("full");
+  const [excelExportMode, setExcelExportMode] = useState<"full" | "month" | "range">("full");
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonthNum = String(now.getMonth() + 1).padStart(2, "0");
+  const [excelSelectedMonth, setExcelSelectedMonth] = useState<string>(`${currentYear}-${currentMonthNum}`);
   const [excelStartDate, setExcelStartDate] = useState(
-    new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split("T")[0]
+    `${currentYear}-${currentMonthNum}-01`
   );
   const [excelEndDate, setExcelEndDate] = useState(
-    new Date().toISOString().split("T")[0]
+    `${currentYear}-${currentMonthNum}-${new Date(currentYear, now.getMonth() + 1, 0).getDate()}`
   );
   const [exportingExcel, setExportingExcel] = useState(false);
 
-  // Function to export donation entries to a UTF-8 BOM CSV/Excel file (supports full backup or date-range filter)
-  const exportFullBackupToExcel = async (startDate?: string, endDate?: string) => {
+  // Helper to normalize date strings
+  const normalizeDateStr = (d?: string): string => {
+    if (!d) return "";
+    const clean = String(d).split("T")[0].trim().replace(/\//g, "-");
+    if (clean.includes("-")) {
+      const parts = clean.split("-");
+      if (parts.length === 3) {
+        if (parts[0].length === 4) {
+          return `${parts[0]}-${parts[1].padStart(2, "0")}-${parts[2].padStart(2, "0")}`;
+        } else if (parts[2].length === 4) {
+          return `${parts[2]}-${parts[1].padStart(2, "0")}-${parts[0].padStart(2, "0")}`;
+        }
+      }
+    }
+    return clean;
+  };
+
+  // Function to export donation entries to a UTF-8 BOM CSV/Excel file (supports full backup, month, or date-range filter)
+  const exportFullBackupToExcel = async (startDate?: string, endDate?: string, month?: string) => {
     try {
       setExportingExcel(true);
       const donSnap = await getDocs(collection(db, "donations"));
       let docsList: Donation[] = [];
       donSnap.forEach((d) => docsList.push({ id: d.id, ...d.data() } as Donation));
 
-      // Filter by date range if provided
-      if (startDate) {
-        docsList = docsList.filter((d) => !d.donationDate || d.donationDate >= startDate);
-      }
-      if (endDate) {
-        docsList = docsList.filter((d) => !d.donationDate || d.donationDate <= endDate);
+      // Filter by month if provided (e.g. 2026-11)
+      if (month) {
+        docsList = docsList.filter((d) => {
+          const dDate = normalizeDateStr(d.donationDate);
+          return dDate.startsWith(month);
+        });
+      } else {
+        // Filter by date range if provided
+        if (startDate) {
+          docsList = docsList.filter((d) => {
+            const dDate = normalizeDateStr(d.donationDate);
+            return dDate && dDate >= startDate;
+          });
+        }
+        if (endDate) {
+          docsList = docsList.filter((d) => {
+            const dDate = normalizeDateStr(d.donationDate);
+            return dDate && dDate <= endDate;
+          });
+        }
       }
 
-      if (docsList.length === 0 && (startDate || endDate)) {
-        alert("પસંદ કરેલ તારીખ ગાળામાં કોઈ દાન એન્ટ્રી મળી નથી.");
+      if (docsList.length === 0 && (startDate || endDate || month)) {
+        alert("પસંદ કરેલ તારીખ/મહિના ગાળામાં કોઈ દાન એન્ટ્રી મળી નથી.");
         return [];
       }
 
@@ -115,11 +150,15 @@ export const Settings: React.FC = () => {
       const url = URL.createObjectURL(blob);
 
       const link = document.createElement("a");
-      const todayStr = new Date().toISOString().split("T")[0];
+      const nowD = new Date();
+      const todayStr = `${nowD.getFullYear()}-${String(nowD.getMonth() + 1).padStart(2, "0")}-${String(nowD.getDate()).padStart(2, "0")}`;
       link.setAttribute("href", url);
-      const downloadFileName = (startDate || endDate)
-        ? `Karuna_Maitri_Donations_${startDate || "Start"}_to_${endDate || "Today"}.csv`
-        : `Karuna_Maitri_Full_Donation_Backup_${todayStr}.csv`;
+      let downloadFileName = `Karuna_Maitri_Full_Donation_Backup_${todayStr}.csv`;
+      if (month) {
+        downloadFileName = `Karuna_Maitri_Donations_${month}.csv`;
+      } else if (startDate || endDate) {
+        downloadFileName = `Karuna_Maitri_Donations_${startDate || "Start"}_to_${endDate || "Today"}.csv`;
+      }
       link.setAttribute("download", downloadFileName);
       document.body.appendChild(link);
       link.click();
@@ -1251,28 +1290,39 @@ export const Settings: React.FC = () => {
             </div>
 
             {/* Selection Tabs */}
-            <div className="grid grid-cols-2 gap-2 bg-cream-50 p-1.5 rounded-2xl border border-cream-200">
+            <div className="grid grid-cols-3 gap-1.5 bg-cream-50 p-1.5 rounded-2xl border border-cream-200">
               <button
                 type="button"
                 onClick={() => setExcelExportMode("full")}
-                className={`py-2.5 px-3 rounded-xl text-xs font-bold transition-all ${
+                className={`py-2 px-2 rounded-xl text-xs font-bold transition-all text-center ${
                   excelExportMode === "full"
                     ? "bg-emerald-700 text-white shadow-sm"
                     : "text-gray-600 hover:text-royal-800"
                 }`}
               >
-                📁 સંપૂર્ણ ડેટાબેઝ
+                📁 તમામ ડેટા
+              </button>
+              <button
+                type="button"
+                onClick={() => setExcelExportMode("month")}
+                className={`py-2 px-2 rounded-xl text-xs font-bold transition-all text-center ${
+                  excelExportMode === "month"
+                    ? "bg-emerald-700 text-white shadow-sm"
+                    : "text-gray-600 hover:text-royal-800"
+                }`}
+              >
+                🗓️ મહિનો
               </button>
               <button
                 type="button"
                 onClick={() => setExcelExportMode("range")}
-                className={`py-2.5 px-3 rounded-xl text-xs font-bold transition-all ${
+                className={`py-2 px-2 rounded-xl text-xs font-bold transition-all text-center ${
                   excelExportMode === "range"
                     ? "bg-emerald-700 text-white shadow-sm"
                     : "text-gray-600 hover:text-royal-800"
                 }`}
               >
-                📅 તારીખ પસંદગી (Date Range)
+                📅 તારીખ ગાળો
               </button>
             </div>
 
@@ -1281,6 +1331,46 @@ export const Settings: React.FC = () => {
                 <p className="font-bold">સંપૂર્ણ ડેટાબેઝ એક્સપોર્ટ:</p>
                 <p className="text-gray-700 leading-relaxed">
                   શરૂઆતથી અત્યાર સુધીની તમામ દાન એન્ટ્રીઓ (દાતાનું નામ, ફોન, રકમ, સેવા, તારીખ, સંદેશ) સંપૂર્ણ ગુજરાતી UTF-8 BOM સપોર્ટ સાથે ડાઉનલોડ થશે.
+                </p>
+              </div>
+            ) : excelExportMode === "month" ? (
+              <div className="space-y-4 bg-emerald-50/30 p-4 rounded-2xl border border-emerald-100">
+                <div>
+                  <label className="block text-xs font-bold text-royal-800 uppercase tracking-wider mb-1.5">
+                    મહિનો પસંદ કરો (Select Month) *
+                  </label>
+                  <input
+                    type="month"
+                    value={excelSelectedMonth}
+                    onChange={(e) => e.target.value && setExcelSelectedMonth(e.target.value)}
+                    className="w-full px-3 py-2.5 rounded-xl border border-cream-200 text-sm font-mono bg-white"
+                  />
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const cur = new Date();
+                      setExcelSelectedMonth(`${cur.getFullYear()}-${String(cur.getMonth() + 1).padStart(2, "0")}`);
+                    }}
+                    className="text-xs bg-white border border-cream-300 hover:border-emerald-600 px-3 py-1.5 rounded-lg font-bold text-royal-800 transition-colors"
+                  >
+                    આ મહિનો
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const cur = new Date();
+                      const prevD = new Date(cur.getFullYear(), cur.getMonth() - 1, 1);
+                      setExcelSelectedMonth(`${prevD.getFullYear()}-${String(prevD.getMonth() + 1).padStart(2, "0")}`);
+                    }}
+                    className="text-xs bg-white border border-cream-300 hover:border-emerald-600 px-3 py-1.5 rounded-lg font-bold text-royal-800 transition-colors"
+                  >
+                    ગત મહિનો
+                  </button>
+                </div>
+                <p className="text-[11px] text-gray-500">
+                  પસંદ કરેલ મહિનાની શરૂઆતથી અંત સુધીની તમામ દાન એન્ટ્રીઓ એક ક્લિકમાં Excel રિપોર્ટ તરીકે મળશે.
                 </p>
               </div>
             ) : (
@@ -1369,6 +1459,8 @@ export const Settings: React.FC = () => {
                 onClick={async () => {
                   if (excelExportMode === "full") {
                     await exportFullBackupToExcel();
+                  } else if (excelExportMode === "month") {
+                    await exportFullBackupToExcel(undefined, undefined, excelSelectedMonth);
                   } else {
                     await exportFullBackupToExcel(excelStartDate, excelEndDate);
                   }
