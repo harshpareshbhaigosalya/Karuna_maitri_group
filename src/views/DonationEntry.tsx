@@ -28,7 +28,15 @@ import {
   Trash2,
   X,
   Sliders,
-  CheckCircle2
+  CheckCircle2,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  ArrowUp,
+  ArrowDown,
+  Square,
+  Circle,
+  ImageIcon
 } from "lucide-react";
 import { Donor, SevaType, OrganizationSettings } from "../types";
 import { DEFAULT_SEVA_TYPES } from "../lib/dbSeed";
@@ -205,18 +213,23 @@ const THEMES: Record<CardThemeId, ThemeConfig> = {
   }
 };
 
+interface CustomSticker {
+  id: string;
+  imgUrl: string;
+  width: number; // 30 to 250
+  align: "left" | "center" | "right";
+  positionY: "top" | "middle" | "bottom";
+  shape: "rounded" | "circle" | "square";
+  border: boolean;
+}
+
 interface CustomTextBox {
   id: string;
   text: string;
   fontSize: number;
   color: string;
+  align: "left" | "center" | "right";
   bold: boolean;
-}
-
-interface CustomSticker {
-  id: string;
-  imgUrl: string;
-  width: number;
 }
 
 export const DonationEntry: React.FC = () => {
@@ -252,7 +265,13 @@ export const DonationEntry: React.FC = () => {
   // Base64 photos
   const [donorPhotoUrl, setDonorPhotoUrl] = useState("");
   const [showDonorPhoto, setShowDonorPhoto] = useState(true);
+  const [donorPhotoWidth, setDonorPhotoWidth] = useState<number>(115);
+  const [donorPhotoShape, setDonorPhotoShape] = useState<"rounded" | "circle" | "square">("rounded");
   const [showQrOnCard, setShowQrOnCard] = useState(true);
+
+  // Seva Collage Image States
+  const [sevaCollageImg, setSevaCollageImg] = useState<string>("");
+  const [showSevaCollage, setShowSevaCollage] = useState<boolean>(true);
 
   // Pre-loaded Base64 local images to prevent html2canvas taint errors
   const [bgBase64, setBgBase64] = useState<string>("");
@@ -299,6 +318,9 @@ export const DonationEntry: React.FC = () => {
           activeSettings = settingsSnap.data() as OrganizationSettings;
           setSettings(activeSettings);
           setShowQrOnCard(activeSettings.showQR);
+          if (activeSettings.defaultHeroImage) {
+            setSevaCollageImg(activeSettings.defaultHeroImage);
+          }
         }
 
         const sevaSnap = await getDocs(query(collection(db, "sevaTypes"), where("active", "==", true)));
@@ -344,12 +366,26 @@ export const DonationEntry: React.FC = () => {
   useEffect(() => {
     const loadAssetsAsBase64 = async () => {
       try {
-        // Fetch Background
-        const bgRes = await fetch("/card_bg.jpg");
-        const bgBlob = await bgRes.blob();
-        const bgReader = new FileReader();
-        bgReader.onloadend = () => setBgBase64(bgReader.result as string);
-        bgReader.readAsDataURL(bgBlob);
+        // Seva collage fallback
+        if (settings?.defaultHeroImage) {
+          setSevaCollageImg(settings.defaultHeroImage);
+        } else {
+          try {
+            const bgRes = await fetch("/card_bg.jpg");
+            if (bgRes.ok) {
+              const bgBlob = await bgRes.blob();
+              const bgReader = new FileReader();
+              bgReader.onloadend = () => {
+                const b64 = bgReader.result as string;
+                setBgBase64(b64);
+                if (!sevaCollageImg) setSevaCollageImg(b64);
+              };
+              bgReader.readAsDataURL(bgBlob);
+            }
+          } catch (e) {
+            console.log("No card_bg file");
+          }
+        }
 
         // Fetch Logo
         const logoUrl = settings?.logoUrl || "/logo.jpg";
@@ -379,7 +415,7 @@ export const DonationEntry: React.FC = () => {
       }
     };
     loadAssetsAsBase64();
-  }, [settings?.logoUrl]);
+  }, [settings?.logoUrl, settings?.defaultHeroImage]);
 
   // Click outside close autocomplete
   useEffect(() => {
@@ -420,6 +456,20 @@ export const DonationEntry: React.FC = () => {
     } catch (err) {
       console.error("Image loading failed:", err);
       alert("ફોટો સેટ કરવામાં ભૂલ આવી.");
+    }
+  };
+
+  // Upload custom Seva Collage directly on this card
+  const handleCustomSevaCollageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const base64 = await compressImageToBase64(file, 600, 350, 0.75);
+      setSevaCollageImg(base64);
+      setShowSevaCollage(true);
+    } catch (err) {
+      console.error("Collage upload failed:", err);
+      alert("કોલાજ ફોટો અપલોડ કરવામાં ભૂલ આવી.");
     }
   };
 
@@ -469,20 +519,36 @@ export const DonationEntry: React.FC = () => {
   };
 
   // Add custom sticker
-  const handleAddSticker = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAddSticker = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const base64 = reader.result as string;
+    try {
+      const base64 = await compressImageToBase64(file, 300, 300, 0.85);
       const newSticker: CustomSticker = {
         id: "stk-" + Date.now(),
         imgUrl: base64,
-        width: 70
+        width: 80,
+        align: "center",
+        positionY: "middle",
+        shape: "rounded",
+        border: true
       };
       setCustomStickers((prev) => [...prev, newSticker]);
-    };
-    reader.readAsDataURL(file);
+    } catch (err) {
+      console.error("Sticker upload failed:", err);
+    }
+  };
+
+  // Update a sticker property
+  const updateSticker = (id: string, updates: Partial<CustomSticker>) => {
+    setCustomStickers((prev) =>
+      prev.map((s) => (s.id === id ? { ...s, ...updates } : s))
+    );
+  };
+
+  // Remove sticker
+  const removeSticker = (id: string) => {
+    setCustomStickers((prev) => prev.filter((s) => s.id !== id));
   };
 
   // Add custom text box
@@ -493,16 +559,33 @@ export const DonationEntry: React.FC = () => {
       text: newTextContent.trim(),
       fontSize: 14,
       color: "#0B2F64",
+      align: "center",
       bold: true
     };
     setCustomTextBoxes((prev) => [...prev, newBox]);
     setNewTextContent("");
   };
 
+  // Update a text box property
+  const updateTextBox = (id: string, updates: Partial<CustomTextBox>) => {
+    setCustomTextBoxes((prev) =>
+      prev.map((tb) => (tb.id === id ? { ...tb, ...updates } : tb))
+    );
+  };
+
+  // Remove text box
+  const removeTextBox = (id: string) => {
+    setCustomTextBoxes((prev) => prev.filter((tb) => tb.id !== id));
+  };
+
   const handleResetCanvaDesign = () => {
     handleSelectTheme("royal-cream");
     setDonorFontSize(32);
     setAmountFontSize(32);
+    setDonorPhotoWidth(115);
+    setDonorPhotoShape("rounded");
+    setShowDonorPhoto(true);
+    setShowSevaCollage(true);
     setCustomTextBoxes([]);
     setCustomStickers([]);
     setIsCanvaMode(false);
@@ -619,7 +702,6 @@ export const DonationEntry: React.FC = () => {
         }
       }
 
-      // Convert occasionDate from YYYY-MM-DD back to MM-DD for reminder recurrences
       let finalOccasionDate = occasionDate;
       if (occasionType !== "કોઈ પ્રસંગ નથી" && occasionDate && occasionDate.includes("-")) {
         const dateParts = occasionDate.split("-");
@@ -811,7 +893,6 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
     return d.fullName.toLowerCase().includes(q) || d.phone.includes(q);
   });
 
-  // Reusable helper to get seva details
   const getActiveSevaDetails = () => {
     if (selectedSevaId !== "other" && SEVA_DETAILS_MAP[selectedSevaId]) {
       return SEVA_DETAILS_MAP[selectedSevaId];
@@ -827,12 +908,55 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
     };
   };
 
+  // Helper to render custom stickers by vertical placement (top, middle, bottom)
+  const renderStickersByPosition = (pos: "top" | "middle" | "bottom") => {
+    const list = customStickers.filter((s) => s.positionY === pos);
+    if (list.length === 0) return null;
+
+    return (
+      <div className="w-full flex flex-wrap gap-2 items-center my-1 z-20" style={{
+        justifyContent: list[0].align === "left" ? "flex-start" : list[0].align === "right" ? "flex-end" : "center"
+      }}>
+        {list.map((stk) => {
+          const shapeStyle =
+            stk.shape === "circle"
+              ? "rounded-full"
+              : stk.shape === "square"
+              ? "rounded-none"
+              : "rounded-xl";
+
+          return (
+            <div
+              key={stk.id}
+              className={`shrink-0 overflow-hidden ${shapeStyle} ${
+                stk.border ? "gold-border shadow-md" : ""
+              }`}
+              style={{
+                width: `${stk.width}px`,
+                height: `${stk.width}px`,
+                border: stk.border ? `2px solid ${cardInnerBorder}` : "none",
+                backgroundColor: "#FFFFFF"
+              }}
+            >
+              <img
+                src={stk.imgUrl}
+                alt="Custom Sticker"
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+              />
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
   // Reusable Certificate Card Renderer used for both on-screen preview and high-res export
   const renderCertificateCard = (isExport: boolean) => {
     const activeDetail = getActiveSevaDetails();
-    const hasPhoto = donorPhotoUrl && donorPhotoUrl.startsWith("data:");
+    const hasPhoto = showDonorPhoto && donorPhotoUrl && donorPhotoUrl.startsWith("data:");
     const isDeceasedOccasion = ["તિથિ", "પુણ્યતિથિ", "સ્મૃતિ દિવસ", "સ્વર્ગવાસી"].includes(displayOccasionName);
     const activeTheme = THEMES[cardTheme] || THEMES["royal-cream"];
+    const collageSrc = sevaCollageImg || bgBase64 || "/card_bg.jpg";
 
     return (
       <div 
@@ -901,8 +1025,11 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
         />
 
         {/* Middle Content Section */}
-        <div style={{ flex: 1, padding: "10px 18px", display: "flex", flexDirection: "column", justifyContent: "space-around", gap: "8px", zIndex: 10, position: "relative" }}>
+        <div style={{ flex: 1, padding: "8px 18px", display: "flex", flexDirection: "column", justifyContent: "space-around", gap: "6px", zIndex: 10, position: "relative" }}>
           
+          {/* Top Positioned Stickers */}
+          {renderStickersByPosition("top")}
+
           {/* Seva Showcase Box */}
           <div 
             className="relative z-10" 
@@ -918,7 +1045,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
             <div 
               className="gold-border"
               style={{
-                width: "190px",
+                width: showSevaCollage ? "190px" : "100%",
                 height: "172px",
                 backgroundColor: activeTheme.sevaBoxBg,
                 border: `2.5px solid ${cardInnerBorder}`,
@@ -952,37 +1079,43 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
               </div>
             </div>
 
-            <div 
-              className="gold-border"
-              style={{ 
-                flex: 1,
-                height: "172px", 
-                borderRadius: "16px", 
-                overflow: "hidden", 
-                border: `2.5px solid ${cardInnerBorder}`, 
-                backgroundColor: '#FAF9F6',
-                position: "relative",
-                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.08)"
-              }}
-            >
-              {bgBase64 ? (
-                <img 
-                  src={bgBase64} 
-                  alt="Seva Collage" 
-                  style={{ 
-                    width: "100%", 
-                    height: "100%", 
-                    objectFit: "cover", 
-                    display: "block" 
-                  }} 
-                />
-              ) : (
-                <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", color: "#9CA3AF" }}>
-                  જીવદયા પ્રવૃત્તિઓ
-                </div>
-              )}
-            </div>
+            {/* Seva Activity Collage Image Section */}
+            {showSevaCollage && (
+              <div 
+                className="gold-border"
+                style={{ 
+                  flex: 1,
+                  height: "172px", 
+                  borderRadius: "16px", 
+                  overflow: "hidden", 
+                  border: `2.5px solid ${cardInnerBorder}`, 
+                  backgroundColor: '#FAF9F6',
+                  position: "relative",
+                  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.08)"
+                }}
+              >
+                {collageSrc ? (
+                  <img 
+                    src={collageSrc} 
+                    alt="Seva Collage" 
+                    style={{ 
+                      width: "100%", 
+                      height: "100%", 
+                      objectFit: "cover", 
+                      display: "block" 
+                    }} 
+                  />
+                ) : (
+                  <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", color: "#9CA3AF" }}>
+                    જીવદયા પ્રવૃત્તિઓ
+                  </div>
+                )}
+              </div>
+            )}
           </div>
+
+          {/* Middle Positioned Stickers */}
+          {renderStickersByPosition("middle")}
 
           {/* Donor Felicitation Main Box */}
           <div 
@@ -1071,35 +1204,29 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                     color: tb.color, 
                     fontSize: `${tb.fontSize}px`, 
                     fontWeight: tb.bold ? "950" : "700",
+                    textAlign: tb.align,
+                    width: "100%",
                     lineHeight: "1.2"
                   }}
                 >
                   {tb.text}
                 </div>
               ))}
-
-              {/* Custom Stickers / Logos */}
-              {customStickers.length > 0 && (
-                <div style={{ display: "flex", gap: "8px", justifyContent: "center", alignItems: "center", marginTop: "4px" }}>
-                  {customStickers.map((stk) => (
-                    <img 
-                      key={stk.id}
-                      src={stk.imgUrl} 
-                      alt="Custom Sticker" 
-                      style={{ width: `${stk.width}px`, height: "auto", maxHeight: "60px", objectFit: "contain", borderRadius: "6px" }}
-                    />
-                  ))}
-                </div>
-              )}
             </div>
 
+            {/* Donor Face Photo with Shape & Width Controls */}
             {hasPhoto && (
               <div 
-                className="gold-border shrink-0"
+                className={`gold-border shrink-0 ${
+                  donorPhotoShape === "circle"
+                    ? "rounded-full"
+                    : donorPhotoShape === "square"
+                    ? "rounded-none"
+                    : "rounded-2xl"
+                }`}
                 style={{ 
-                  width: "115px", 
-                  height: "148px", 
-                  borderRadius: "16px", 
+                  width: `${donorPhotoWidth}px`, 
+                  height: `${Math.round(donorPhotoWidth * 1.3)}px`, 
                   overflow: "hidden", 
                   border: `2.5px solid ${cardInnerBorder}`, 
                   backgroundColor: '#ffffff',
@@ -1119,6 +1246,9 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
               </div>
             )}
           </div>
+
+          {/* Bottom Positioned Stickers */}
+          {renderStickersByPosition("bottom")}
         </div>
 
         {/* Bottom Footer Banner */}
@@ -1483,7 +1613,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
             </div>
           </div>
 
-          {/* Card Preview & Canva Editor Column */}
+          {/* Card Preview & Advanced Canva Editor Column */}
           <div className="lg:col-span-7 flex flex-col items-center gap-4 w-full">
             
             {/* Top Download/Share Actions */}
@@ -1507,7 +1637,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
             </div>
 
             {/* Design Themes Selection Carousel */}
-            <div className="w-full max-w-[600px] bg-white p-3.5 rounded-2xl border border-cream-200 shadow-xs space-y-2.5">
+            <div className="w-full max-w-[600px] bg-white p-3.5 rounded-2xl border border-cream-200 shadow-xs space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-extrabold text-royal-900 flex items-center gap-1.5">
                   <Sparkles className="h-4 w-4 text-amber-500" />
@@ -1519,7 +1649,7 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                   className="text-[11px] font-bold text-royal-800 hover:text-royal-950 flex items-center gap-1 bg-cream-100/70 hover:bg-cream-200/70 px-2.5 py-1 rounded-lg transition-colors"
                 >
                   <Sliders className="h-3.5 w-3.5" />
-                  <span>{isCanvaMode ? "સામાન્ય મોડ" : "🎨 કેનવા એડિટર"}</span>
+                  <span>{isCanvaMode ? "સામાન્ય મોડ" : "🎨 કેનવા કસ્ટમાઇઝેશન એડિટર"}</span>
                 </button>
               </div>
 
@@ -1546,81 +1676,424 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                 })}
               </div>
 
-              {/* Canva Editor Controls Drawer */}
+              {/* Advanced Canva Editor Controls Drawer */}
               {isCanvaMode && (
-                <div className="pt-3 border-t border-cream-100 space-y-3.5 animate-in fade-in duration-150">
+                <div className="pt-3 border-t border-cream-100 space-y-4 animate-in fade-in duration-150">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-extrabold text-royal-800 uppercase tracking-wider">કેનવા કસ્ટમાઇઝેશન ટૂલ</span>
+                    <span className="text-[11px] font-extrabold text-royal-800 uppercase tracking-wider flex items-center gap-1.5">
+                      <Palette className="h-4 w-4 text-royal-700" />
+                      <span>કેનવા કસ્ટમાઇઝેશન ટૂલ (Canva Editor)</span>
+                    </span>
                     <button
                       type="button"
                       onClick={handleResetCanvaDesign}
-                      className="text-[10px] font-bold text-red-600 hover:text-red-800 flex items-center gap-1"
+                      className="text-[10px] font-bold text-red-600 hover:text-red-800 flex items-center gap-1 px-2 py-0.5 rounded hover:bg-red-50 transition-colors"
                     >
                       <RotateCcw className="h-3 w-3" />
                       <span>મૂળ ડિઝાઇન લાવો</span>
                     </button>
                   </div>
 
-                  {/* Background Color Swatches */}
-                  <div>
-                    <label className="block text-[11px] font-bold text-gray-600 mb-1.5">બેકગ્રાઉન્ડ રંગ:</label>
-                    <div className="flex flex-wrap gap-2">
-                      {[
-                        { label: "ક્રીમ", hex: "#FAF5EC" },
-                        { label: "સફેદ", hex: "#FFFFFF" },
-                        { label: "આઇવરી", hex: "#FFFDF5" },
-                        { label: "લાઈટ ગ્રીન", hex: "#F0FDF4" },
-                        { label: "સોફ્ટ બ્લુ", hex: "#F8FAFC" },
-                        { label: "ગુલાબી આભા", hex: "#FFF1F2" }
-                      ].map((c) => (
-                        <button
-                          key={c.hex}
-                          type="button"
-                          onClick={() => setCardBgColor(c.hex)}
-                          className={`px-2 py-1 rounded-lg text-[10px] font-bold border transition-all flex items-center gap-1.5 ${
-                            cardBgColor === c.hex ? "ring-2 ring-royal-800 border-transparent shadow-xs" : "border-cream-300"
-                          }`}
-                          style={{ backgroundColor: c.hex }}
-                        >
-                          <span className="h-2.5 w-2.5 rounded-full border border-gray-400" style={{ backgroundColor: c.hex }} />
-                          <span className="text-gray-800">{c.label}</span>
-                        </button>
-                      ))}
+                  {/* 1. SEVA COLLAGE IMAGE CONTROLS */}
+                  <div className="p-3 bg-cream-50/60 rounded-xl border border-cream-200 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-royal-900 flex items-center gap-1.5">
+                        <ImageIcon className="h-3.5 w-3.5 text-royal-700" />
+                        <span>સેવા કોલાજ ફોટો (Seva Activity Photo)</span>
+                      </span>
+                      <label className="text-[11px] font-bold text-royal-800 flex items-center gap-1 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={showSevaCollage}
+                          onChange={(e) => setShowSevaCollage(e.target.checked)}
+                          className="accent-royal-800"
+                        />
+                        <span>કાર્ડ પર બતાવો</span>
+                      </label>
+                    </div>
+
+                    <div className="flex items-center gap-3 pt-1">
+                      <img
+                        src={sevaCollageImg || bgBase64 || "/card_bg.jpg"}
+                        alt="Current Collage"
+                        className="h-10 w-16 object-cover rounded-lg border border-cream-300 bg-white shrink-0"
+                      />
+                      <label className="flex-1 py-1.5 px-3 bg-white border border-dashed border-royal-400 hover:bg-royal-50 text-royal-900 rounded-lg text-xs font-bold text-center cursor-pointer transition-colors shadow-2xs">
+                        <span>અહીંથી નવો કોલાજ ફોટો અપલોડ કરો</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleCustomSevaCollageUpload}
+                          className="hidden"
+                        />
+                      </label>
                     </div>
                   </div>
 
-                  {/* Border Color Swatches */}
-                  <div>
-                    <label className="block text-[11px] font-bold text-gray-600 mb-1.5">બોર્ડર રંગ:</label>
-                    <div className="flex flex-wrap gap-2">
-                      {[
-                        { label: "ડાર્ક ગ્રીન", hex: "#043e22" },
-                        { label: "ગોલ્ડ", hex: "#C5A059" },
-                        { label: "રોયલ બ્લુ", hex: "#0B2F64" },
-                        { label: "મેરૂન", hex: "#7f1d1d" },
-                        { label: "બ્લેક", hex: "#1F2937" }
-                      ].map((b) => (
-                        <button
-                          key={b.hex}
-                          type="button"
-                          onClick={() => {
-                            setCardOuterBorder(b.hex);
-                            if (b.hex === "#C5A059") {
-                              setCardInnerBorder("#B45309");
-                            }
-                          }}
-                          className={`px-2 py-1 rounded-lg text-[10px] font-bold border text-white transition-all ${
-                            cardOuterBorder === b.hex ? "ring-2 ring-amber-500 scale-105" : "border-transparent opacity-90"
-                          }`}
-                          style={{ backgroundColor: b.hex }}
-                        >
-                          {b.label}
-                        </button>
-                      ))}
+                  {/* 2. DONOR PHOTO CONTROLS */}
+                  {donorPhotoUrl && (
+                    <div className="p-3 bg-cream-50/60 rounded-xl border border-cream-200 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-royal-900">દાતાશ્રીનો ફોટો કંટ્રોલ:</span>
+                        <label className="text-[11px] font-bold text-royal-800 flex items-center gap-1 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={showDonorPhoto}
+                            onChange={(e) => setShowDonorPhoto(e.target.checked)}
+                            className="accent-royal-800"
+                          />
+                          <span>બતાવો</span>
+                        </label>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 text-xs">
+                        <div>
+                          <span className="text-[10px] text-gray-500 font-bold block mb-1">
+                            સાઇઝ ({donorPhotoWidth}px):
+                          </span>
+                          <div className="flex items-center gap-1">
+                            <button
+                              type="button"
+                              onClick={() => setDonorPhotoWidth((p) => Math.max(70, p - 10))}
+                              className="px-2 py-0.5 bg-white border rounded font-bold"
+                            >
+                              -
+                            </button>
+                            <input
+                              type="range"
+                              min="70"
+                              max="160"
+                              value={donorPhotoWidth}
+                              onChange={(e) => setDonorPhotoWidth(Number(e.target.value))}
+                              className="flex-1 accent-royal-800"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setDonorPhotoWidth((p) => Math.min(160, p + 10))}
+                              className="px-2 py-0.5 bg-white border rounded font-bold"
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
+
+                        <div>
+                          <span className="text-[10px] text-gray-500 font-bold block mb-1">આકાર (Shape):</span>
+                          <div className="flex gap-1">
+                            <button
+                              type="button"
+                              onClick={() => setDonorPhotoShape("rounded")}
+                              className={`flex-1 py-1 text-[10px] font-bold rounded border ${
+                                donorPhotoShape === "rounded" ? "bg-royal-800 text-white" : "bg-white"
+                              }`}
+                            >
+                              સામાન્ય
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setDonorPhotoShape("circle")}
+                              className={`flex-1 py-1 text-[10px] font-bold rounded border ${
+                                donorPhotoShape === "circle" ? "bg-royal-800 text-white" : "bg-white"
+                              }`}
+                            >
+                              ગોળ
+                            </button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
+                  )}
+
+                  {/* 3. UPLOADED STICKERS & BADGES MANAGER */}
+                  <div className="p-3 bg-cream-50/60 rounded-xl border border-cream-200 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-royal-900 flex items-center gap-1">
+                        <ImagePlus className="h-4 w-4 text-emerald-700" />
+                        <span>અપલોડ કરેલા સ્ટીકર્સ અને બેજ ({customStickers.length})</span>
+                      </span>
+                      <label className="px-2.5 py-1 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-bold shrink-0 cursor-pointer flex items-center gap-1 transition-colors">
+                        <Plus className="h-3 w-3" />
+                        <span>+ નવું સ્ટીકર / ફોટો</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleAddSticker}
+                          className="hidden"
+                        />
+                      </label>
+                    </div>
+
+                    {customStickers.length === 0 ? (
+                      <p className="text-[11px] text-gray-400 italic text-center py-1">
+                        કોઈ કસ્ટમ સ્ટીકર ઉમેરાયેલ નથી. ઉપર બટનથી કોઈપણ લોગો કે સ્ટીકર ઉમેરી શકાય છે.
+                      </p>
+                    ) : (
+                      <div className="space-y-2.5">
+                        {customStickers.map((stk, idx) => (
+                          <div
+                            key={stk.id}
+                            className="bg-white p-2.5 rounded-xl border border-cream-200 shadow-2xs space-y-2"
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <img
+                                  src={stk.imgUrl}
+                                  alt="Sticker thumbnail"
+                                  className="w-8 h-8 rounded object-cover border"
+                                />
+                                <span className="text-xs font-bold text-royal-950">
+                                  સ્ટીકર #{idx + 1} ({stk.width}px)
+                                </span>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => removeSticker(stk.id)}
+                                className="p-1 text-red-500 hover:text-red-700 hover:bg-red-50 rounded"
+                                title="સ્ટીકર કાઢી નાખો"
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </button>
+                            </div>
+
+                            {/* Resize Slider */}
+                            <div className="flex items-center gap-2">
+                              <span className="text-[10px] text-gray-500 font-bold shrink-0">સાઇઝ:</span>
+                              <button
+                                type="button"
+                                onClick={() => updateSticker(stk.id, { width: Math.max(30, stk.width - 10) })}
+                                className="px-1.5 py-0.5 bg-cream-100 rounded text-xs font-bold"
+                              >
+                                -
+                              </button>
+                              <input
+                                type="range"
+                                min="30"
+                                max="220"
+                                value={stk.width}
+                                onChange={(e) => updateSticker(stk.id, { width: Number(e.target.value) })}
+                                className="flex-1 accent-royal-800"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => updateSticker(stk.id, { width: Math.min(220, stk.width + 10) })}
+                                className="px-1.5 py-0.5 bg-cream-100 rounded text-xs font-bold"
+                              >
+                                +
+                              </button>
+                            </div>
+
+                            {/* Position Controls */}
+                            <div className="grid grid-cols-2 gap-2 text-[10px]">
+                              {/* Horizontal Alignment */}
+                              <div className="flex items-center gap-1 bg-cream-50 p-1 rounded-lg">
+                                <span className="text-gray-400 font-bold">સ્થાન:</span>
+                                <button
+                                  type="button"
+                                  onClick={() => updateSticker(stk.id, { align: "left" })}
+                                  className={`p-1 rounded ${stk.align === "left" ? "bg-royal-800 text-white" : "text-gray-600"}`}
+                                  title="ડાબે"
+                                >
+                                  <AlignLeft className="h-3 w-3" />
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => updateSticker(stk.id, { align: "center" })}
+                                  className={`p-1 rounded ${stk.align === "center" ? "bg-royal-800 text-white" : "text-gray-600"}`}
+                                  title="વચ્ચે"
+                                >
+                                  <AlignCenter className="h-3 w-3" />
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => updateSticker(stk.id, { align: "right" })}
+                                  className={`p-1 rounded ${stk.align === "right" ? "bg-royal-800 text-white" : "text-gray-600"}`}
+                                  title="જમણે"
+                                >
+                                  <AlignRight className="h-3 w-3" />
+                                </button>
+                              </div>
+
+                              {/* Vertical Section */}
+                              <div className="flex items-center gap-1 bg-cream-50 p-1 rounded-lg">
+                                <span className="text-gray-400 font-bold">ભાગ:</span>
+                                <button
+                                  type="button"
+                                  onClick={() => updateSticker(stk.id, { positionY: "top" })}
+                                  className={`px-1.5 py-0.5 rounded font-bold ${
+                                    stk.positionY === "top" ? "bg-royal-800 text-white" : "text-gray-600"
+                                  }`}
+                                >
+                                  ઉપર
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => updateSticker(stk.id, { positionY: "middle" })}
+                                  className={`px-1.5 py-0.5 rounded font-bold ${
+                                    stk.positionY === "middle" ? "bg-royal-800 text-white" : "text-gray-600"
+                                  }`}
+                                >
+                                  મધ્ય
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => updateSticker(stk.id, { positionY: "bottom" })}
+                                  className={`px-1.5 py-0.5 rounded font-bold ${
+                                    stk.positionY === "bottom" ? "bg-royal-800 text-white" : "text-gray-600"
+                                  }`}
+                                >
+                                  નીચે
+                                </button>
+                              </div>
+                            </div>
+
+                            {/* Shape & Border Controls */}
+                            <div className="flex items-center justify-between text-[10px] pt-0.5">
+                              <div className="flex items-center gap-1">
+                                <span className="text-gray-400 font-bold">આકાર:</span>
+                                <button
+                                  type="button"
+                                  onClick={() => updateSticker(stk.id, { shape: "rounded" })}
+                                  className={`px-1.5 py-0.5 rounded border ${
+                                    stk.shape === "rounded" ? "bg-royal-800 text-white" : "bg-white text-gray-700"
+                                  }`}
+                                >
+                                  રાઉન્ડ
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => updateSticker(stk.id, { shape: "circle" })}
+                                  className={`px-1.5 py-0.5 rounded border ${
+                                    stk.shape === "circle" ? "bg-royal-800 text-white" : "bg-white text-gray-700"
+                                  }`}
+                                >
+                                  ગોળ બેજ
+                                </button>
+                              </div>
+
+                              <label className="flex items-center gap-1 cursor-pointer font-bold text-royal-900">
+                                <input
+                                  type="checkbox"
+                                  checked={stk.border}
+                                  onChange={(e) => updateSticker(stk.id, { border: e.target.checked })}
+                                  className="accent-royal-800"
+                                />
+                                <span>ગોલ્ડ બોર્ડર</span>
+                              </label>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
-                  {/* Quick Element Font Sizing & Colors */}
+                  {/* 4. CUSTOM TEXT BOXES MANAGER */}
+                  <div className="p-3 bg-cream-50/60 rounded-xl border border-cream-200 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-royal-900 flex items-center gap-1">
+                        <Type className="h-4 w-4 text-royal-700" />
+                        <span>કસ્ટમ લખાણ લાઈનો ({customTextBoxes.length})</span>
+                      </span>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={newTextContent}
+                        onChange={(e) => setNewTextContent(e.target.value)}
+                        placeholder="નવું લખાણ (દા.ત. જય જિનેન્દ્ર, ગુરુકૃપા)..."
+                        className="flex-1 px-3 py-1.5 text-xs border border-cream-300 rounded-xl bg-white"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleAddCustomText}
+                        className="px-3 py-1.5 bg-royal-800 hover:bg-royal-900 text-white rounded-xl text-xs font-bold shrink-0"
+                      >
+                        + ઉમેરો
+                      </button>
+                    </div>
+
+                    {customTextBoxes.map((tb) => (
+                      <div
+                        key={tb.id}
+                        className="bg-white p-2.5 rounded-xl border border-cream-200 shadow-2xs space-y-2"
+                      >
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="text"
+                            value={tb.text}
+                            onChange={(e) => updateTextBox(tb.id, { text: e.target.value })}
+                            className="flex-1 text-xs font-bold px-2 py-1 border rounded bg-cream-50/40"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removeTextBox(tb.id)}
+                            className="p-1 text-red-500 hover:text-red-700 hover:bg-red-50 rounded"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+
+                        <div className="flex flex-wrap items-center justify-between gap-2 text-[10px]">
+                          <div className="flex items-center gap-1">
+                            <span className="text-gray-400 font-bold">સાઇઝ ({tb.fontSize}px):</span>
+                            <button
+                              type="button"
+                              onClick={() => updateTextBox(tb.id, { fontSize: Math.max(10, tb.fontSize - 1) })}
+                              className="px-1.5 py-0.5 bg-cream-100 rounded font-bold"
+                            >
+                              -
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => updateTextBox(tb.id, { fontSize: Math.min(32, tb.fontSize + 1) })}
+                              className="px-1.5 py-0.5 bg-cream-100 rounded font-bold"
+                            >
+                              +
+                            </button>
+                          </div>
+
+                          <div className="flex items-center gap-1">
+                            <span className="text-gray-400 font-bold">રંગ:</span>
+                            {["#7f1d1d", "#0B2F64", "#B45309", "#15803D", "#111827", "#6B21A8"].map((col) => (
+                              <button
+                                key={col}
+                                type="button"
+                                onClick={() => updateTextBox(tb.id, { color: col })}
+                                className="w-3.5 h-3.5 rounded-full border border-gray-300"
+                                style={{ backgroundColor: col }}
+                              />
+                            ))}
+                          </div>
+
+                          <div className="flex items-center gap-1">
+                            <button
+                              type="button"
+                              onClick={() => updateTextBox(tb.id, { align: "left" })}
+                              className={`p-1 rounded ${tb.align === "left" ? "bg-royal-800 text-white" : "text-gray-600"}`}
+                            >
+                              <AlignLeft className="h-3 w-3" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => updateTextBox(tb.id, { align: "center" })}
+                              className={`p-1 rounded ${tb.align === "center" ? "bg-royal-800 text-white" : "text-gray-600"}`}
+                            >
+                              <AlignCenter className="h-3 w-3" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => updateTextBox(tb.id, { align: "right" })}
+                              className={`p-1 rounded ${tb.align === "right" ? "bg-royal-800 text-white" : "text-gray-600"}`}
+                            >
+                              <AlignRight className="h-3 w-3" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* 5. CORE TYPOGRAPHY SIZING & COLORS */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-cream-50/50 p-2.5 rounded-xl border border-cream-200">
                     {/* Donor Name Font Controls */}
                     <div className="space-y-1">
@@ -1687,55 +2160,62 @@ ${occasionType !== "કોઈ પ્રસંગ નથી" ? `*પ્રસં�
                     </div>
                   </div>
 
-                  {/* Add Custom Text Box & Add Sticker Buttons */}
+                  {/* 6. BACKGROUND & BORDER COLOR CHOICES */}
                   <div className="space-y-2">
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={newTextContent}
-                        onChange={(e) => setNewTextContent(e.target.value)}
-                        placeholder="નવું લખાણ ઉમેરો (દા.ત. જય જિનેન્દ્ર, ગુરુકૃપા)..."
-                        className="flex-1 px-3 py-1.5 text-xs border border-cream-300 rounded-xl"
-                      />
-                      <button
-                        type="button"
-                        onClick={handleAddCustomText}
-                        className="px-3 py-1.5 bg-royal-800 hover:bg-royal-900 text-white rounded-xl text-xs font-bold shrink-0"
-                      >
-                        + લખાણ
-                      </button>
-                      <label className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shrink-0 cursor-pointer flex items-center gap-1">
-                        <ImagePlus className="h-3.5 w-3.5" />
-                        <span>+ સ્ટીકર</span>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleAddSticker}
-                          className="hidden"
-                        />
-                      </label>
-                    </div>
-
-                    {/* Active custom text items list */}
-                    {customTextBoxes.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 pt-1">
-                        {customTextBoxes.map((tb) => (
-                          <span
-                            key={tb.id}
-                            className="inline-flex items-center gap-1 bg-white border border-cream-300 px-2 py-0.5 rounded-lg text-[11px] font-bold text-royal-800"
+                    <div>
+                      <label className="block text-[11px] font-bold text-gray-600 mb-1">કાર્ડ બેકગ્રાઉન્ડ રંગ:</label>
+                      <div className="flex flex-wrap gap-1.5">
+                        {[
+                          { label: "ક્રીમ", hex: "#FAF5EC" },
+                          { label: "સફેદ", hex: "#FFFFFF" },
+                          { label: "આઇવરી", hex: "#FFFDF5" },
+                          { label: "ગ્રીન", hex: "#F0FDF4" },
+                          { label: "સોફ્ટ બ્લુ", hex: "#F8FAFC" },
+                          { label: "રોઝ", hex: "#FFF1F2" }
+                        ].map((c) => (
+                          <button
+                            key={c.hex}
+                            type="button"
+                            onClick={() => setCardBgColor(c.hex)}
+                            className={`px-2 py-1 rounded-lg text-[10px] font-bold border flex items-center gap-1 ${
+                              cardBgColor === c.hex ? "ring-2 ring-royal-800 border-transparent shadow-xs" : "border-cream-300"
+                            }`}
+                            style={{ backgroundColor: c.hex }}
                           >
-                            <span>{tb.text}</span>
-                            <button
-                              type="button"
-                              onClick={() => setCustomTextBoxes((prev) => prev.filter((x) => x.id !== tb.id))}
-                              className="text-red-500 hover:text-red-700 ml-1"
-                            >
-                              ✕
-                            </button>
-                          </span>
+                            <span className="h-2 w-2 rounded-full border" style={{ backgroundColor: c.hex }} />
+                            <span>{c.label}</span>
+                          </button>
                         ))}
                       </div>
-                    )}
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-bold text-gray-600 mb-1">મુખ્ય બોર્ડર રંગ:</label>
+                      <div className="flex flex-wrap gap-1.5">
+                        {[
+                          { label: "ડાર્ક ગ્રીન", hex: "#043e22" },
+                          { label: "ગોલ્ડ", hex: "#C5A059" },
+                          { label: "રોયલ બ્લુ", hex: "#0B2F64" },
+                          { label: "મેરૂન", hex: "#7f1d1d" },
+                          { label: "બ્લેક", hex: "#1F2937" }
+                        ].map((b) => (
+                          <button
+                            key={b.hex}
+                            type="button"
+                            onClick={() => {
+                              setCardOuterBorder(b.hex);
+                              if (b.hex === "#C5A059") setCardInnerBorder("#B45309");
+                            }}
+                            className={`px-2 py-1 rounded-lg text-[10px] font-bold text-white ${
+                              cardOuterBorder === b.hex ? "ring-2 ring-amber-500 scale-105" : "opacity-90"
+                            }`}
+                            style={{ backgroundColor: b.hex }}
+                          >
+                            {b.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}

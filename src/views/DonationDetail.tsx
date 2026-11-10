@@ -126,11 +126,21 @@ export const DonationDetail: React.FC = () => {
   useEffect(() => {
     const loadAssetsAsBase64 = async () => {
       try {
-        const bgRes = await fetch("/card_background.jpg");
-        const bgBlob = await bgRes.blob();
-        const bgReader = new FileReader();
-        bgReader.onloadend = () => setBgBase64(bgReader.result as string);
-        bgReader.readAsDataURL(bgBlob);
+        if (settings?.defaultHeroImage) {
+          setBgBase64(settings.defaultHeroImage);
+        } else {
+          try {
+            const bgRes = await fetch("/card_bg.jpg");
+            if (bgRes.ok) {
+              const bgBlob = await bgRes.blob();
+              const bgReader = new FileReader();
+              bgReader.onloadend = () => setBgBase64(bgReader.result as string);
+              bgReader.readAsDataURL(bgBlob);
+            }
+          } catch (e) {
+            console.log("No card_bg fallback");
+          }
+        }
 
         const logoUrl = settings?.logoUrl || "/logo.jpg";
         if (logoUrl.startsWith("data:")) {
@@ -159,7 +169,7 @@ export const DonationDetail: React.FC = () => {
       }
     };
     loadAssetsAsBase64();
-  }, [settings?.logoUrl]);
+  }, [settings?.logoUrl, settings?.defaultHeroImage]);
 
   // Pre-load donor photo as Base64 if it's a remote URL
   useEffect(() => {
